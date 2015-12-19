@@ -1,0 +1,13 @@
+FingerConfigInfo=2,3,3
+
+PartInfo = Palm,        ./models/BarrettHandOSG/BHPalm.osg,           0,0,0,           0,0,0,      0,0,0
+PartInfo = Finger10,    ./models/BarrettHandOSG/BHBase.osg,           635,0,640,       0,0,0,      0,0,0
+PartInfo = Finger20,    ./models/BarrettHandOSG/BHBase.osg,           -635,0,640,      -180,0,0,   0,0,0
+PartInfo = Finger00,    ./models/BarrettHandOSG/BHMiddle.osg,         0,1300,1500,     90,0,0,     0,0,-1.5
+PartInfo = Finger11,    ./models/BarrettHandOSG/BHMiddle.osg,         1280,20,860,     0,0,0,      0,0,-1.5
+PartInfo = Finger21,    ./models/BarrettHandOSG/BHMiddle.osg,         1280,20,860,     0,0,0,      0,0,-1.5
+PartInfo = Finger01,    ./models/BarrettHandOSG/BHTip.osg,            1760,20,0,       0,0,0,      0,0,-1.5
+PartInfo = Finger12,    ./models/BarrettHandOSG/BHTip.osg,            1760,20,0,       0,0,0,      0,0,-1.5
+PartInfo = Finger22,    ./models/BarrettHandOSG/BHTip.osg,            1760,20,0,       0,0,0,      0,0,-1.5
+
+PartScale = 0.01

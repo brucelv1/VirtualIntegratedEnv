@@ -1,0 +1,9 @@
+PartInfo = Palm,./models/BarrettHandOSG/BHPalm.osg,0,0,0,0,0,0,0,0,0
+PartInfo = Base1,./models/BarrettHandOSG/BHBase.osg,635,0,640,0,0,0,0,0,0
+PartInfo = Base2,./models/BarrettHandOSG/BHBase.osg,-635,0,640,-180,0,0,0,0,0
+PartInfo = Mid0,./models/BarrettHandOSG/BHMiddle.osg,0,1300,1500,90,0,0,0,0,-1.5
+PartInfo = Mid1,./models/BarrettHandOSG/BHMiddle.osg,1280,20,860,0,0,0,0,0,-1.5
+PartInfo = Mid2,./models/BarrettHandOSG/BHMiddle.osg,1280,20,860,0,0,0,0,0,-1.5
+PartInfo = Tip0,./models/BarrettHandOSG/BHTip.osg,1760,20,0,0,0,0,0,0,-1.5
+PartInfo = Tip1,./models/BarrettHandOSG/BHTip.osg,1760,20,0,0,0,0,0,0,-1.5
+PartInfo = Tip2,./models/BarrettHandOSG/BHTip.osg,1760,20,0,0,0,0,0,0,-1.5

@@ -1,0 +1,179 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="AddDialog.h">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc.exe AddDialog.h -o moc_AddDialog.cpp</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc_AddDialog.cpp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc.exe AddDialog.h</AdditionalInputs>
+    </CustomBuild>
+    <CustomBuild Include="AddObjDlg.h">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc.exe AddObjDlg.h -o moc_AddObjDlg.cpp</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc_AddObjDlg.cpp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc.exe AddObjDlg.h</AdditionalInputs>
+    </CustomBuild>
+    <ClInclude Include="BarrettGrasp.h" />
+    <ClInclude Include="EDS_MatlabBarrett.h" />
+    <ClInclude Include="GUI\ui_AddObjDlg.h" />
+    <ClInclude Include="GUI\ui_HandConfigFileDlg.h" />
+    <ClInclude Include="GUI\ui_VIE_MainWin.h" />
+    <CustomBuild Include="HandConfigFileDlg.h">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc.exe HandConfigFileDlg.h -o moc_HandConfigFileDlg.cpp</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc_HandConfigFileDlg.cpp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc.exe HandConfigFileDlg.h</AdditionalInputs>
+    </CustomBuild>
+    <ClInclude Include="HandFactory.h" />
+    <ClInclude Include="Hand_Barrett.h" />
+    <ClInclude Include="Hand_Custom.h" />
+    <ClInclude Include="Hand_Human.h" />
+    <ClInclude Include="Hand_SJT_3.h" />
+    <ClInclude Include="InfoStruct.h" />
+    <ClInclude Include="AttributeVisitor.h" />
+    <ClInclude Include="EDS_DataGlove.h" />
+    <ClInclude Include="Finger.h" />
+    <ClInclude Include="Hand_SJT_6.h" />
+    <ClInclude Include="IControlCharStrategy.h" />
+    <ClInclude Include="fglove.h" />
+    <ClInclude Include="findNodeVisitor.h" />
+    <ClInclude Include="GUI\ui_addingDialog.h" />
+    <ClInclude Include="GUI\ui_SettingsDialog.h" />
+    <ClInclude Include="IHand.h" />
+    <ClInclude Include="IExternDataStrategy.h" />
+    <ClInclude Include="InfoVisitor.h" />
+    <CustomBuild Include="MyQtWindow.h">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc.exe MyQtWindow.h -o moc_MyQtWindow.cpp</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc_MyQtWindow.cpp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc.exe MyQtWindow.h</AdditionalInputs>
+    </CustomBuild>
+    <ClInclude Include="Part.h" />
+    <ClInclude Include="ReadAsmTxt.h" />
+    <ClInclude Include="SerialPort.h" />
+    <CustomBuild Include="SettingsDlg.h">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc.exe SettingsDlg.h -o moc_SettingsDlg.cpp</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc_SettingsDlg.cpp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc.exe SettingsDlg.h</AdditionalInputs>
+    </CustomBuild>
+    <ClInclude Include="CCS_Keyboard.h" />
+    <ClInclude Include="CCS_EMGClassifierStr.h" />
+    <ClInclude Include="StrategyPrototype.h" />
+    <ClInclude Include="VIECoreApp.h">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc.exe VIECoreApp.h -o moc_VIECoreApp.cpp</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc_VIECoreApp.cpp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc.exe VIECoreApp.h</AdditionalInputs>
+    </ClInclude>
+    <ClInclude Include="userAddInfoStruct.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="AddDialog.cpp" />
+    <ClCompile Include="AddObjDlg.cpp" />
+    <ClCompile Include="AttributeVisitor.cpp" />
+    <ClCompile Include="EDS_DataGlove.cpp" />
+    <ClCompile Include="EDS_MatlabBarrett.cpp" />
+    <ClCompile Include="IExternDataStrategy.cpp" />
+    <ClCompile Include="findNodeVisitor.cpp" />
+    <ClCompile Include="Finger.cpp" />
+    <ClCompile Include="HandConfigFileDlg.cpp" />
+    <ClCompile Include="Hand_Barrett.cpp" />
+    <ClCompile Include="Hand_Custom.cpp" />
+    <ClCompile Include="Hand_Human.cpp" />
+    <ClCompile Include="Hand_SJT_3.cpp" />
+    <ClCompile Include="Hand_SJT_6.cpp" />
+    <ClCompile Include="IControlCharStrategy.cpp" />
+    <ClCompile Include="IHand.cpp" />
+    <ClCompile Include="InfoVisitor.cpp" />
+    <ClCompile Include="main.cpp">
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="moc_AddDialog.cpp" />
+    <ClCompile Include="moc_AddObjDlg.cpp" />
+    <ClCompile Include="moc_HandConfigFileDlg.cpp" />
+    <ClCompile Include="moc_MyQtWindow.cpp" />
+    <ClCompile Include="moc_SettingsDlg.cpp" />
+    <ClCompile Include="MyQtWindow.cpp" />
+    <ClCompile Include="Part.cpp" />
+    <ClCompile Include="ReadAsmTxt.cpp" />
+    <ClCompile Include="SerialPort.cpp" />
+    <ClCompile Include="CCS_EMGClassifierStr.cpp" />
+    <ClCompile Include="SettingsDlg.cpp" />
+    <ClCompile Include="CCS_Keyboard.cpp" />
+    <ClCompile Include="VIECoreApp.cpp" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{BBEC6A82-4C79-478F-91C9-40A5C313714C}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>VirtualIntegratedEnv</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(DELTA_INC);$(QT_INC);$(MATLAB_INC);$(IncludePath)</IncludePath>
+    <LibraryPath>$(DELTA_LIB);$(QT_LIB);$(MATLAB_LIB);$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;//DEBUG_MAIN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>dtCored.lib;dtABCd.lib;osgd.lib;QtGuid4.lib;QtCored4.lib;dtQtd.lib;osgDBd.lib;fgloved.lib;ode_singled.lib;mclmcrrt.lib;BarrettGrasp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
