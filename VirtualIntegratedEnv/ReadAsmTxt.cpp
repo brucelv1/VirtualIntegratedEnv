@@ -70,70 +70,81 @@ void ReadAsmTxt::readWholeFileInfo()
 	}
 }
 
+int ReadAsmTxt::checkValidity()
+{
+	std::vector<AssemblyInfoStruct*> PartInfolist;
+	parsePartInfo(PartInfolist);
+
+	std::vector<int> fingerInfoList;
+	parseFingerConfigInfo(fingerInfoList);
+
+	// check the number of knuckles
+	unsigned int NumOfKnuckles = 0;
+	for (unsigned int i=0; i<fingerInfoList.size(); i++)
+		NumOfKnuckles += fingerInfoList[i];
+
+	if ( NumOfKnuckles != PartInfolist.size())
+	{
+		QMessageBox::warning(NULL, "Warning", 
+			"The number of knuckles does not match that of records in the configuration file. Please try again after fix the file.");
+		for (unsigned int j=0; j<InfoListMarker.size(); j++)
+			InfoListMarker[j] = 0;
+		return -1;
+	}
+	
+	for (unsigned int j=0; j<InfoListMarker.size(); j++)
+		InfoListMarker[j] = 0;
+	return 1;
+}
+
 void ReadAsmTxt::parsePartInfo(std::vector<AssemblyInfoStruct*>& AssemblyInfoList)
 {
-	std::string str;
-	char* str_token;
-	char* pNext = NULL;
-
 	for (unsigned int i=0; i<InfoList.size(); i++)
 	{
 		if(InfoListMarker[i] ==0 && InfoList[i].substr(0,8) == "PartInfo")
 		{
-			// 读过，打标签
+			// after being read, mark it as 1
 			InfoListMarker[i] = 1;
+			std::vector<char*> items;
+			splitIntoItems(InfoList[i], ",", items);
 
-			str = InfoList[i];
-			unsigned int pos = str.find('=')+1;
-			unsigned int newpos = 0;
-			char tempChar[300]={'\0'};
-			strcpy_s(tempChar,str.c_str());
+			//// do validity check here
+			//if (items.size() != 11)
+			//{
+			//	QString mes = "The number of pieces of info in one single record does not match. Please try again after fixing the error.\n[In Position]: ";
+			//	mes.append(items[0]);
+			//	QMessageBox::warning(NULL, "Warning", mes);
+			//	
+			//	exit(0);
+			//	return;
+			//}
 
-			while(pos < str.length())
-				tempChar[newpos++] = str[pos++];
-			tempChar[newpos] = '\0';
-
+			unsigned int index = 0;
 			AssemblyInfoStruct* ais = new AssemblyInfoStruct();
 
-			str_token = strtok_s(tempChar,",",&pNext);
-			ais->name = removeSpaceOnSides(str_token);
+			// parse name and filename
+			ais->name = items[index];
+			ais->filename = items[++index];
 
-			str_token = strtok_s(NULL,",",&pNext);
-			ais->filename = removeSpaceOnSides(str_token);
-
-			//以下三组，读出位置坐标
-			str_token = strtok_s(NULL,",",&pNext);
-			float x = atof(str_token);
-
-			str_token = strtok_s(NULL,",",&pNext);
-			float y = atof(str_token);
-
-			str_token = strtok_s(NULL,",",&pNext);
-			float z = atof(str_token);
+			// parse translation coordinates
+			double x = atof(items[++index]);
+			double y = atof(items[++index]);
+			double z = atof(items[++index]);
 			ais->pos = osg::Vec3(x,y,z);
 
-			//以下三组，读出姿态坐标
-			str_token = strtok_s(NULL,",",&pNext);
-			float h = atof(str_token);
+			// parse rotation attitude
+			x = atof(items[++index]);
+			y = atof(items[++index]);
+			z = atof(items[++index]);
+			ais->att = osg::Vec3(x,y,z);
 
-			str_token = strtok_s(NULL,",",&pNext);
-			float p = atof(str_token);
+			// parse delta rotation per frame
+			x = atof(items[++index]);
+			y = atof(items[++index]);
+			z = atof(items[++index]);
+			ais->delta_att_perFrame = osg::Vec3(x,y,z);
 
-			str_token = strtok_s(NULL,",",&pNext);
-			float r = atof(str_token);
-			ais->att = osg::Vec3(h,p,r);
-
-			//以下三组，读出每帧姿态变化量
-			str_token = strtok_s(NULL,",",&pNext);
-			float dh = atof(str_token);
-
-			str_token = strtok_s(NULL,",",&pNext);
-			float dp = atof(str_token);
-
-			str_token = strtok_s(NULL,",",&pNext);
-			float dr = atof(str_token);
-			ais->delta_att_perFrame = osg::Vec3(dh,dp,dr);
-
+			// push this single info into the list
 			AssemblyInfoList.push_back(ais);
 		}			
 	}

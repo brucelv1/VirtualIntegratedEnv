@@ -29,6 +29,9 @@ public:
     // 一次性把配置文件全部读入内存，存储在InfoList中
 	void readWholeFileInfo();
 
+	// 检查配置文件内容的有效性，并返回相应的错误代码
+	int checkValidity();
+
 	// 解析“PartInfo”属性，该属性不可缺省
 	void parsePartInfo(std::vector<AssemblyInfoStruct*>& AssemblyInfoList);
 
