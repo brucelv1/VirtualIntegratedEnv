@@ -28,17 +28,22 @@ class HandFactory
 public:
 	static IHand* createHand(const std::string& _name, float _scale, const std::string& _filePath="")
 	{
+		IHand* hand = NULL;
+
 		if (_name == "SJT_3")
-			return new Hand_SJT_3(_scale, "SJT3AsmInfo.txt");
+			hand = new Hand_SJT_3(_scale, "./models/SJT3HandOSG/SJT3AsmInfo.txt");
 		if (_name == "SJT_6")
-			return new Hand_SJT_6(_scale, "SJT6AsmInfo.txt");
+			hand = new Hand_SJT_6(_scale, "./models/SJT6HandOSG/SJT6AsmInfo.txt");
 		if (_name == "Barrett")
-			return new Hand_Barrett(_scale/100, "BarrettAsmInfo.txt");
+			hand = new Hand_Barrett(_scale/100, "./models/BarrettHandOSG/BarrettAsmInfo.txt");
 		if (_name == "HumanHand")
-			return new Hand_Human(_scale/10, "HumanAsmInfo.txt");
+			hand = new Hand_Human(_scale/10, "./models/HumanHandOSG/HumanAsmInfo.txt");
 		if (_name == "UserCustom")
-			return new Hand_Custom(_scale/100, _filePath);
-		
+			hand = new Hand_Custom(_scale/100, _filePath);
+
+		if(1 == hand->ConfigureHand())
+			return hand;
+
 		return NULL;
 	}
 };

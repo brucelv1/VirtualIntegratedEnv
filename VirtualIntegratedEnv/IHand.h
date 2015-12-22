@@ -32,6 +32,9 @@ public:
 	IHand(float scale, const std::string& configFile);
 	virtual ~IHand();
 
+	// 完成手的配置工作，子类根据需求重写该函数，但是要在最开始处调用这个函数
+	virtual int ConfigureHand();
+
 	Part* getHandRoot() const;
 
 	std::vector<Finger*> FingersVector;
@@ -66,11 +69,11 @@ protected:
 private:
 	std::vector<Part*> PartVector;
 	float mScale;
-	
+	std::string mConfigFile;
 
 	void configPart(Part* thisPart, AssemblyInfoStruct & ais, Part* parent = NULL);
 
-	void LoadPartToVector();
+	bool LoadPartToVector();
 };
 
 #endif // _IHAND_H_

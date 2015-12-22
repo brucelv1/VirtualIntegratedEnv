@@ -29,14 +29,17 @@ public:
     // 一次性把配置文件全部读入内存，存储在InfoList中
 	void readWholeFileInfo();
 
+	// 检查配置文件内容的有效性，并返回相应的错误代码
+	int checkValidity();
+
 	// 解析“PartInfo”属性，该属性不可缺省
-	void parsePartInfo(std::vector<AssemblyInfoStruct*>& AssemblyInfoList);
+	bool parsePartInfo(std::vector<AssemblyInfoStruct*>& AssemblyInfoList);
 
 	// 解析“FingerConfigInfo”属性，该属性不可缺省
-	void parseFingerConfigInfo(std::vector<int>& FingerConfigInfoList);
+	bool parseFingerConfigInfo(std::vector<int>& FingerConfigInfoList);
 
 	// 解析“PartScale”属性,若无该属性，则不对scale引用做任何修改
-	void parsePartScale(double& scale);
+	bool parsePartScale(double& scale);
 
 	// 返回InfoList
 	std::vector<std::string> getInfoList();

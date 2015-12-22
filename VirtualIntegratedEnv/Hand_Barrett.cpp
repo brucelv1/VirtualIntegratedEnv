@@ -15,17 +15,27 @@
 Hand_Barrett::Hand_Barrett(float scale, const std::string& configFile)
 	: IHand(scale, configFile)
 {
+}
+
+Hand_Barrett::~Hand_Barrett()
+{
+	std::cout << "Hand_Barrett Class has been destroyed!" << std::endl;
+}
+
+int Hand_Barrett::ConfigureHand()
+{
+	int ErrorCode = IHand::ConfigureHand();
+	if(ErrorCode != 1)
+		return ErrorCode;
+
 	if(mAsmInfo->Is_OpenSuccessful())
 	{
 		Part_Node_Mapping();
 		Part_Collision_Mapping();
 		Parent_Child_Mapping();
 	}
-}
 
-Hand_Barrett::~Hand_Barrett()
-{
-	std::cout << "Hand_Barrett Class has been destroyed!" << std::endl;
+	return 1;
 }
 
 void Hand_Barrett::Part_Node_Mapping()

@@ -15,6 +15,19 @@
 Hand_Human::Hand_Human(float scale, const std::string& configFile)
 	: IHand(scale, configFile)
 {
+}
+
+Hand_Human::~Hand_Human()
+{
+	std::cout << "Hand_Human Class has been destroyed!" << std::endl;
+}
+
+int Hand_Human::ConfigureHand()
+{
+	int ErrorCode = IHand::ConfigureHand();
+	if(ErrorCode != 1)
+		return ErrorCode;
+
 	if(mAsmInfo->Is_OpenSuccessful())
 	{
 		Part_Node_Mapping();
@@ -22,11 +35,8 @@ Hand_Human::Hand_Human(float scale, const std::string& configFile)
 		Parent_Child_Mapping();
 		setMotionPriority();
 	}
-}
 
-Hand_Human::~Hand_Human()
-{
-	std::cout << "Hand_Human Class has been destroyed!" << std::endl;
+	return 1;
 }
 
 void Hand_Human::Part_Node_Mapping()

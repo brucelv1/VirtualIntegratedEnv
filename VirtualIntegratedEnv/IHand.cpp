@@ -16,17 +16,12 @@
 
 IHand::IHand(float scale, const std::string& configFile)
 : mScale(scale)
+, mConfigFile(configFile)
 {
 	initPartPtr();
 	mRoot = new Part("mRoot");
 	//mRoot->setPosition(0,0,0);
 	//mRoot->makeTransform();
-
-	mAsmInfo = new ReadAsmTxt(configFile);
-	mAsmInfo->readWholeFileInfo();
-
-	if(mAsmInfo->Is_OpenSuccessful())
-		LoadPartToVector();
 }
 
 IHand::~IHand()
@@ -36,25 +31,44 @@ IHand::~IHand()
 	std::cout << "IHand Class has been destroyed!" << std::endl;
 }
 
-void IHand::LoadPartToVector()
+int IHand::ConfigureHand()
+{
+	mAsmInfo = new ReadAsmTxt(mConfigFile);
+	mAsmInfo->readWholeFileInfo();
+
+	if(false == mAsmInfo->Is_OpenSuccessful())
+		return -1; //文件未能打开
+
+	if(false == LoadPartToVector())
+		return -2; //解析文件错误
+
+	return 1;
+}
+
+bool IHand::LoadPartToVector()
 {
 	// parse fingers and knuckles
-	mAsmInfo->parseFingerConfigInfo(mFingerConfigInfo);
+	if(false == mAsmInfo->parseFingerConfigInfo(mFingerConfigInfo))
+		return false;
 
 	// parse part scale factor
 	double _scale = mScale;
-	mAsmInfo->parsePartScale(_scale);
+	if(false == mAsmInfo->parsePartScale(_scale))
+		return false;
 	mScale = _scale;
 
 	// parse part info, and save them into the PartVector
 	std::vector<AssemblyInfoStruct*> PartList;
-	mAsmInfo->parsePartInfo(PartList);
+	if(false == mAsmInfo->parsePartInfo(PartList))
+		return false;
 	for (unsigned int i=0; i<PartList.size(); i++)
 	{
 		Part* pt = new Part();
 		configPart(pt,*(PartList[i]));
 		PartVector.push_back(pt);
 	}
+
+	return true;
 }
 
 void IHand::configPart(Part* thisPart, AssemblyInfoStruct & ais, Part* parent/*=NULL*/)
