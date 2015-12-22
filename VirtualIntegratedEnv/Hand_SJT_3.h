@@ -22,6 +22,8 @@ public:
 	Hand_SJT_3(float scale, const std::string& configFile);
 	virtual ~Hand_SJT_3();
 
+	virtual int ConfigureHand();
+
 protected:
 	//需要在子类中实现的方法，并在子类的构造函数中依次调用
 	//1、部件映射：将加载到部件容器PartVector中的手指相关部件，根据其名字映射到手指容器FingersVector中

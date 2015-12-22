@@ -15,6 +15,19 @@
 Hand_Custom::Hand_Custom(float scale, const std::string& configFile)
 	: IHand(scale, configFile)
 {
+}
+
+Hand_Custom::~Hand_Custom()
+{
+	std::cout << "Hand_Custom Class has been destroyed!" << std::endl;
+}
+
+int Hand_Custom::ConfigureHand()
+{
+	int ErrorCode = IHand::ConfigureHand();
+	if(ErrorCode != 1)
+		return ErrorCode;
+
 	if(mAsmInfo->Is_OpenSuccessful())
 	{
 		Part_Node_Mapping();
@@ -22,11 +35,8 @@ Hand_Custom::Hand_Custom(float scale, const std::string& configFile)
 		Parent_Child_Mapping();
 		setMotionPriority();
 	}
-}
 
-Hand_Custom::~Hand_Custom()
-{
-	std::cout << "Hand_Custom Class has been destroyed!" << std::endl;
+	return 1;
 }
 
 void Hand_Custom::Part_Node_Mapping()

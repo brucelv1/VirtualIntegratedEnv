@@ -15,6 +15,19 @@
 Hand_SJT_6::Hand_SJT_6(float scale, const std::string& configFile)
 	: IHand(scale, configFile)
 {
+}
+
+Hand_SJT_6::~Hand_SJT_6()
+{
+	std::cout << "Hand_SJT_6 Class has been destroyed!" << std::endl;
+}
+
+int Hand_SJT_6::ConfigureHand()
+{
+	int ErrorCode = IHand::ConfigureHand();
+	if(ErrorCode != 1)
+		return ErrorCode;
+
 	if(mAsmInfo->Is_OpenSuccessful())
 	{
 		Part_Node_Mapping();
@@ -22,11 +35,8 @@ Hand_SJT_6::Hand_SJT_6(float scale, const std::string& configFile)
 		Parent_Child_Mapping();
 		setMotionPriority();
 	}
-}
 
-Hand_SJT_6::~Hand_SJT_6()
-{
-	std::cout << "Hand_SJT_6 Class has been destroyed!" << std::endl;
+	return 1;
 }
 
 void Hand_SJT_6::Part_Node_Mapping()

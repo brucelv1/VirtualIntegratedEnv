@@ -97,7 +97,7 @@ int ReadAsmTxt::checkValidity()
 	return 1;
 }
 
-void ReadAsmTxt::parsePartInfo(std::vector<AssemblyInfoStruct*>& AssemblyInfoList)
+bool ReadAsmTxt::parsePartInfo(std::vector<AssemblyInfoStruct*>& AssemblyInfoList)
 {
 	for (unsigned int i=0; i<InfoList.size(); i++)
 	{
@@ -108,16 +108,15 @@ void ReadAsmTxt::parsePartInfo(std::vector<AssemblyInfoStruct*>& AssemblyInfoLis
 			std::vector<char*> items;
 			splitIntoItems(InfoList[i], ",", items);
 
-			//// do validity check here
-			//if (items.size() != 11)
-			//{
-			//	QString mes = "The number of pieces of info in one single record does not match. Please try again after fixing the error.\n[In Position]: ";
-			//	mes.append(items[0]);
-			//	QMessageBox::warning(NULL, "Warning", mes);
-			//	
-			//	exit(0);
-			//	return;
-			//}
+			// for now, there are 11 items in each record.
+			if (items.size() != 11)
+			{
+				QString mes = "The number of pieces of info in one single record does not match. Please try again after fixing the error.\n[In Position]: ";
+				mes.append(items[0]);
+				QMessageBox::warning(NULL, "Warning", mes);
+				
+				return false;
+			}
 
 			unsigned int index = 0;
 			AssemblyInfoStruct* ais = new AssemblyInfoStruct();
@@ -148,9 +147,10 @@ void ReadAsmTxt::parsePartInfo(std::vector<AssemblyInfoStruct*>& AssemblyInfoLis
 			AssemblyInfoList.push_back(ais);
 		}			
 	}
+	return true;
 }
 
-void ReadAsmTxt::parseFingerConfigInfo(std::vector<int>& FingerConfigInfoList)
+bool ReadAsmTxt::parseFingerConfigInfo(std::vector<int>& FingerConfigInfoList)
 {
 	for (unsigned int i=0; i<InfoList.size(); i++)
 	{
@@ -164,6 +164,7 @@ void ReadAsmTxt::parseFingerConfigInfo(std::vector<int>& FingerConfigInfoList)
 				FingerConfigInfoList.push_back(atoi(items[j]));
 		}
 	}
+	return true;
 }
 
 void ReadAsmTxt::splitIntoItems(std::string& info, char* delimiter, std::vector<char*>& items)
@@ -188,7 +189,7 @@ void ReadAsmTxt::splitIntoItems(std::string& info, char* delimiter, std::vector<
 	}
 }
 
-void ReadAsmTxt::parsePartScale(double& scale)
+bool ReadAsmTxt::parsePartScale(double& scale)
 {
 	for (unsigned int i=0; i<InfoList.size(); i++)
 	{
@@ -202,6 +203,10 @@ void ReadAsmTxt::parsePartScale(double& scale)
 				scale = atof(items[0]);
 		}
 	}
+	if (scale <= 0)
+		return false;
+
+	return true;
 }
 
 std::vector<std::string> ReadAsmTxt::getInfoList()
