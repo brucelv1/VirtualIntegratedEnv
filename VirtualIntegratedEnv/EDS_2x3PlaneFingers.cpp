@@ -67,7 +67,28 @@ void EDS_2x3PlaneFingers::UpdateHand()
 
 void EDS_2x3PlaneFingers::OnMessage( MessageData* data )
 {
+	if (data->message == "collision")
+	{
+		dtCore::Scene::CollisionData* cd = static_cast< dtCore::Scene::CollisionData* >( data->userData );
 
+		for(unsigned int i=0; i<2; i++)
+		{
+			for(unsigned int j=0; j<3; j++)
+			{
+				Part* pt = mHand->getFingerFromVector(i)->getKnuckleAt(j);
+				if(pt == NULL)
+					break;
+
+				if(cd->mBodies[0] == pt->getModelPtr() || cd->mBodies[1] == pt->getModelPtr())
+				{
+					// 若第k指节发生碰撞，则k-1, k-2, ..., 0指节均视为发生碰撞
+					int index = j;
+					for(; index>-1; index--)
+						mCollided[i][index] = 1;
+				}
+			}
+		}
+	}
 }
 
 void EDS_2x3PlaneFingers::_updateData()
