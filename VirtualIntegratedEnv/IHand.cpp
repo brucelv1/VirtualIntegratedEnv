@@ -93,24 +93,6 @@ Part* IHand::getHandRoot() const
 	return mRoot;
 }
 
-//void IHand::setCollisionBits()
-//{
-//	enum CategoryBits{CAT_A = UNSIGNED_BIT(31),
-//					  CAT_B = UNSIGNED_BIT(30),
-//					  CAT_C = UNSIGNED_BIT(29),
-//					  CAT_D = UNSIGNED_BIT(28)};
-//
-//	mPalm->setCollisionCategoryBits(CAT_A);
-//	mPalm->setCollisionCollideBits(CAT_A | CAT_C | CAT_D);
-//
-//	mIndex1->setCollisionCategoryBits(CAT_B);
-//	mIndex1->setCollisionCollideBits(CAT_B | CAT_D);
-//
-//	mIndex2->setCollisionCategoryBits(CAT_C);
-//	mIndex2->setCollisionCollideBits(CAT_C | CAT_A);
-//
-//}
-
 Part* IHand::getPartFromVector(const std::string& partName)
 {
 	std::vector<Part*>::iterator iter = PartVector.begin();

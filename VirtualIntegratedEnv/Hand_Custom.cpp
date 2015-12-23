@@ -65,20 +65,22 @@ void Hand_Custom::Part_Node_Mapping()
 
 void Hand_Custom::Part_Collision_Mapping()
 {
-	std::vector<char*> CollidesList;
+	std::vector<CollisionInfoStruct*> CollidesList;
 	IHand::mAsmInfo->parsePartCollision(CollidesList);
 	for (unsigned int i=0; i<CollidesList.size(); i++)
 	{
 		Part* pt = NULL;
-		pt = IHand::getPartFromVector(CollidesList[i]);
+		pt = IHand::getPartFromVector(CollidesList[i]->name);
 		if(pt == NULL)
 		{
-			QString mes = QString("No part named [%1] has been found during Collision Mapping!\n").arg(CollidesList[i]);
+			QString mes = QString("No part named [%1] has been found during Collision Mapping!\n").arg(CollidesList[i]->name.c_str());
 			mes.append("This might cause crash. Please fix this error and then try again.");
 			QMessageBox::warning(NULL, "Warning", mes);
 			break;
 		}
 		pt->getModelPtr()->SetCollisionMesh();
+		pt->setCollisionCategoryBits(CollidesList[i]->CollisionCategory);
+		pt->setCollisionCollideBits(CollidesList[i]->CollisionCollides);
 	}
 }
 

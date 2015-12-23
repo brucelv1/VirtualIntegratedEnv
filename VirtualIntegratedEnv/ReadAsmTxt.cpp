@@ -187,15 +187,36 @@ bool ReadAsmTxt::parsePartScale(double& scale)
 	return true;
 }
 
-bool ReadAsmTxt::parsePartCollision(std::vector<char*>& CollidesList)
+bool ReadAsmTxt::parsePartCollision(std::vector<CollisionInfoStruct*>& CollisionInfoList)
 {
 	for (unsigned int i=0; i<InfoList.size(); i++)
 	{
 		if(InfoListMarker[i] ==0 && InfoList[i].substr(0,13) == "PartCollision")
 		{
 			InfoListMarker[i] = 1;
+			std::vector<char*> items;
+			splitIntoItems(InfoList[i], ",", items);
 
-			splitIntoItems(InfoList[i], ",", CollidesList);
+			unsigned int index=0;
+			CollisionInfoStruct* cis = new CollisionInfoStruct();
+
+			// parse the part name
+			cis->name = items[index];
+
+			// parse collision category
+			cis->CollisionCategory = _transformToCategoryBits(items[++index]);
+
+			// parse collision collides
+			++index;
+			unsigned long collidesBits = 0;
+			for (; index<items.size(); index++)
+			{
+				collidesBits |= _transformToCategoryBits(items[index]);
+			}
+			cis->CollisionCollides = collidesBits;
+
+			// push this single info into the list
+			CollisionInfoList.push_back(cis);
 		}
 	}
 	return true;
@@ -226,6 +247,15 @@ void ReadAsmTxt::splitIntoItems(std::string& info, char* delimiter, std::vector<
 std::vector<std::string> ReadAsmTxt::getInfoList()
 {
 	return InfoList;
+}
+
+ReadAsmTxt::CategoryBits ReadAsmTxt::_transformToCategoryBits(char* src)
+{
+	if(strcmp(src,"A") == 0) return CAT_A;
+	if(strcmp(src,"B") == 0) return CAT_B;
+	if(strcmp(src,"C") == 0) return CAT_C;
+	if(strcmp(src,"D") == 0) return CAT_D;
+	else                     return CAT_DEFAULT;
 }
 
 //////////////////////////////////////////////////////////////////////////

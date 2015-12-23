@@ -31,4 +31,11 @@ struct SettingsInfoStruct
 	unsigned int inputCOM;         //输入设备串口号
 	unsigned int outputCOM;        //输出设备串口号
 };
+
+struct CollisionInfoStruct
+{
+	std::string name;                //部件名
+	unsigned long CollisionCategory; //碰撞类别
+	unsigned long CollisionCollides; //碰撞目标
+};
 #endif //_Delta_AssemblyInfoStruct_H_

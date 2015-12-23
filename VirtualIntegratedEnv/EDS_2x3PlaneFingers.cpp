@@ -81,7 +81,7 @@ void EDS_2x3PlaneFingers::OnMessage( MessageData* data )
 
 				if(cd->mBodies[0] == pt->getModelPtr() || cd->mBodies[1] == pt->getModelPtr())
 				{
-					// 若第k指节发生碰撞，则k-1, k-2, ..., 0指节均视为发生碰撞
+					// 若第k指节发生碰撞，则k, k-1, ..., 0指节均视为发生碰撞
 					int index = j;
 					for(; index>-1; index--)
 						mCollided[i][index] = 1;
@@ -99,10 +99,17 @@ void EDS_2x3PlaneFingers::_updateData()
 		{
 			if (mCollided[i][j]==0 && mReachLimit[i][j]==0)
 			{
-				mTheta[i][j] += 0.2;
-				if(mTheta[i][j] >= 60)
+				Part* pt = mHand->getFingerFromVector(i)->getKnuckleAt(j);
+				double CurrentPos = pt->getAttitude().x();
+
+				// 当前角位置大于90°，则认为到达极限位置
+				if(fabs(CurrentPos) >= 90)
+				{
 					mReachLimit[i][j] = 1;
-				break; // 用于控制指节运动的先后，现在的情况下，前一个指节停止运动后，后一个才会开始运动
+				    break; // 用于控制指节运动的先后，现在的情况下，前一个指节停止运动后，后一个才会开始运动
+				}
+				// 否则，更新角位置
+				mTheta[i][j] += pt->getDeltaAttitudePerFrame().x();				
 			}
 		}
 	}
