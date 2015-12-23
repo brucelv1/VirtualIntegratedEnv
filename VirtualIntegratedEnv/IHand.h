@@ -40,10 +40,9 @@ public:
 	std::vector<Finger*> FingersVector;
 	Finger* getFingerFromVector(unsigned int index);
 
-	float getHandScale()
-	{
-		return mScale;
-	}
+	float getHandScale() {return mScale;}
+
+	void getFingerConfigInfo(std::vector<int>& FCI);
 
 	void initPartPtr();
 	Part* mRoot; //只初始化其位姿，不加载模型，专门用作管理。（不知道对于颜色等会不会出错）

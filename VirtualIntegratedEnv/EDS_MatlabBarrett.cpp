@@ -42,7 +42,7 @@ EDS_MatlabBarrett::~EDS_MatlabBarrett(void)
 	}
 }
 
-void EDS_MatlabBarrett::initStrategyConfig( SettingsInfoStruct& si, IHand* _hand, dtCore::Scene* _scene )
+bool EDS_MatlabBarrett::initStrategyConfig( SettingsInfoStruct& si, IHand* _hand, dtCore::Scene* _scene )
 {
 	IExternDataStrategy::initStrategyConfig(si,_hand,_scene);
 
@@ -66,6 +66,7 @@ void EDS_MatlabBarrett::initStrategyConfig( SettingsInfoStruct& si, IHand* _hand
 	mCalcuNum = new mwArray(1,1,mxDOUBLE_CLASS);
 	(*mCalcuNum)(1,1) = 0;
 
+	return true;
 }
 
 void EDS_MatlabBarrett::UpdateHand()

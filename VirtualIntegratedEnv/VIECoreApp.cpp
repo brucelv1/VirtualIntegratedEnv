@@ -469,7 +469,14 @@ bool VIECoreApp::CreateStrategy(SettingsInfoStruct& sis)
 	if (sis.strategy.substr(0,4) == "EDS_")
 	{
 		mExDataStr = IExternDataStrategy::makeEDSProduct(sis.strategy);
-		mExDataStr->initStrategyConfig(sis,mHand,GetScene());
+
+		// 初始化，同时执行检查，若失败，则恢复原状
+		if(false == mExDataStr->initStrategyConfig(sis,mHand,GetScene()))
+		{
+			mExDataStr->Destroy();
+			mExDataStr = NULL;
+			return false;
+		}
 		return true;
 	}
 

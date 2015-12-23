@@ -24,7 +24,7 @@ public:
 	IMPLEMENT_EDS_CLONE(EDS_DataGlove)
 	EDS_DataGlove();
 	EDS_DataGlove(const EDS_DataGlove& _DG);
-	virtual void initStrategyConfig(SettingsInfoStruct& si, IHand* _hand, dtCore::Scene* _scene);
+	virtual bool initStrategyConfig(SettingsInfoStruct& si, IHand* _hand, dtCore::Scene* _scene);
 
 	virtual ~EDS_DataGlove(void);
 

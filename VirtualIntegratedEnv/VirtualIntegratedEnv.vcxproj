@@ -22,6 +22,7 @@
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc.exe AddObjDlg.h</AdditionalInputs>
     </CustomBuild>
     <ClInclude Include="BarrettGrasp.h" />
+    <ClInclude Include="EDS_2x3PlaneFingers.h" />
     <ClInclude Include="EDS_MatlabBarrett.h" />
     <ClInclude Include="GUI\ui_AddObjDlg.h" />
     <ClInclude Include="GUI\ui_HandConfigFileDlg.h" />
@@ -76,6 +77,7 @@
     <ClCompile Include="AddDialog.cpp" />
     <ClCompile Include="AddObjDlg.cpp" />
     <ClCompile Include="AttributeVisitor.cpp" />
+    <ClCompile Include="EDS_2x3PlaneFingers.cpp" />
     <ClCompile Include="EDS_DataGlove.cpp" />
     <ClCompile Include="EDS_MatlabBarrett.cpp" />
     <ClCompile Include="IExternDataStrategy.cpp" />

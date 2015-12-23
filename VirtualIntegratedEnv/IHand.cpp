@@ -144,3 +144,9 @@ Finger* IHand::getFingerFromVector(unsigned int index)
 		return NULL;
 	}
 }
+
+void IHand::getFingerConfigInfo(std::vector<int>& FCI)
+{
+	for(unsigned int i=0; i<mFingerConfigInfo.size(); i++)
+		FCI.push_back(mFingerConfigInfo[i]);
+}

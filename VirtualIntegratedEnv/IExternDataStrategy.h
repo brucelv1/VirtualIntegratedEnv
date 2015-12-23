@@ -39,12 +39,13 @@ public:
 		, mScene(IEDS.mScene)
 	{}
 	/// for reflection purpose
-	virtual void initStrategyConfig(SettingsInfoStruct& si, IHand* _hand, dtCore::Scene* _scene)
+	virtual bool initStrategyConfig(SettingsInfoStruct& si, IHand* _hand, dtCore::Scene* _scene)
 	{
 		mName = si.strategy;
 		mHand = _hand;
 		mScene = _scene;
 		this->AddSender(mScene);
+		return true;
 	}
 
 	void Destroy()

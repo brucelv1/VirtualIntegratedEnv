@@ -108,6 +108,9 @@
     <ClInclude Include="EDS_MatlabBarrett.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="EDS_2x3PlaneFingers.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AddDialog.cpp">
@@ -201,6 +204,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="EDS_MatlabBarrett.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="EDS_2x3PlaneFingers.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
