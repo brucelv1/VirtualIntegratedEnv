@@ -41,6 +41,9 @@ public:
 	// 解析“PartScale”属性,若无该属性，则不对scale引用做任何修改
 	bool parsePartScale(double& scale);
 
+	// 解析“PartCollision”属性，若无该属性，则不对CollidesList引用作任何修改
+	bool parsePartCollision(std::vector<char*>& CollidesList);
+
 	// 返回InfoList
 	std::vector<std::string> getInfoList();
 

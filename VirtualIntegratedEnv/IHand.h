@@ -29,6 +29,8 @@
 class IHand
 {
 public:
+	std::vector<Finger*> FingersVector;
+
 	IHand(float scale, const std::string& configFile);
 	virtual ~IHand();
 
@@ -37,7 +39,6 @@ public:
 
 	Part* getHandRoot() const;
 
-	std::vector<Finger*> FingersVector;
 	Finger* getFingerFromVector(unsigned int index);
 
 	float getHandScale() {return mScale;}

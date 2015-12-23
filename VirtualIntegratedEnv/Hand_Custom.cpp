@@ -11,6 +11,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "Hand_Custom.h"
+#include <QtGui/QMessageBox>
 
 Hand_Custom::Hand_Custom(float scale, const std::string& configFile)
 	: IHand(scale, configFile)
@@ -64,13 +65,20 @@ void Hand_Custom::Part_Node_Mapping()
 
 void Hand_Custom::Part_Collision_Mapping()
 {
-	mPalm->getModelPtr()->SetCollisionMesh();
-
-	for (unsigned int i=0; i<FingersVector.size(); i++)
+	std::vector<char*> CollidesList;
+	IHand::mAsmInfo->parsePartCollision(CollidesList);
+	for (unsigned int i=0; i<CollidesList.size(); i++)
 	{
-		unsigned int endKnuckleID = getFingerFromVector(i)->numOfKnuckles()-1;
-		getFingerFromVector(i)->getKnuckleAt(endKnuckleID)->getModelPtr()->SetCollisionMesh();
-		//getFingerFromVector(i)->getKnuckleAt(endKnuckleID-1)->getModelPtr()->SetCollisionMesh();
+		Part* pt = NULL;
+		pt = IHand::getPartFromVector(CollidesList[i]);
+		if(pt == NULL)
+		{
+			QString mes = QString("No part named [%1] has been found during Collision Mapping!\n").arg(CollidesList[i]);
+			mes.append("This might cause crash. Please fix this error and then try again.");
+			QMessageBox::warning(NULL, "Warning", mes);
+			break;
+		}
+		pt->getModelPtr()->SetCollisionMesh();
 	}
 }
 

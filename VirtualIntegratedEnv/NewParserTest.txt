@@ -11,3 +11,5 @@ PartInfo = Finger12,    ./models/BarrettHandOSG/BHTip.osg,            1760,20,0,
 PartInfo = Finger22,    ./models/BarrettHandOSG/BHTip.osg,            1760,20,0,       0,0,0,      0,0,-1.5
 
 PartScale = 0.01
+
+PartCollision = Palm, Finger01, Finger12, Finger22   

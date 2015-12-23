@@ -167,6 +167,40 @@ bool ReadAsmTxt::parseFingerConfigInfo(std::vector<int>& FingerConfigInfoList)
 	return true;
 }
 
+bool ReadAsmTxt::parsePartScale(double& scale)
+{
+	for (unsigned int i=0; i<InfoList.size(); i++)
+	{
+		if(InfoListMarker[i] ==0 && InfoList[i].substr(0,9) == "PartScale")
+		{
+			InfoListMarker[i] = 1;
+			std::vector<char*> items;
+			splitIntoItems(InfoList[i], ",", items);
+
+			if (!items.empty())
+				scale = atof(items[0]);
+		}
+	}
+	if (scale <= 0)
+		return false;
+
+	return true;
+}
+
+bool ReadAsmTxt::parsePartCollision(std::vector<char*>& CollidesList)
+{
+	for (unsigned int i=0; i<InfoList.size(); i++)
+	{
+		if(InfoListMarker[i] ==0 && InfoList[i].substr(0,13) == "PartCollision")
+		{
+			InfoListMarker[i] = 1;
+
+			splitIntoItems(InfoList[i], ",", CollidesList);
+		}
+	}
+	return true;
+}
+
 void ReadAsmTxt::splitIntoItems(std::string& info, char* delimiter, std::vector<char*>& items)
 {
 	unsigned int head = info.find('=')+1;
@@ -187,26 +221,6 @@ void ReadAsmTxt::splitIntoItems(std::string& info, char* delimiter, std::vector<
 		str_token = strtok_s(NULL, delimiter, &pNext);
 		items.push_back(removeSpaceOnSides(str_token));
 	}
-}
-
-bool ReadAsmTxt::parsePartScale(double& scale)
-{
-	for (unsigned int i=0; i<InfoList.size(); i++)
-	{
-		if(InfoListMarker[i] ==0 && InfoList[i].substr(0,9) == "PartScale")
-		{
-			InfoListMarker[i] = 1;
-			std::vector<char*> items;
-			splitIntoItems(InfoList[i], ",", items);
-
-			if (!items.empty())
-				scale = atof(items[0]);
-		}
-	}
-	if (scale <= 0)
-		return false;
-
-	return true;
 }
 
 std::vector<std::string> ReadAsmTxt::getInfoList()
@@ -239,6 +253,11 @@ int main()
 	double partScale;
 	rat->parsePartScale(partScale);
 	printf_s("%f\n", partScale);
+
+	std::vector<char*> collides;
+	rat->parsePartCollision(collides);
+	for (unsigned int i=0; i<collides.size(); i++)
+		printf_s("%s\n", collides[i]);
 
 	int a = 1;
 	delete rat;
