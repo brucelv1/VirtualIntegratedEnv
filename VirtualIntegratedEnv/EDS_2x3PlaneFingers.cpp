@@ -12,21 +12,24 @@
 
 #include "EDS_2x3PlaneFingers.h"
 #include <QtGUI/QMessageBox>
+#include <Windows.h>
 
 EDS_2x3PlaneFingers::EDS_2x3PlaneFingers()
 : IExternDataStrategy()
+, mGraspingObj(NULL)
 {
 	
 }
 
 EDS_2x3PlaneFingers::EDS_2x3PlaneFingers( const EDS_2x3PlaneFingers& copy )
 {
-
+	mGraspingObj = copy.mGraspingObj;
 }
 
 EDS_2x3PlaneFingers::~EDS_2x3PlaneFingers()
 {
-
+	if(mOutPutFile.is_open())
+		mOutPutFile.close();
 }
 
 bool EDS_2x3PlaneFingers::initStrategyConfig( SettingsInfoStruct& si, IHand* _hand, dtCore::Scene* _scene )
@@ -47,7 +50,20 @@ bool EDS_2x3PlaneFingers::initStrategyConfig( SettingsInfoStruct& si, IHand* _ha
 		return false;
 	}
 
+	mGraspingObj = _hand->getPartFromVector("GraspObj");
+	if (mGraspingObj == NULL)
+	{
+		QMessageBox::warning(NULL,"Warning","No part named 'GraspObj' has been found!");
+		return false;
+	}
+	mGraspingObj->addToScene(_scene);
+	mObjPosX = -40;
+	mObjPosY = 48;
+
 	_makeDataZero();
+
+	mOutPutFile.open("./Data/TwoFingers.txt",std::ios::out);
+
 	return true;
 }
 
@@ -63,6 +79,10 @@ void EDS_2x3PlaneFingers::UpdateHand()
 			mHand->getFingerFromVector(i)->getKnuckleAt(j)->makeTransform();
 		}
 	}
+
+	//先更新手指 再更新物体 避免在更新过程中出现问题
+	/*mGraspingObj->setPosition(osg::Vec3(mObjPosX, mObjPosY, -10) * mHand->getHandScale());
+	mGraspingObj->makeTransform();*/
 }
 
 void EDS_2x3PlaneFingers::OnMessage( MessageData* data )
@@ -96,6 +116,39 @@ void EDS_2x3PlaneFingers::OnMessage( MessageData* data )
 
 void EDS_2x3PlaneFingers::_updateData()
 {
+	if (_isStopped() == true)
+	{
+		Sleep(50);
+
+		// writeData
+		if(mOutPutFile.is_open())
+		{
+			char temp[200];
+			sprintf_s(temp,"%f, %f\n",mObjPosX,mObjPosY);
+			mOutPutFile << temp;
+		}
+
+		// re-position the object
+		if (mObjPosX < 40 && mObjPosY < 88)
+		{
+			mObjPosX += 7;
+			if (mObjPosX > 40)
+			{
+				mObjPosX = -40;
+				mObjPosY += 7;
+			}
+			mGraspingObj->setPosition(osg::Vec3(mObjPosX, mObjPosY, -10) * mHand->getHandScale());
+			mGraspingObj->makeTransform();
+		}
+
+		_makeDataZero();
+		return;
+	}
+
+	// 分界线以上是当一次试验完成时，对所有数据的清零操作
+	//////////////////////////////////////////////////////////////////////////
+	// 分界线以下是试验进行过程中，对所有数据的一般更新操作
+
 	for (int i=0; i<2; i++)
 	{
 		for (int j=0; j<3; j++)
@@ -121,14 +174,28 @@ void EDS_2x3PlaneFingers::_updateData()
 void EDS_2x3PlaneFingers::_makeDataZero()
 {
 	for(int i=0; i<2; i++)
+	{
 		for(int j=0; j<3; j++)
+		{
 			mTheta[i][j] = 0;
-
-	for(int i=0; i<2; i++)
-		for(int j=0; j<3; j++)
 			mCollided[i][j] = 0;
-
-	for(int i=0; i<2; i++)
-		for(int j=0; j<3; j++)
 			mReachLimit[i][j] = 0;
+			mContactPos[i][j] = osg::Vec3(0,0,0);
+			mContactNormal[i][j] = osg::Vec3(0,0,0);
+		}
+	}
+}
+
+bool EDS_2x3PlaneFingers::_isStopped()
+{
+	// 用加法代替“或”操作
+	for(int i=0; i<2; i++)
+	{
+		for (int j=0; j<3; j++)
+		{
+			if (mCollided[i][j] + mReachLimit[i][j] == 0)
+				return false;
+		}
+	}
+	return true;
 }

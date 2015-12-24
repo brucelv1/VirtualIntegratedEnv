@@ -39,6 +39,8 @@ public:
 
 	Part* getHandRoot() const;
 
+	Part* getPartFromVector(const std::string& partName);
+
 	Finger* getFingerFromVector(unsigned int index);
 
 	float getHandScale() {return mScale;}
@@ -60,8 +62,6 @@ protected:
 	virtual void Part_Collision_Mapping() {}
 	//3¡¢¸¸×Ó½ÚµãÓ³Éä
 	virtual void Parent_Child_Mapping()=0;
-
-	Part* getPartFromVector(const std::string& partName);
 
 	ReadAsmTxt* mAsmInfo;
 	std::vector<int> mFingerConfigInfo;

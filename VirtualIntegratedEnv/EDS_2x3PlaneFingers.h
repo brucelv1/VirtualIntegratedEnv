@@ -14,6 +14,7 @@
 #define _EDS_2x3PLANEFINGERS_H_
 
 #include "iexterndatastrategy.h"
+#include <fstream>
 
 class EDS_2x3PlaneFingers :
 	public IExternDataStrategy
@@ -39,8 +40,17 @@ private:
 	int    mReachLimit[2][3];
 	osg::Vec3 mContactPos[2][3];
 	osg::Vec3 mContactNormal[2][3];
+	
+	Part* mGraspingObj;
+	double mObjPosX;
+	double mObjPosY;
+	
+	std::ofstream mOutPutFile;
+
 	void _updateData();
 	void _makeDataZero();
+	// 第一期：先用mCollided和mReachLimit来判断这一轮试验是否结束
+	bool _isStopped();
 };
 
 #endif //_EDS_2x3PLANEFINGERS_H_
