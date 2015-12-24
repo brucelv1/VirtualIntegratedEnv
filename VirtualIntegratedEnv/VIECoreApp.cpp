@@ -503,7 +503,7 @@ void VIECoreApp::On_AddObjectsDlg(const std::string& _name, const std::string& _
 
 	if (type == "HPR")
 	{
-		mGraspingObj->setOriginPosition(osg::Vec3(data[0],data[1],data[2]));
+		mGraspingObj->setOriginPosition(osg::Vec3(data[0],data[1],data[2]) * _scale);
 		mGraspingObj->setOriginAttitude(osg::Vec3(data[3],data[4],data[5]));
 		mGraspingObj->makeAssembly();
 	}

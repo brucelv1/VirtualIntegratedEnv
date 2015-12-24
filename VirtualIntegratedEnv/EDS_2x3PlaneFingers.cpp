@@ -85,6 +85,9 @@ void EDS_2x3PlaneFingers::OnMessage( MessageData* data )
 					int index = j;
 					for(; index>-1; index--)
 						mCollided[i][index] = 1;
+
+					mContactPos[i][j] = cd->mLocation;
+					mContactNormal[i][j] = cd->mNormal;
 				}
 			}
 		}
@@ -104,12 +107,12 @@ void EDS_2x3PlaneFingers::_updateData()
 
 				// 当前角位置大于90°，则认为到达极限位置
 				if(fabs(CurrentPos) >= 90)
-				{
 					mReachLimit[i][j] = 1;
-				    break; // 用于控制指节运动的先后，现在的情况下，前一个指节停止运动后，后一个才会开始运动
-				}
 				// 否则，更新角位置
-				mTheta[i][j] += pt->getDeltaAttitudePerFrame().x();				
+				else
+					mTheta[i][j] += pt->getDeltaAttitudePerFrame().x();	
+
+				break; // 用于控制指节运动的先后，现在的情况下，前一个指节停止运动后，后一个才会开始运动
 			}
 		}
 	}

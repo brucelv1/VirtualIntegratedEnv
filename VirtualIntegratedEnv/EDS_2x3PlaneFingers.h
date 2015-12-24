@@ -37,6 +37,8 @@ private:
 	double mTheta[2][3];
 	int    mCollided[2][3];
 	int    mReachLimit[2][3];
+	osg::Vec3 mContactPos[2][3];
+	osg::Vec3 mContactNormal[2][3];
 	void _updateData();
 	void _makeDataZero();
 };
