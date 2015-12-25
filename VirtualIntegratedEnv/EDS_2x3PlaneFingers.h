@@ -45,7 +45,7 @@ private:
 	double mObjPosX;
 	double mObjPosY;
 	
-	std::ofstream mOutPutFile;
+	std::ofstream mOutputFile;
 
 	void _updateData();
 	void _makeDataZero();

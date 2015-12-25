@@ -28,8 +28,8 @@ EDS_2x3PlaneFingers::EDS_2x3PlaneFingers( const EDS_2x3PlaneFingers& copy )
 
 EDS_2x3PlaneFingers::~EDS_2x3PlaneFingers()
 {
-	if(mOutPutFile.is_open())
-		mOutPutFile.close();
+	if(mOutputFile.is_open())
+		mOutputFile.close();
 }
 
 bool EDS_2x3PlaneFingers::initStrategyConfig( SettingsInfoStruct& si, IHand* _hand, dtCore::Scene* _scene )
@@ -62,7 +62,7 @@ bool EDS_2x3PlaneFingers::initStrategyConfig( SettingsInfoStruct& si, IHand* _ha
 
 	_makeDataZero();
 
-	mOutPutFile.open("./Data/TwoFingers.txt",std::ios::out);
+	mOutputFile.open("./Data/TwoFingers.txt",std::ios::out);
 
 	return true;
 }
@@ -121,11 +121,35 @@ void EDS_2x3PlaneFingers::_updateData()
 		Sleep(50);
 
 		// writeData
-		if(mOutPutFile.is_open())
+		if(mOutputFile.is_open())
 		{
-			char temp[200];
-			sprintf_s(temp,"%f, %f\n",mObjPosX,mObjPosY);
-			mOutPutFile << temp;
+			//char temp[200];
+			//sprintf_s(temp,"%f, %f\n",mObjPosX,mObjPosY);
+			//mOutputFile << temp;
+            mOutputFile << mObjPosX << ", " << mObjPosY << ", ";
+            int i,j;
+            for(i=0; i<2; i++)
+                for(j=0; j<3; j++)
+                    mOutputFile << mTheta[i][j] << ", ";
+                    
+            for(i=0; i<2; i++)
+                for(j=0; j<3; j++) 
+                {
+                    mOutputFile << mContactPos[i][j].x() << ", ";
+                    mOutputFile << mContactPos[i][j].y() << ", ";
+					mOutputFile << mContactPos[i][j].z() << ", ";
+                }
+            
+            for(i=0; i<2; i++)
+                for(j=0; j<3; j++) 
+                {
+                    mOutputFile << mContactNormal[i][j].x() << ", ";
+                    mOutputFile << mContactNormal[i][j].y() << ", ";
+					mOutputFile << mContactNormal[i][j].z() << ", ";
+                }
+            
+            // use '0' as tail of this record
+            mOutputFile << 0 << '\n';
 		}
 
 		// re-position the object
