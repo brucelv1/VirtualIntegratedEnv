@@ -13,6 +13,7 @@
 #include "EDS_2x3PlaneFingers.h"
 #include <QtGUI/QMessageBox>
 #include <Windows.h>
+#include <dtCore/odebodywrap.h>
 
 EDS_2x3PlaneFingers::EDS_2x3PlaneFingers()
 : IExternDataStrategy()
@@ -59,6 +60,7 @@ bool EDS_2x3PlaneFingers::initStrategyConfig( SettingsInfoStruct& si, IHand* _ha
 	mGraspingObj->addToScene(_scene);
 	mObjPosX = -40;
 	mObjPosY = 48;
+	//mGraspingObj->getModelPtr()->EnableDynamics();
 
 	_makeDataZero();
 
@@ -79,10 +81,6 @@ void EDS_2x3PlaneFingers::UpdateHand()
 			mHand->getFingerFromVector(i)->getKnuckleAt(j)->makeTransform();
 		}
 	}
-
-	//先更新手指 再更新物体 避免在更新过程中出现问题
-	/*mGraspingObj->setPosition(osg::Vec3(mObjPosX, mObjPosY, -10) * mHand->getHandScale());
-	mGraspingObj->makeTransform();*/
 }
 
 void EDS_2x3PlaneFingers::OnMessage( MessageData* data )
@@ -123,9 +121,6 @@ void EDS_2x3PlaneFingers::_updateData()
 		// writeData
 		if(mOutputFile.is_open())
 		{
-			//char temp[200];
-			//sprintf_s(temp,"%f, %f\n",mObjPosX,mObjPosY);
-			//mOutputFile << temp;
             mOutputFile << mObjPosX << ", " << mObjPosY << ", ";
             int i,j;
             for(i=0; i<2; i++)
@@ -153,13 +148,13 @@ void EDS_2x3PlaneFingers::_updateData()
 		}
 
 		// re-position the object
-		if (mObjPosX < 40 && mObjPosY < 88)
+		if (mObjPosX <= 40 && mObjPosY <= 88)
 		{
-			mObjPosX += 7;
+			mObjPosX += 4;
 			if (mObjPosX > 40)
 			{
 				mObjPosX = -40;
-				mObjPosY += 7;
+				mObjPosY += 4;
 			}
 			mGraspingObj->setPosition(osg::Vec3(mObjPosX, mObjPosY, -10) * mHand->getHandScale());
 			mGraspingObj->makeTransform();

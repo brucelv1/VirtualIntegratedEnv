@@ -60,7 +60,7 @@ VIECoreApp::VIECoreApp(const std::string& configFile)
 
 	// setup some default physics values
 	GetScene()->SetGravity(0.0f, 0.0f, -15.0f);
-	GetScene()->GetPhysicsController()->GetWorldWrapper()->SetDamping(0.1f, 0.1f);
+	GetScene()->GetPhysicsController()->GetWorldWrapper()->SetDamping(0.0f, 0.0f);
 
 	// position the camera
 	dtCore::Transform CamPosition;

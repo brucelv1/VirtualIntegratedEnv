@@ -29,6 +29,9 @@ Part* Finger::getKnuckleAt(unsigned int index)
 
 void Finger::makeFinger()
 {
+	if(KnuckleVector.size() == 1)
+		return;
+
 	for (unsigned int i=0; i <= KnuckleVector.size()-2; i++)
 	{
 		KnuckleVector[i]->addChild(KnuckleVector[i+1]);
