@@ -58,8 +58,10 @@ bool EDS_2x3PlaneFingers::initStrategyConfig( SettingsInfoStruct& si, IHand* _ha
 		return false;
 	}
 	mGraspingObj->addToScene(_scene);
-	mObjPosX = -40;
-	mObjPosY = 48;
+	//mObjPosX = -40;
+	//mObjPosY = 48;
+	mObjPosX = mGraspingObj->getPosition().x();
+	mObjPosY = mGraspingObj->getPosition().y();
 	//mGraspingObj->getModelPtr()->EnableDynamics();
 
 	_makeDataZero();
@@ -105,7 +107,11 @@ void EDS_2x3PlaneFingers::OnMessage( MessageData* data )
 						mCollided[i][index] = 1;
 
 					mContactPos[i][j] = cd->mLocation;
-					mContactNormal[i][j] = cd->mNormal;
+					// 保证所有法向量要么都是指向物体中心，要么都是背离物体中心
+					if(cd->mBodies[0] == pt->getModelPtr())
+					    mContactNormal[i][j] = cd->mNormal * (-1.0);
+					else
+						mContactNormal[i][j] = cd->mNormal * 1.0;
 				}
 			}
 		}
@@ -121,7 +127,9 @@ void EDS_2x3PlaneFingers::_updateData()
 		// writeData
 		if(mOutputFile.is_open())
 		{
-            mOutputFile << mObjPosX << ", " << mObjPosY << ", ";
+			double abs_ObjPosX = mObjPosX+mGraspingObj->getOriginPosition().x();
+			double abs_ObjPosY = mObjPosY+mGraspingObj->getOriginPosition().y();
+            mOutputFile << abs_ObjPosX << ", " << abs_ObjPosY << ", ";
             int i,j;
             for(i=0; i<2; i++)
                 for(j=0; j<3; j++)
@@ -148,13 +156,13 @@ void EDS_2x3PlaneFingers::_updateData()
 		}
 
 		// re-position the object
-		if (mObjPosX <= 40 && mObjPosY <= 88)
+		if (mObjPosX <= 80 && mObjPosY <= 40)
 		{
-			mObjPosX += 4;
-			if (mObjPosX > 40)
+			mObjPosX += 20;
+			if (mObjPosX > 80)
 			{
-				mObjPosX = -40;
-				mObjPosY += 4;
+				mObjPosX = 0;
+				mObjPosY += 20;
 			}
 			mGraspingObj->setPosition(osg::Vec3(mObjPosX, mObjPosY, -10) * mHand->getHandScale());
 			mGraspingObj->makeTransform();
