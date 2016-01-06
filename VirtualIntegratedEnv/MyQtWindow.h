@@ -13,10 +13,10 @@
 #ifndef _Delta_MyMainWindow_H_
 #define _Delta_MyMainWindow_H_
 
-//ode要求指定dSINGLE或dDOUBLE
-#ifndef dSINGLE
-#define dSINGLE
-#endif
+////ode要求指定dSINGLE或dDOUBLE
+//#ifndef dSINGLE
+//#define dSINGLE
+//#endif
 
 #include <QtGui/QMainWindow>
 #include "GUI/ui_VIE_MainWin.h"

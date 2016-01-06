@@ -15,10 +15,10 @@
 #ifndef _IHAND_H_
 #define _IHAND_H_
 
-//ode要求指定dSINGLE或dDOUBLE
-#ifndef dSINGLE
-#define dSINGLE
-#endif
+////ode要求指定dSINGLE或dDOUBLE
+//#ifndef dSINGLE
+//#define dSINGLE
+//#endif
 
 #include <iostream>
 #include <vector>

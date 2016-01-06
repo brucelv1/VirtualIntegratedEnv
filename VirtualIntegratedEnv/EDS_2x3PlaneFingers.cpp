@@ -58,8 +58,6 @@ bool EDS_2x3PlaneFingers::initStrategyConfig( SettingsInfoStruct& si, IHand* _ha
 		return false;
 	}
 	mGraspingObj->addToScene(_scene);
-	//mObjPosX = -40;
-	//mObjPosY = 48;
 	mObjPosX = mGraspingObj->getPosition().x();
 	mObjPosY = mGraspingObj->getPosition().y();
 	//mGraspingObj->getModelPtr()->EnableDynamics();
@@ -158,13 +156,13 @@ void EDS_2x3PlaneFingers::_updateData()
 		// re-position the object
 		if (mObjPosX <= 80 && mObjPosY <= 40)
 		{
-			mObjPosX += 20;
+			mObjPosX += 4;
 			if (mObjPosX > 80)
 			{
 				mObjPosX = 0;
-				mObjPosY += 20;
+				mObjPosY += 4;
 			}
-			mGraspingObj->setPosition(osg::Vec3(mObjPosX, mObjPosY, -10) * mHand->getHandScale());
+			mGraspingObj->setPosition(osg::Vec3(mObjPosX, mObjPosY, 0) * mHand->getHandScale());
 			mGraspingObj->makeTransform();
 		}
 
