@@ -23,7 +23,7 @@ public:
 	IMPLEMENT_EDS_CLONE(EDS_MatlabBarrett)
 	EDS_MatlabBarrett(void);
 	EDS_MatlabBarrett(const EDS_MatlabBarrett& copy);
-	virtual void initStrategyConfig(SettingsInfoStruct& si, IHand* _hand, dtCore::Scene* _scene);
+	virtual bool initStrategyConfig(SettingsInfoStruct& si, IHand* _hand, dtCore::Scene* _scene);
 
 	virtual ~EDS_MatlabBarrett(void);
 

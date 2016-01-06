@@ -13,10 +13,10 @@
 #ifndef _CCS_KEYBOARD_H_
 #define _CCS_KEYBOARD_H_
 
-//ode要求指定dSINGLE或dDOUBLE
-#ifndef dSINGLE
-#define dSINGLE
-#endif
+////ode要求指定dSINGLE或dDOUBLE
+//#ifndef dSINGLE
+//#define dSINGLE
+//#endif
 
 #include "IControlCharStrategy.h"
 #include <osg/Vec3>

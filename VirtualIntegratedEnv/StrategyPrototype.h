@@ -20,6 +20,7 @@
 #include "CCS_Keyboard.h"
 #include "EDS_DataGlove.h"
 #include "EDS_MatlabBarrett.h"
+#include "EDS_2x3PlaneFingers.h"
 
 class StrategyPrototype
 {
@@ -33,6 +34,7 @@ void StrategyPrototype::RegisterStrategy()
 	MAKE_CCS_PROTOTYPE(CCS_Keyboard)
 	MAKE_EDS_PROTOTYPE(EDS_DataGlove)
 	MAKE_EDS_PROTOTYPE(EDS_MatlabBarrett)
+	MAKE_EDS_PROTOTYPE(EDS_2x3PlaneFingers)
 }
 
 #endif //_STRATEGYPROTOTYPE_H_
