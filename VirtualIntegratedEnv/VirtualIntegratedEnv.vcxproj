@@ -22,7 +22,9 @@
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc.exe AddObjDlg.h</AdditionalInputs>
     </CustomBuild>
     <ClInclude Include="BarrettGrasp.h" />
+    <ClInclude Include="EDS_2x3PlaneFingers.h" />
     <ClInclude Include="EDS_MatlabBarrett.h" />
+    <ClInclude Include="EDS_MatlabYangFan.h" />
     <ClInclude Include="GUI\ui_AddObjDlg.h" />
     <ClInclude Include="GUI\ui_HandConfigFileDlg.h" />
     <ClInclude Include="GUI\ui_VIE_MainWin.h" />
@@ -54,6 +56,7 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc_MyQtWindow.cpp</Outputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc.exe MyQtWindow.h</AdditionalInputs>
     </CustomBuild>
+    <ClInclude Include="JAGenerater.h" />
     <ClInclude Include="Part.h" />
     <ClInclude Include="ReadAsmTxt.h" />
     <ClInclude Include="SerialPort.h" />
@@ -76,8 +79,10 @@
     <ClCompile Include="AddDialog.cpp" />
     <ClCompile Include="AddObjDlg.cpp" />
     <ClCompile Include="AttributeVisitor.cpp" />
+    <ClCompile Include="EDS_2x3PlaneFingers.cpp" />
     <ClCompile Include="EDS_DataGlove.cpp" />
     <ClCompile Include="EDS_MatlabBarrett.cpp" />
+    <ClCompile Include="EDS_MatlabYangFan.cpp" />
     <ClCompile Include="IExternDataStrategy.cpp" />
     <ClCompile Include="findNodeVisitor.cpp" />
     <ClCompile Include="Finger.cpp" />
@@ -148,12 +153,12 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;//DEBUG_MAIN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;dSINGLE;//DEBUG_MAIN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>dtCored.lib;dtABCd.lib;osgd.lib;QtGuid4.lib;QtCored4.lib;dtQtd.lib;osgDBd.lib;fgloved.lib;ode_singled.lib;mclmcrrt.lib;BarrettGrasp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>dtCored.lib;dtABCd.lib;osgd.lib;QtGuid4.lib;QtCored4.lib;dtQtd.lib;osgDBd.lib;fgloved.lib;ode_singled.lib;mclmcrrt.lib;BarrettGrasp.lib;JAGenerater.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

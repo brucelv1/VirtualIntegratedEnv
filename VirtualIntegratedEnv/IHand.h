@@ -15,10 +15,10 @@
 #ifndef _IHAND_H_
 #define _IHAND_H_
 
-//ode要求指定dSINGLE或dDOUBLE
-#ifndef dSINGLE
-#define dSINGLE
-#endif
+////ode要求指定dSINGLE或dDOUBLE
+//#ifndef dSINGLE
+//#define dSINGLE
+//#endif
 
 #include <iostream>
 #include <vector>
@@ -29,6 +29,8 @@
 class IHand
 {
 public:
+	std::vector<Finger*> FingersVector;
+
 	IHand(float scale, const std::string& configFile);
 	virtual ~IHand();
 
@@ -37,13 +39,13 @@ public:
 
 	Part* getHandRoot() const;
 
-	std::vector<Finger*> FingersVector;
+	Part* getPartFromVector(const std::string& partName);
+
 	Finger* getFingerFromVector(unsigned int index);
 
-	float getHandScale()
-	{
-		return mScale;
-	}
+	float getHandScale() {return mScale;}
+
+	void getFingerConfigInfo(std::vector<int>& FCI);
 
 	void initPartPtr();
 	Part* mRoot; //只初始化其位姿，不加载模型，专门用作管理。（不知道对于颜色等会不会出错）
@@ -60,8 +62,6 @@ protected:
 	virtual void Part_Collision_Mapping() {}
 	//3、父子节点映射
 	virtual void Parent_Child_Mapping()=0;
-
-	Part* getPartFromVector(const std::string& partName);
 
 	ReadAsmTxt* mAsmInfo;
 	std::vector<int> mFingerConfigInfo;

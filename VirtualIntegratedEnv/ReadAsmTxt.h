@@ -17,10 +17,18 @@
 #include <string>
 #include "InfoStruct.h"
 #include <vector>
+#include <dtUtil/macros.h>
+
 
 class ReadAsmTxt
 {
 public:
+	enum CategoryBits{CAT_A = UNSIGNED_BIT(31),
+		              CAT_B = UNSIGNED_BIT(30),
+		              CAT_C = UNSIGNED_BIT(29),
+		              CAT_D = UNSIGNED_BIT(28),
+	                  CAT_DEFAULT = UNSIGNED_BIT(5),}; //5->dtCore::Object 
+
 	ReadAsmTxt(std::string filename);
 	~ReadAsmTxt();
 
@@ -41,6 +49,9 @@ public:
 	// 解析“PartScale”属性,若无该属性，则不对scale引用做任何修改
 	bool parsePartScale(double& scale);
 
+	// 解析“PartCollision”属性，若无该属性，则不对CollidesList引用作任何修改
+	bool parsePartCollision(std::vector<CollisionInfoStruct*>& CollisionInfoList);
+
 	// 返回InfoList
 	std::vector<std::string> getInfoList();
 
@@ -50,6 +61,9 @@ private:
 
 	// remove white spaces at the head and end
 	char* removeSpaceOnSides(char* s);
+
+	// 把字符A, B, C, D映射为枚举量CAT_A, CAT_B, CAT_C, CAT_D
+	CategoryBits _transformToCategoryBits(char* src);
 
 private:
 	std::ifstream m_file;

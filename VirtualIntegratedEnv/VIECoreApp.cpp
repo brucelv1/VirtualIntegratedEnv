@@ -60,7 +60,7 @@ VIECoreApp::VIECoreApp(const std::string& configFile)
 
 	// setup some default physics values
 	GetScene()->SetGravity(0.0f, 0.0f, -15.0f);
-	GetScene()->GetPhysicsController()->GetWorldWrapper()->SetDamping(0.1f, 0.1f);
+	GetScene()->GetPhysicsController()->GetWorldWrapper()->SetDamping(0.0f, 0.0f);
 
 	// position the camera
 	dtCore::Transform CamPosition;
@@ -469,7 +469,14 @@ bool VIECoreApp::CreateStrategy(SettingsInfoStruct& sis)
 	if (sis.strategy.substr(0,4) == "EDS_")
 	{
 		mExDataStr = IExternDataStrategy::makeEDSProduct(sis.strategy);
-		mExDataStr->initStrategyConfig(sis,mHand,GetScene());
+
+		// 初始化，同时执行检查，若失败，则恢复原状
+		if(false == mExDataStr->initStrategyConfig(sis,mHand,GetScene()))
+		{
+			mExDataStr->Destroy();
+			mExDataStr = NULL;
+			return false;
+		}
 		return true;
 	}
 
@@ -496,7 +503,7 @@ void VIECoreApp::On_AddObjectsDlg(const std::string& _name, const std::string& _
 
 	if (type == "HPR")
 	{
-		mGraspingObj->setOriginPosition(osg::Vec3(data[0],data[1],data[2]));
+		mGraspingObj->setOriginPosition(osg::Vec3(data[0],data[1],data[2]) * _scale);
 		mGraspingObj->setOriginAttitude(osg::Vec3(data[3],data[4],data[5]));
 		mGraspingObj->makeAssembly();
 	}

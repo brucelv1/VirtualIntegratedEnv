@@ -26,7 +26,7 @@ EDS_DataGlove::EDS_DataGlove(const EDS_DataGlove& _DG)
 	pGlove = _DG.pGlove;
 }
 
-void EDS_DataGlove::initStrategyConfig(SettingsInfoStruct& si, IHand* _hand, dtCore::Scene* _scene)
+bool EDS_DataGlove::initStrategyConfig(SettingsInfoStruct& si, IHand* _hand, dtCore::Scene* _scene)
 {
 	IExternDataStrategy::initStrategyConfig(si,_hand,_scene);
 	pGlove = getDataGlovePtr();
@@ -35,6 +35,7 @@ void EDS_DataGlove::initStrategyConfig(SettingsInfoStruct& si, IHand* _hand, dtC
 		printf("No available data glove has been opened!\n");
 		printf("You have to check USB or RS232 port, and re-start!\n");
 	}
+	return true;
 }
 
 
