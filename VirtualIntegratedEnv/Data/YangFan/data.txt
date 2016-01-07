@@ -1,0 +1,4 @@
+Finger01: d=0.1
+Finger10: d=7.9
+Finger30: d=9.1
+Finger20: d=9.2
