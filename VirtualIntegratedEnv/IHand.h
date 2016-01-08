@@ -45,7 +45,7 @@ public:
 
 	float getHandScale() {return mScale;}
 
-	void getFingerConfigInfo(std::vector<int>& FCI);
+	void getFingerConfigInfo(std::vector<unsigned int>& FCI);
 
 	void initPartPtr();
 	Part* mRoot; //只初始化其位姿，不加载模型，专门用作管理。（不知道对于颜色等会不会出错）
@@ -64,7 +64,7 @@ protected:
 	virtual void Parent_Child_Mapping()=0;
 
 	ReadAsmTxt* mAsmInfo;
-	std::vector<int> mFingerConfigInfo;
+	std::vector<unsigned int> mFingerConfigInfo;
 
 private:
 	std::vector<Part*> PartVector;

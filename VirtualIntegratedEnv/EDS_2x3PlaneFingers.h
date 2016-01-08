@@ -26,7 +26,9 @@ public:
 	{
 		Reset();
 	}
+
 	~DataCollector() {}
+
 	void Reset()
 	{
 		Angle = 0;
@@ -37,6 +39,25 @@ public:
 	double Angle;
 	osg::Vec3 ContactPos;
 	osg::Vec3 ContactNorm;
+};
+
+class StateCollector
+{
+public:
+	StateCollector()
+	{
+		Reset();
+	}
+	~StateCollector() {}
+
+	void Reset()
+	{
+		IsCollided = false;
+		IsLimited = false;
+	}
+
+	bool IsCollided; // 发生碰撞
+	bool IsLimited;  // 到达极限
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -61,12 +82,9 @@ public:
 	virtual void OnMessage(MessageData* data);
 
 private:
-	double mTheta[2][3];
-	int    mCollided[2][3];
-	int    mReachLimit[2][3];
-	osg::Vec3 mContactPos[2][3];
-	osg::Vec3 mContactNormal[2][3];
-	
+	std::vector<unsigned int> mFingerConfigInfo;
+	std::vector< std::vector<DataCollector*> > mDataTable;
+	std::vector< std::vector<StateCollector*> > mStateTable;
 	Part* mGraspingObj;
 	double mObjPosX;
 	double mObjPosY;
@@ -75,11 +93,9 @@ private:
 
 	void _updateData();
 	void _makeDataZero();
-	// 第一期：先用mCollided和mReachLimit来判断这一轮试验是否结束
+
+	// 判断所有手指停止运动
 	bool _isStopped();
-
-
-	std::vector< std::vector<DataCollector*> > DataTable;
 };
 
 #endif //_EDS_2x3PLANEFINGERS_H_

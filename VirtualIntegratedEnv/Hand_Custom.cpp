@@ -50,7 +50,7 @@ void Hand_Custom::Part_Node_Mapping()
 		sprintf_s(_name,10,"Finger%i",i);
 		std::string sName = _name;
 		Finger* _Finger = new Finger(sName);
-		for (int j=0; j<mFingerConfigInfo[i]; j++)
+		for (unsigned int j=0; j<mFingerConfigInfo[i]; j++)
 		{
 			char* knuckleName = new char[10];
 			sprintf_s(knuckleName,10,"Finger%i%i",i,j);

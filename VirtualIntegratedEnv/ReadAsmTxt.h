@@ -44,7 +44,7 @@ public:
 	bool parsePartInfo(std::vector<AssemblyInfoStruct*>& AssemblyInfoList);
 
 	// 解析“FingerConfigInfo”属性，该属性不可缺省
-	bool parseFingerConfigInfo(std::vector<int>& FingerConfigInfoList);
+	bool parseFingerConfigInfo(std::vector<unsigned int>& FingerConfigInfoList);
 
 	// 解析“PartScale”属性,若无该属性，则不对scale引用做任何修改
 	bool parsePartScale(double& scale);

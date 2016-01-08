@@ -75,7 +75,7 @@ int ReadAsmTxt::checkValidity()
 	std::vector<AssemblyInfoStruct*> PartInfolist;
 	parsePartInfo(PartInfolist);
 
-	std::vector<int> fingerInfoList;
+	std::vector<unsigned int> fingerInfoList;
 	parseFingerConfigInfo(fingerInfoList);
 
 	// check the number of knuckles
@@ -150,7 +150,7 @@ bool ReadAsmTxt::parsePartInfo(std::vector<AssemblyInfoStruct*>& AssemblyInfoLis
 	return true;
 }
 
-bool ReadAsmTxt::parseFingerConfigInfo(std::vector<int>& FingerConfigInfoList)
+bool ReadAsmTxt::parseFingerConfigInfo(std::vector<unsigned int>& FingerConfigInfoList)
 {
 	for (unsigned int i=0; i<InfoList.size(); i++)
 	{
@@ -161,7 +161,7 @@ bool ReadAsmTxt::parseFingerConfigInfo(std::vector<int>& FingerConfigInfoList)
 			splitIntoItems(InfoList[i], ",", items);
 
 			for (unsigned int j=0; j<items.size(); j++)
-				FingerConfigInfoList.push_back(atoi(items[j]));
+				FingerConfigInfoList.push_back((unsigned int)atoi(items[j]));
 		}
 	}
 	return true;
