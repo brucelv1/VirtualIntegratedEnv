@@ -16,6 +16,32 @@
 #include "iexterndatastrategy.h"
 #include <fstream>
 
+//////////////////////////////////////////////////////////////////////////
+//
+//////////////////////////////////////////////////////////////////////////
+class DataCollector
+{
+public:
+	DataCollector() 
+	{
+		Reset();
+	}
+	~DataCollector() {}
+	void Reset()
+	{
+		Angle = 0;
+		ContactPos = osg::Vec3(0,0,0);
+		ContactNorm = osg::Vec3(0,0,0);
+	}
+
+	double Angle;
+	osg::Vec3 ContactPos;
+	osg::Vec3 ContactNorm;
+};
+
+//////////////////////////////////////////////////////////////////////////
+//
+//////////////////////////////////////////////////////////////////////////
 class EDS_2x3PlaneFingers :
 	public IExternDataStrategy
 {
@@ -51,6 +77,9 @@ private:
 	void _makeDataZero();
 	// 第一期：先用mCollided和mReachLimit来判断这一轮试验是否结束
 	bool _isStopped();
+
+
+	std::vector< std::vector<DataCollector*> > DataTable;
 };
 
 #endif //_EDS_2x3PLANEFINGERS_H_

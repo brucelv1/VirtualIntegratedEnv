@@ -14,6 +14,7 @@
 #include <QtGUI/QMessageBox>
 #include <Windows.h>
 #include <dtCore/odebodywrap.h>
+#include "Dlg2x3Parameter.h"
 
 EDS_2x3PlaneFingers::EDS_2x3PlaneFingers()
 : IExternDataStrategy()
@@ -63,6 +64,19 @@ bool EDS_2x3PlaneFingers::initStrategyConfig( SettingsInfoStruct& si, IHand* _ha
 	//mGraspingObj->getModelPtr()->EnableDynamics();
 
 	_makeDataZero();
+	//0108
+	int nFinger = FingerConfiguration.size();
+	DataTable.resize(nFinger);
+
+	for (int i=0; i<nFinger; i++)
+	{
+		for (int j=0; j<FingerConfiguration[i]; j++)
+		{
+			DataCollector* dc = new DataCollector();
+			dc->Reset();
+			DataTable[i].push_back(dc);
+		}
+	}
 
 	mOutputFile.open("./Data/TwoFingers.txt",std::ios::out);
 
@@ -77,7 +91,8 @@ void EDS_2x3PlaneFingers::UpdateHand()
 	{
 		for (unsigned int j=0; j<3; j++)
 		{
-			mHand->getFingerFromVector(i)->getKnuckleAt(j)->setAttitude(osg::Vec3(mTheta[i][j],0,0));
+			//mHand->getFingerFromVector(i)->getKnuckleAt(j)->setAttitude(osg::Vec3(mTheta[i][j],0,0));
+			mHand->getFingerFromVector(i)->getKnuckleAt(j)->setAttitude(osg::Vec3(DataTable[i][j]->Angle,0,0));
 			mHand->getFingerFromVector(i)->getKnuckleAt(j)->makeTransform();
 		}
 	}
@@ -104,12 +119,15 @@ void EDS_2x3PlaneFingers::OnMessage( MessageData* data )
 					for(; index>-1; index--)
 						mCollided[i][index] = 1;
 
-					mContactPos[i][j] = cd->mLocation;
+					//mContactPos[i][j] = cd->mLocation;
+					//0108
+					DataTable[i][j]->ContactPos = cd->mLocation;
+
 					// 保证所有法向量要么都是指向物体中心，要么都是背离物体中心
 					if(cd->mBodies[0] == pt->getModelPtr())
-					    mContactNormal[i][j] = cd->mNormal * (-1.0);
+					    DataTable[i][j]->ContactNorm = cd->mNormal * (-1.0); //mContactNormal[i][j] = cd->mNormal * (-1.0);
 					else
-						mContactNormal[i][j] = cd->mNormal * 1.0;
+						DataTable[i][j]->ContactNorm = cd->mNormal * 1.0; //mContactNormal[i][j] = cd->mNormal * 1.0;
 				}
 			}
 		}
@@ -131,22 +149,28 @@ void EDS_2x3PlaneFingers::_updateData()
             int i,j;
             for(i=0; i<2; i++)
                 for(j=0; j<3; j++)
-                    mOutputFile << mTheta[i][j] << ", ";
+                    mOutputFile << DataTable[i][j]->Angle << ", "; //mOutputFile << mTheta[i][j] << ", ";
                     
             for(i=0; i<2; i++)
                 for(j=0; j<3; j++) 
                 {
-                    mOutputFile << mContactPos[i][j].x() << ", ";
-                    mOutputFile << mContactPos[i][j].y() << ", ";
-					mOutputFile << mContactPos[i][j].z() << ", ";
+     //               mOutputFile << mContactPos[i][j].x() << ", ";
+     //               mOutputFile << mContactPos[i][j].y() << ", ";
+					//mOutputFile << mContactPos[i][j].z() << ", ";
+					mOutputFile << DataTable[i][j]->ContactPos.x() << ", ";
+					mOutputFile << DataTable[i][j]->ContactPos.y() << ", ";
+					mOutputFile << DataTable[i][j]->ContactPos.z() << ", ";
                 }
             
             for(i=0; i<2; i++)
                 for(j=0; j<3; j++) 
                 {
-                    mOutputFile << mContactNormal[i][j].x() << ", ";
-                    mOutputFile << mContactNormal[i][j].y() << ", ";
-					mOutputFile << mContactNormal[i][j].z() << ", ";
+     //               mOutputFile << mContactNormal[i][j].x() << ", ";
+     //               mOutputFile << mContactNormal[i][j].y() << ", ";
+					//mOutputFile << mContactNormal[i][j].z() << ", ";
+					mOutputFile << DataTable[i][j]->ContactNorm.x() << ", ";
+					mOutputFile << DataTable[i][j]->ContactNorm.y() << ", ";
+					mOutputFile << DataTable[i][j]->ContactNorm.z() << ", ";
                 }
             
             // use '0' as tail of this record
@@ -188,7 +212,7 @@ void EDS_2x3PlaneFingers::_updateData()
 					mReachLimit[i][j] = 1;
 				// 否则，更新角位置
 				else
-					mTheta[i][j] += pt->getDeltaAttitudePerFrame().x();	
+					DataTable[i][j]->Angle += pt->getDeltaAttitudePerFrame().x();	//mTheta[i][j] += pt->getDeltaAttitudePerFrame().x();	
 
 				break; // 用于控制指节运动的先后，现在的情况下，前一个指节停止运动后，后一个才会开始运动
 			}

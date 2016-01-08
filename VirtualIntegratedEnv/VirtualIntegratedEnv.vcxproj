@@ -22,11 +22,17 @@
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc.exe AddObjDlg.h</AdditionalInputs>
     </CustomBuild>
     <ClInclude Include="BarrettGrasp.h" />
+    <CustomBuild Include="Dlg2x3Parameter.h">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc.exe Dlg2x3Parameter.h -o moc_Dlg2x3Parameter.cpp</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc_Dlg2x3Parameter.cpp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc.exe Dlg2x3Parameter.h</AdditionalInputs>
+    </CustomBuild>
     <ClInclude Include="EDS_2x3PlaneFingers.h" />
     <ClInclude Include="EDS_MatlabBarrett.h" />
     <ClInclude Include="EDS_MatlabYangFan.h" />
     <ClInclude Include="GUI\ui_AddObjDlg.h" />
     <ClInclude Include="GUI\ui_HandConfigFileDlg.h" />
+    <ClInclude Include="GUI\ui_Parameter.h" />
     <ClInclude Include="GUI\ui_VIE_MainWin.h" />
     <CustomBuild Include="HandConfigFileDlg.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc.exe HandConfigFileDlg.h -o moc_HandConfigFileDlg.cpp</Command>
@@ -79,6 +85,7 @@
     <ClCompile Include="AddDialog.cpp" />
     <ClCompile Include="AddObjDlg.cpp" />
     <ClCompile Include="AttributeVisitor.cpp" />
+    <ClCompile Include="Dlg2x3Parameter.cpp" />
     <ClCompile Include="EDS_2x3PlaneFingers.cpp" />
     <ClCompile Include="EDS_DataGlove.cpp" />
     <ClCompile Include="EDS_MatlabBarrett.cpp" />
@@ -100,6 +107,7 @@
     </ClCompile>
     <ClCompile Include="moc_AddDialog.cpp" />
     <ClCompile Include="moc_AddObjDlg.cpp" />
+    <ClCompile Include="moc_Dlg2x3Parameter.cpp" />
     <ClCompile Include="moc_HandConfigFileDlg.cpp" />
     <ClCompile Include="moc_MyQtWindow.cpp" />
     <ClCompile Include="moc_SettingsDlg.cpp" />
