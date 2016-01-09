@@ -498,12 +498,12 @@ void VIECoreApp::On_AddObjectsDlg(const std::string& _name, const std::string& _
 	mGraspingObj = new Part();
 	mGraspingObj->setName(_name);
 	mGraspingObj->loadFile(_filepath);
-	float _scale = mHand->getHandScale();
-	mGraspingObj->getModelPtr()->SetScale(osg::Vec3(_scale,_scale,_scale));
+	//float _scale = mHand->getHandScale();
+	//mGraspingObj->getModelPtr()->SetScale(osg::Vec3(_scale,_scale,_scale));
 
 	if (type == "HPR")
 	{
-		mGraspingObj->setOriginPosition(osg::Vec3(data[0],data[1],data[2]) * _scale);
+		mGraspingObj->setOriginPosition(osg::Vec3(data[0],data[1],data[2])/* * _scale*/);
 		mGraspingObj->setOriginAttitude(osg::Vec3(data[3],data[4],data[5]));
 		mGraspingObj->makeAssembly();
 	}

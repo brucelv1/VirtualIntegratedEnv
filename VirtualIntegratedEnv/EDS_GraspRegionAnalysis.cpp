@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////// 
 /// Copyright (c) 2015, 上海交通大学-生机电实验室. All rights reserved.  
 ///   
-/// @file    EDS_2x3PlaneFingers.h
+/// @file    EDS_GraspRegionAnalysis.h
 /// @brief   外部数据策略-2手指、3指节手的控制算法数据类的源文件   
 ///  
 /// @version 1.0     
@@ -10,31 +10,31 @@
 /// @date    2015/12
 //////////////////////////////////////////////////////////////////////////
 
-#include "EDS_2x3PlaneFingers.h"
+#include "EDS_GraspRegionAnalysis.h"
 #include <QtGUI/QMessageBox>
 #include <Windows.h>
 #include <dtCore/odebodywrap.h>
 #include "Dlg2x3Parameter.h"
 
-EDS_2x3PlaneFingers::EDS_2x3PlaneFingers()
+EDS_GraspRegionAnalysis::EDS_GraspRegionAnalysis()
 : IExternDataStrategy()
 , mGraspingObj(NULL)
 {
 	
 }
 
-EDS_2x3PlaneFingers::EDS_2x3PlaneFingers( const EDS_2x3PlaneFingers& copy )
+EDS_GraspRegionAnalysis::EDS_GraspRegionAnalysis( const EDS_GraspRegionAnalysis& copy )
 {
 	mGraspingObj = copy.mGraspingObj;
 }
 
-EDS_2x3PlaneFingers::~EDS_2x3PlaneFingers()
+EDS_GraspRegionAnalysis::~EDS_GraspRegionAnalysis()
 {
 	if(mOutputFile.is_open())
 		mOutputFile.close();
 }
 
-bool EDS_2x3PlaneFingers::initStrategyConfig( SettingsInfoStruct& si, IHand* _hand, dtCore::Scene* _scene )
+bool EDS_GraspRegionAnalysis::initStrategyConfig( SettingsInfoStruct& si, IHand* _hand, dtCore::Scene* _scene )
 {
 	IExternDataStrategy::initStrategyConfig(si,_hand,_scene);
 
@@ -60,8 +60,8 @@ bool EDS_2x3PlaneFingers::initStrategyConfig( SettingsInfoStruct& si, IHand* _ha
 	}
 	//mGraspingObj->addToScene(_scene);
 	_hand->getHandRoot()->addChild(mGraspingObj);
-	mObjPosX = mGraspingObj->getPosition().x();
-	mObjPosY = mGraspingObj->getPosition().y();
+	mObjPos = mGraspingObj->getPosition();
+
 	//mGraspingObj->getModelPtr()->EnableDynamics();
 
 	int nFinger = mFingerConfigInfo.size();
@@ -82,12 +82,15 @@ bool EDS_2x3PlaneFingers::initStrategyConfig( SettingsInfoStruct& si, IHand* _ha
 		}
 	}
 
+	// 填充测试点位置
+	_fillTestPointList(80,40,40,40,0,0);
+
 	mOutputFile.open("./Data/TwoFingers.txt",std::ios::out);
 
 	return true;
 }
 
-void EDS_2x3PlaneFingers::UpdateHand()
+void EDS_GraspRegionAnalysis::UpdateHand()
 {
 	_updateData();
 
@@ -101,7 +104,7 @@ void EDS_2x3PlaneFingers::UpdateHand()
 	}
 }
 
-void EDS_2x3PlaneFingers::OnMessage( MessageData* data )
+void EDS_GraspRegionAnalysis::OnMessage( MessageData* data )
 {
 	if (data->message == "collision")
 	{
@@ -135,7 +138,7 @@ void EDS_2x3PlaneFingers::OnMessage( MessageData* data )
 	}
 }
 
-void EDS_2x3PlaneFingers::_updateData()
+void EDS_GraspRegionAnalysis::_updateData()
 {
 	if (_isStopped() == true)
 	{
@@ -144,9 +147,8 @@ void EDS_2x3PlaneFingers::_updateData()
 		// writeData
 		if(mOutputFile.is_open())
 		{
-			double abs_ObjPosX = mObjPosX+mGraspingObj->getOriginPosition().x();
-			double abs_ObjPosY = mObjPosY+mGraspingObj->getOriginPosition().y();
-            mOutputFile << abs_ObjPosX << ", " << abs_ObjPosY << ", ";
+			osg::Vec3 absObjPos = mObjPos + mGraspingObj->getOriginPosition();
+            mOutputFile << absObjPos.x() << ", " << absObjPos.y() << ", " << absObjPos.z() << ", ";
             
 			unsigned int i,j;
             for(i=0; i<mDataTable.size(); i++)
@@ -178,15 +180,11 @@ void EDS_2x3PlaneFingers::_updateData()
 		}
 
 		// re-position the object
-		if (mObjPosX <= 80 && mObjPosY <= 40)
+		if(mTestPointList.empty() == false)
 		{
-			mObjPosX += 40;
-			if (mObjPosX > 80)
-			{
-				mObjPosX = 0;
-				mObjPosY += 40;
-			}
-			mGraspingObj->setPosition(osg::Vec3(mObjPosX, mObjPosY, 0) * mHand->getHandScale());
+			mObjPos = mTestPointList.front();
+			mTestPointList.pop();
+			mGraspingObj->setPosition(mObjPos * mHand->getHandScale());
 			mGraspingObj->makeTransform();
 		}
 
@@ -226,7 +224,7 @@ void EDS_2x3PlaneFingers::_updateData()
 	}
 }
 
-void EDS_2x3PlaneFingers::_makeDataZero()
+void EDS_GraspRegionAnalysis::_makeDataZero()
 {
 	for (unsigned int i=0; i<mFingerConfigInfo.size(); i++)
 	{
@@ -238,7 +236,7 @@ void EDS_2x3PlaneFingers::_makeDataZero()
 	}
 }
 
-bool EDS_2x3PlaneFingers::_isStopped()
+bool EDS_GraspRegionAnalysis::_isStopped()
 {
 	for(unsigned int i=0; i<mStateTable.size(); i++)
 	{
@@ -251,4 +249,32 @@ bool EDS_2x3PlaneFingers::_isStopped()
 		}
 	}
 	return true;
+}
+
+void EDS_GraspRegionAnalysis::_fillTestPointList( double xDomain, double xInc, double yDomain, double yInc, double zDomain, double zInc )
+{
+	unsigned int x_size, y_size, z_size;
+	if(xInc == 0)
+		x_size = 1;
+	else
+		x_size = (unsigned int)(xDomain / xInc) + 1;
+
+	if(yInc == 0)
+		y_size = 1;
+	else
+		y_size = (unsigned int)(yDomain / yInc) + 1;
+
+	if(zInc == 0)
+		z_size = 1;
+	else
+		z_size = (unsigned int)(zDomain / zInc) + 1;
+
+	for(unsigned int i=0; i<z_size; i++)
+		for(unsigned int j=0; j<y_size; j++)
+			for(unsigned int k=0; k<x_size; k++)
+			{
+				osg::Vec3 p;
+				p.set(k*xInc, j*yInc, i*zInc);
+				mTestPointList.push(p);
+			}
 }

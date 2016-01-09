@@ -27,7 +27,7 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc_Dlg2x3Parameter.cpp</Outputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc.exe Dlg2x3Parameter.h</AdditionalInputs>
     </CustomBuild>
-    <ClInclude Include="EDS_2x3PlaneFingers.h" />
+    <ClInclude Include="EDS_GraspRegionAnalysis.h" />
     <ClInclude Include="EDS_MatlabBarrett.h" />
     <ClInclude Include="EDS_MatlabYangFan.h" />
     <ClInclude Include="GUI\ui_AddObjDlg.h" />
@@ -86,7 +86,7 @@
     <ClCompile Include="AddObjDlg.cpp" />
     <ClCompile Include="AttributeVisitor.cpp" />
     <ClCompile Include="Dlg2x3Parameter.cpp" />
-    <ClCompile Include="EDS_2x3PlaneFingers.cpp" />
+    <ClCompile Include="EDS_GraspRegionAnalysis.cpp" />
     <ClCompile Include="EDS_DataGlove.cpp" />
     <ClCompile Include="EDS_MatlabBarrett.cpp" />
     <ClCompile Include="EDS_MatlabYangFan.cpp" />

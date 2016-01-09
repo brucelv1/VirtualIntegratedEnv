@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////// 
 /// Copyright (c) 2015, 上海交通大学-生机电实验室. All rights reserved.  
 ///   
-/// @file    EDS_2x3PlaneFingers.h
+/// @file    EDS_GraspRegionAnalysis.h
 /// @brief   外部数据策略-2手指、3指节手的控制算法数据类的头文件   
 ///  
 /// @version 1.0     
@@ -10,11 +10,12 @@
 /// @date    2015/12
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef _EDS_2x3PLANEFINGERS_H_
-#define _EDS_2x3PLANEFINGERS_H_
+#ifndef _EDS_GRASP_REGION_H_
+#define _EDS_GRASP_REGION_H_
 
 #include "iexterndatastrategy.h"
 #include <fstream>
+#include <queue>
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -63,17 +64,17 @@ public:
 //////////////////////////////////////////////////////////////////////////
 //
 //////////////////////////////////////////////////////////////////////////
-class EDS_2x3PlaneFingers :
+class EDS_GraspRegionAnalysis :
 	public IExternDataStrategy
 {
 public:
-	IMPLEMENT_EDS_CLONE(EDS_2x3PlaneFingers)
+	IMPLEMENT_EDS_CLONE(EDS_GraspRegionAnalysis)
 	
-	EDS_2x3PlaneFingers(void);
+	EDS_GraspRegionAnalysis(void);
 	
-	EDS_2x3PlaneFingers(const EDS_2x3PlaneFingers& copy);		
+	EDS_GraspRegionAnalysis(const EDS_GraspRegionAnalysis& copy);		
 
-	virtual ~EDS_2x3PlaneFingers(void);
+	virtual ~EDS_GraspRegionAnalysis(void);
 
 	virtual bool initStrategyConfig(SettingsInfoStruct& si, IHand* _hand, dtCore::Scene* _scene);
 
@@ -85,9 +86,10 @@ private:
 	std::vector<unsigned int> mFingerConfigInfo;
 	std::vector< std::vector<DataCollector*> > mDataTable;
 	std::vector< std::vector<StateCollector*> > mStateTable;
+	std::queue< osg::Vec3 > mTestPointList;
+
 	Part* mGraspingObj;
-	double mObjPosX;
-	double mObjPosY;
+    osg::Vec3 mObjPos;
 	
 	std::ofstream mOutputFile;
 
@@ -96,7 +98,9 @@ private:
 
 	// 判断所有手指停止运动
 	bool _isStopped();
+
+	void _fillTestPointList(double xDomain, double xInc, double yDomain, double yInc, double zDomain, double zInc);
 };
 
-#endif //_EDS_2x3PLANEFINGERS_H_
+#endif //_EDS_GRASP_REGION_H_
 

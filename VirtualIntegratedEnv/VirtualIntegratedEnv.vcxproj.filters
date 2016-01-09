@@ -108,9 +108,6 @@
     <ClInclude Include="EDS_MatlabBarrett.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="EDS_2x3PlaneFingers.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="EDS_MatlabYangFan.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -118,6 +115,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="GUI\ui_Parameter.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="EDS_GraspRegionAnalysis.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -215,9 +215,6 @@
     <ClCompile Include="EDS_MatlabBarrett.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="EDS_2x3PlaneFingers.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="EDS_MatlabYangFan.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -225,6 +222,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="moc_Dlg2x3Parameter.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="EDS_GraspRegionAnalysis.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
