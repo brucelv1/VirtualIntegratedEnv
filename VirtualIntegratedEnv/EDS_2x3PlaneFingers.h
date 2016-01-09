@@ -31,12 +31,12 @@ public:
 
 	void Reset()
 	{
-		Angle = 0;
+		Angle = osg::Vec3(0,0,0);
 		ContactPos = osg::Vec3(0,0,0);
 		ContactNorm = osg::Vec3(0,0,0);
 	}
 
-	double Angle;
+	osg::Vec3 Angle;
 	osg::Vec3 ContactPos;
 	osg::Vec3 ContactNorm;
 };

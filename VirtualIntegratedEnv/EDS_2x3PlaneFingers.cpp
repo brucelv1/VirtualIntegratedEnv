@@ -95,7 +95,7 @@ void EDS_2x3PlaneFingers::UpdateHand()
 	{
 		for (unsigned int j=0; j<mFingerConfigInfo[i]; j++)
 		{
-			mHand->getFingerFromVector(i)->getKnuckleAt(j)->setAttitude(osg::Vec3(mDataTable[i][j]->Angle,0,0));
+			mHand->getFingerFromVector(i)->getKnuckleAt(j)->setAttitude(mDataTable[i][j]->Angle);
 			mHand->getFingerFromVector(i)->getKnuckleAt(j)->makeTransform();
 		}
 	}
@@ -151,7 +151,11 @@ void EDS_2x3PlaneFingers::_updateData()
 			unsigned int i,j;
             for(i=0; i<mDataTable.size(); i++)
                 for(j=0; j<mDataTable[i].size(); j++)
-                    mOutputFile << mDataTable[i][j]->Angle << ", ";
+				{
+                    mOutputFile << mDataTable[i][j]->Angle.x() << ", ";
+					mOutputFile << mDataTable[i][j]->Angle.y() << ", ";
+					mOutputFile << mDataTable[i][j]->Angle.z() << ", ";
+				}
                     
 			for(i=0; i<mDataTable.size(); i++)
 				for(j=0; j<mDataTable[i].size(); j++)
@@ -202,14 +206,19 @@ void EDS_2x3PlaneFingers::_updateData()
 			if (mStateTable[i][j]->IsCollided==false && mStateTable[i][j]->IsLimited==false)
 			{
 				Part* pt = mHand->getFingerFromVector(i)->getKnuckleAt(j);
-				double CurrentPos = pt->getAttitude().x();
+				// 对于不运动的固定指节，当检测到这一事实时，就认为其已经到达极限位置
+				if (pt->getDeltaAttitudePerFrame().length() == 0)
+					mStateTable[i][j]->IsLimited = true;
+
+				// 因为关节只涉及一个自由度的转动，因此可以用长度来代表当前转过的角度
+				double CurrentPos = pt->getAttitude().length();
 
 				// 当前角位置大于90°，则认为到达极限位置
-				if(fabs(CurrentPos) >= 90)
+				if(CurrentPos >= 90)
 					mStateTable[i][j]->IsLimited = true;
 				// 否则，更新角位置
 				else
-					mDataTable[i][j]->Angle += pt->getDeltaAttitudePerFrame().x();
+					mDataTable[i][j]->Angle += pt->getDeltaAttitudePerFrame();
 
 				break; // 用于控制指节运动的先后，现在的情况下，前一个指节停止运动后，后一个才会开始运动
 			}
