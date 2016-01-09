@@ -83,7 +83,7 @@ bool EDS_GraspRegionAnalysis::initStrategyConfig( SettingsInfoStruct& si, IHand*
 	}
 
 	// Ìî³ä²âÊÔµãÎ»ÖÃ
-	_fillTestPointList(80,40,40,40,0,0);
+	_fillTestPointList(-40,80,10,0,50,10,0,0,0);
 
 	mOutputFile.open("./Data/TwoFingers.txt",std::ios::out);
 
@@ -184,7 +184,7 @@ void EDS_GraspRegionAnalysis::_updateData()
 		{
 			mObjPos = mTestPointList.front();
 			mTestPointList.pop();
-			mGraspingObj->setPosition(mObjPos * mHand->getHandScale());
+			mGraspingObj->setPosition(mObjPos/* * mHand->getHandScale()*/);
 			mGraspingObj->makeTransform();
 		}
 
@@ -251,7 +251,9 @@ bool EDS_GraspRegionAnalysis::_isStopped()
 	return true;
 }
 
-void EDS_GraspRegionAnalysis::_fillTestPointList( double xDomain, double xInc, double yDomain, double yInc, double zDomain, double zInc )
+void EDS_GraspRegionAnalysis::_fillTestPointList(double xLow, double xDomain, double xInc, 
+												 double yLow, double yDomain, double yInc, 
+												 double zLow, double zDomain, double zInc)
 {
 	unsigned int x_size, y_size, z_size;
 	if(xInc == 0)
@@ -274,7 +276,7 @@ void EDS_GraspRegionAnalysis::_fillTestPointList( double xDomain, double xInc, d
 			for(unsigned int k=0; k<x_size; k++)
 			{
 				osg::Vec3 p;
-				p.set(k*xInc, j*yInc, i*zInc);
+				p.set(xLow+k*xInc, yLow+j*yInc, zLow+i*zInc);
 				mTestPointList.push(p);
 			}
 }

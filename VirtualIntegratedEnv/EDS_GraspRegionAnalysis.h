@@ -99,7 +99,9 @@ private:
 	// 判断所有手指停止运动
 	bool _isStopped();
 
-	void _fillTestPointList(double xDomain, double xInc, double yDomain, double yInc, double zDomain, double zInc);
+	void _fillTestPointList(double xLow, double xDomain, double xInc, 
+							double yLow, double yDomain, double yInc, 
+							double zLow, double zDomain, double zInc);
 };
 
 #endif //_EDS_GRASP_REGION_H_
