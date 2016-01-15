@@ -15,6 +15,7 @@
 #include <Windows.h>
 #include <dtCore/odebodywrap.h>
 #include "Dlg2x3Parameter.h"
+#include "matlibTwoFingers.h"
 
 EDS_GraspRegionAnalysis::EDS_GraspRegionAnalysis()
 : IExternDataStrategy()
@@ -32,6 +33,9 @@ EDS_GraspRegionAnalysis::~EDS_GraspRegionAnalysis()
 {
 	if(mOutputFile.is_open())
 		mOutputFile.close();
+
+	if(b_mLibLoaded)
+		matlibTwoFingersTerminate();
 }
 
 bool EDS_GraspRegionAnalysis::initStrategyConfig( SettingsInfoStruct& si, IHand* _hand, dtCore::Scene* _scene )
@@ -83,9 +87,13 @@ bool EDS_GraspRegionAnalysis::initStrategyConfig( SettingsInfoStruct& si, IHand*
 	}
 
 	// ÃÓ≥‰≤‚ ‘µ„Œª÷√
-	_fillTestPointList(-40,80,10,0,50,10,0,0,0);
+	_fillTestPointList(-40,80,40,0,48,48,0,0,0);
 
 	mOutputFile.open("./Data/TwoFingers.txt",std::ios::out);
+
+	b_mLibLoaded = matlibTwoFingersInitialize();
+	if(b_mLibLoaded)
+		std::cout << "YF lib loaded!\n";
 
 	return true;
 }
@@ -180,14 +188,10 @@ void EDS_GraspRegionAnalysis::_updateData()
 		}
 
 		// re-position the object
-		if(mTestPointList.empty() == false)
-		{
-			mObjPos = mTestPointList.front();
-			mTestPointList.pop();
-			mGraspingObj->setPosition(mObjPos/* * mHand->getHandScale()*/);
-			mGraspingObj->makeTransform();
-		}
+		_repositionObj();
+		
 
+		// make zero
 		_makeDataZero();
 
 		return;
@@ -279,4 +283,71 @@ void EDS_GraspRegionAnalysis::_fillTestPointList(double xLow, double xDomain, do
 				p.set(xLow+k*xInc, yLow+j*yInc, zLow+i*zInc);
 				mTestPointList.push(p);
 			}
+}
+
+bool EDS_GraspRegionAnalysis::_repositionObj()
+{
+	//if(mTestPointList.empty() == false)
+	//{
+	//	mObjPos = mTestPointList.front();
+	//	mTestPointList.pop();
+	//	mGraspingObj->setPosition(mObjPos/* * mHand->getHandScale()*/);
+	//	mGraspingObj->makeTransform();
+	//}
+
+	double fx,fy;
+	_forcePerFrame(fx,fy);
+	mObjPos.x() += fx;
+	mObjPos.y() += fy;
+
+	//mObjPos.normalize();
+	//mObjPos.x() *= 2;
+	//mObjPos.y() *= 2;
+
+	mGraspingObj->setPosition(mObjPos/* * mHand->getHandScale()*/);
+	mGraspingObj->makeTransform();
+
+	return true;
+}
+
+void EDS_GraspRegionAnalysis::_forcePerFrame(double& fx, double& fy)
+{
+	mwArray Angle(1,18,mxDOUBLE_CLASS);
+	mwArray ContactPos(1,18,mxDOUBLE_CLASS);
+	mwArray ContactNorm(1,18,mxDOUBLE_CLASS);
+	double _angle[18] = {0};
+	double _pos[18] = {0};
+	double _norm[18] = {0};
+
+	int index=0;
+	for (unsigned int i=0; i<2; i++)
+	{
+		for (unsigned int j=0; j<3; j++)
+		{
+			_angle[3*index+0]=mDataTable[i][j]->Angle.x();
+			_angle[3*index+1]=mDataTable[i][j]->Angle.y();
+			_angle[3*index+2]=mDataTable[i][j]->Angle.z();
+
+			_pos[3*index+0]=mDataTable[i][j]->ContactPos.x();
+			_pos[3*index+1]=mDataTable[i][j]->ContactPos.y();
+			_pos[3*index+2]=mDataTable[i][j]->ContactPos.z();
+
+			_norm[3*index+0]=mDataTable[i][j]->ContactNorm.x();
+			_norm[3*index+1]=mDataTable[i][j]->ContactNorm.y();
+			_norm[3*index+2]=mDataTable[i][j]->ContactNorm.z();
+
+			index++;
+		}
+	}
+
+	Angle.SetData(_angle,18);
+	ContactPos.SetData(_pos,18);
+	ContactNorm.SetData(_norm,18);
+
+	// call matlab function here
+	mwArray Fx, Fy;
+	GetObjForce(2, Fx, Fy, Angle, ContactPos, ContactNorm);
+
+	fx = Fx(1,1);
+	fy = Fy(1,1);
 }

@@ -93,6 +93,8 @@ private:
 	
 	std::ofstream mOutputFile;
 
+	bool b_mLibLoaded;
+
 	void _updateData();
 	void _makeDataZero();
 
@@ -102,6 +104,9 @@ private:
 	void _fillTestPointList(double xLow, double xDomain, double xInc, 
 							double yLow, double yDomain, double yInc, 
 							double zLow, double zDomain, double zInc);
+
+	bool _repositionObj();
+	void _forcePerFrame(double& fx, double& fy);
 };
 
 #endif //_EDS_GRASP_REGION_H_

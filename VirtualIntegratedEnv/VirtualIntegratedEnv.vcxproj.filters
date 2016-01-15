@@ -120,6 +120,9 @@
     <ClInclude Include="EDS_GraspRegionAnalysis.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="matlibTwoFingers.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AddDialog.cpp">
