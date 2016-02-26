@@ -87,7 +87,7 @@ bool EDS_GraspRegionAnalysis::initStrategyConfig( SettingsInfoStruct& si, IHand*
 	}
 
 	// Ìî³ä²âÊÔµãÎ»ÖÃ
-	_fillTestPointList(-40,80,40,0,48,48,0,0,0);
+	_fillTestPointList(-40,80,20,0,48,48,0,0,0);
 
 	mOutputFile.open("./Data/TwoFingers.txt",std::ios::out);
 
@@ -287,25 +287,22 @@ void EDS_GraspRegionAnalysis::_fillTestPointList(double xLow, double xDomain, do
 
 bool EDS_GraspRegionAnalysis::_repositionObj()
 {
-	//if(mTestPointList.empty() == false)
-	//{
-	//	mObjPos = mTestPointList.front();
-	//	mTestPointList.pop();
-	//	mGraspingObj->setPosition(mObjPos/* * mHand->getHandScale()*/);
-	//	mGraspingObj->makeTransform();
-	//}
+	// 1. Object: Rectangle Mesh Grid
+	if(mTestPointList.empty() == false)
+	{
+		mObjPos = mTestPointList.front();
+		mTestPointList.pop();
+		mGraspingObj->setPosition(mObjPos/* * mHand->getHandScale()*/);
+		mGraspingObj->makeTransform();
+	}
 
-	double fx,fy;
-	_forcePerFrame(fx,fy);
-	mObjPos.x() += fx;
-	mObjPos.y() += fy;
-
-	//mObjPos.normalize();
-	//mObjPos.x() *= 2;
-	//mObjPos.y() *= 2;
-
-	mGraspingObj->setPosition(mObjPos/* * mHand->getHandScale()*/);
-	mGraspingObj->makeTransform();
+	//// 2. Object: Trajectory
+	//double fx,fy;
+	//_forcePerFrame(fx,fy);
+	//mObjPos.x() += fx;
+	//mObjPos.y() += fy;
+	//mGraspingObj->setPosition(mObjPos/* * mHand->getHandScale()*/);
+	//mGraspingObj->makeTransform();
 
 	return true;
 }
