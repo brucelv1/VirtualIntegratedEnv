@@ -33,7 +33,7 @@ public:
 		if (_name == "SJT_3")
 			hand = new Hand_SJT_3(_scale, "./models/SJT3HandOSG/SJT3AsmInfo.txt");
 		if (_name == "SJT_6")
-			hand = new Hand_SJT_6(_scale, "./models/SJT6HandOSG/SJT6AsmInfo.txt");
+			hand = new Hand_SJT_6(_scale, "./models/SJT6HandOSG/SJT6AsmInfo_old.txt");
 		if (_name == "Barrett")
 			hand = new Hand_Barrett(_scale/100, "./models/BarrettHandOSG/BarrettAsmInfo.txt");
 		if (_name == "HumanHand")
