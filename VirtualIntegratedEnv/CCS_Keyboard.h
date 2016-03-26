@@ -42,6 +42,9 @@ public:
 	virtual void doWristAction();
 	void recoverWrist();
 
+	//手肘动作函数
+	virtual void doElbowAction();
+
 	virtual void setCommandBits(std::bitset<5> bits);
 	virtual void setWristActionType(int _type);
 

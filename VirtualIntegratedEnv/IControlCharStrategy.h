@@ -68,11 +68,18 @@ public:
 	{
 		mWristActionType = _type;
 	}
+	//手肘指令，共两种：0回位1前伸
+	virtual void setElbowActionType(int _type)
+	{
+		mElbowActionType = _type;
+	}
 
 	//手指动作
 	virtual void doGesture()=0;
 	//手腕动作
-	virtual void doWristAction(){};
+	virtual void doWristAction() {}
+	//手肘动作
+	virtual void doElbowAction() {}
 
 	// for prototype purpose
 	static std::vector<std::string> CCSNameList;
@@ -97,6 +104,7 @@ protected:
 	IHand* mHand;
 	std::bitset<5> mCommandBits;
 	int mWristActionType;
+	int mElbowActionType;
 };
 
 #endif // _CONTROLSTRATEGY_H_
