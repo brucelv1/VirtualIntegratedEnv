@@ -194,6 +194,7 @@ void VIECoreApp::PreFrame(const double deltaFrameTime)
 		{			  
 			mCtrlStr->doGesture();
 			mCtrlStr->doWristAction();
+			mCtrlStr->doElbowAction();
 		}
 	}
 }
