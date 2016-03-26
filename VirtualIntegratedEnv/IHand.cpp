@@ -17,7 +17,6 @@
 IHand::IHand(float scale, const std::string& configFile)
 : mScale(scale)
 , mConfigFile(configFile)
-, HasElbowAction(false)
 {
 	initPartPtr();
 	mRoot = new Part("mRoot");
@@ -109,7 +108,6 @@ void IHand::initPartPtr()
 {
 	mRoot = NULL;
 	mArm = NULL;
-	mForeArm = NULL;
 	mPostWrist = NULL;
 	mWrist = NULL;
 	mPalm = NULL;

@@ -259,33 +259,6 @@ void CCS_Keyboard::recoverWrist()
 		b_mWristRecovered = true;
 }
 
-void CCS_Keyboard::doElbowAction()
-{
-	static float Angle = 0;
-	Part* ForeArm = mHand->mForeArm;
-	Part* UpperArm = mHand->mArm;
-
-	if (ForeArm == NULL || UpperArm == NULL)
-	    return;
-
-	if (mElbowActionType == 0 && Angle > 0)
-	{
-		Angle -= 2.0;
-		UpperArm->setAttitude(osg::Vec3(Angle,0,0));
-		ForeArm->setAttitude(osg::Vec3(-Angle,0,0));
-	}
-
-	if (mElbowActionType == 1 && Angle <= 50) // 前伸至50度位置
-	{
-		Angle += 2.0;
-		UpperArm->setAttitude(osg::Vec3(Angle,0,0));
-		ForeArm->setAttitude(osg::Vec3(-Angle,0,0));
-	}
-
-	UpperArm->makeTransform();
-	ForeArm->makeTransform();
-}
-
 void CCS_Keyboard::updateCommand(int key)
 {
 	switch(key)
@@ -307,9 +280,6 @@ void CCS_Keyboard::updateCommand(int key)
 		break;
 	case '6':
 		setWristActionType(6);
-		break;
-	case '7':
-		setElbowActionType(1);
 		break;
 	case 'f':
 		setCommandBits(std::bitset<5>(0X1F));
@@ -342,7 +312,6 @@ void CCS_Keyboard::updateCommand(int key)
 	case 'r':
 		setCommandBits(std::bitset<5>(0X00));
 		setWristActionType(0);
-		setElbowActionType(0);
 		break;
 
 	default:
