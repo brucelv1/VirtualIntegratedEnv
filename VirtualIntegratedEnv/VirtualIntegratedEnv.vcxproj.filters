@@ -105,16 +105,10 @@
     <ClInclude Include="BarrettGrasp.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="EDS_MatlabBarrett.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="EDS_2x3PlaneFingers.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="EDS_MatlabYangFan.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="JAGenerater.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CCS_TMRArmWangYang.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -209,13 +203,7 @@
     <ClCompile Include="EDS_DataGlove.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="EDS_MatlabBarrett.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="EDS_2x3PlaneFingers.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="EDS_MatlabYangFan.cpp">
+    <ClCompile Include="CCS_TMRArmWangYang.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

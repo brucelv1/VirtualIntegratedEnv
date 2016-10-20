@@ -22,9 +22,7 @@
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc.exe AddObjDlg.h</AdditionalInputs>
     </CustomBuild>
     <ClInclude Include="BarrettGrasp.h" />
-    <ClInclude Include="EDS_2x3PlaneFingers.h" />
-    <ClInclude Include="EDS_MatlabBarrett.h" />
-    <ClInclude Include="EDS_MatlabYangFan.h" />
+    <ClInclude Include="CCS_TMRArmWangYang.h" />
     <ClInclude Include="GUI\ui_AddObjDlg.h" />
     <ClInclude Include="GUI\ui_HandConfigFileDlg.h" />
     <ClInclude Include="GUI\ui_VIE_MainWin.h" />
@@ -79,10 +77,8 @@
     <ClCompile Include="AddDialog.cpp" />
     <ClCompile Include="AddObjDlg.cpp" />
     <ClCompile Include="AttributeVisitor.cpp" />
-    <ClCompile Include="EDS_2x3PlaneFingers.cpp" />
+    <ClCompile Include="CCS_TMRArmWangYang.cpp" />
     <ClCompile Include="EDS_DataGlove.cpp" />
-    <ClCompile Include="EDS_MatlabBarrett.cpp" />
-    <ClCompile Include="EDS_MatlabYangFan.cpp" />
     <ClCompile Include="IExternDataStrategy.cpp" />
     <ClCompile Include="findNodeVisitor.cpp" />
     <ClCompile Include="Finger.cpp" />
@@ -141,8 +137,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(DELTA_INC);$(QT_INC);$(MATLAB_INC);$(IncludePath)</IncludePath>
-    <LibraryPath>$(DELTA_LIB);$(QT_LIB);$(MATLAB_LIB);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(DELTA_INC);$(QT_INC);$(IncludePath)</IncludePath>
+    <LibraryPath>$(DELTA_LIB);$(QT_LIB);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -158,7 +154,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>dtCored.lib;dtABCd.lib;osgd.lib;QtGuid4.lib;QtCored4.lib;dtQtd.lib;osgDBd.lib;fgloved.lib;ode_singled.lib;mclmcrrt.lib;BarrettGrasp.lib;JAGenerater.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>dtCored.lib;dtABCd.lib;osgd.lib;QtGuid4.lib;QtCored4.lib;dtQtd.lib;osgDBd.lib;fgloved.lib;ode_singled.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

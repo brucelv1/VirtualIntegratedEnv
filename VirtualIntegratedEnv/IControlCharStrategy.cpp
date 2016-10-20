@@ -43,7 +43,7 @@ std::string IControlCharStrategy::getStrategyName()
 	return mName;
 }
 
-void IControlCharStrategy::flexFinger(Finger* _finger)
+void IControlCharStrategy::flexFinger(Finger* _finger, float speedratio /* = 1.0*/)
 {
 	if(_finger == NULL)
 		return;
@@ -54,12 +54,12 @@ void IControlCharStrategy::flexFinger(Finger* _finger)
 	for (unsigned int i=0; i<_finger->numOfKnuckles(); i++)
 	{
 		Part* knuckle = _finger->getKnuckleAt(i);
-		knuckle->setAttitude(knuckle->getAttitude() + knuckle->getDeltaAttitudePerFrame());
+		knuckle->setAttitude(knuckle->getAttitude() + (knuckle->getDeltaAttitudePerFrame())*speedratio);
 		knuckle->makeTransform();
 	}
 }
 
-bool IControlCharStrategy::extendFinger(Finger* _finger)
+bool IControlCharStrategy::extendFinger(Finger* _finger, float speedratio/* = 1.0*/)
 {
 	if(_finger == NULL)
 		return true;
@@ -71,7 +71,7 @@ bool IControlCharStrategy::extendFinger(Finger* _finger)
 		Part* knuckle = _finger->getKnuckleAt(i);
 		if(false == checkKnuckleRecovered(knuckle,knuckle->getDeltaAttitudePerFrame()))
 		{
-			knuckle->setAttitude(knuckle->getAttitude() - knuckle->getDeltaAttitudePerFrame());
+			knuckle->setAttitude(knuckle->getAttitude() - (knuckle->getDeltaAttitudePerFrame())*speedratio);
 			knuckle->makeTransform();
 		}
 	}

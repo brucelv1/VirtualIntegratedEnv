@@ -19,9 +19,10 @@
 #include "CCS_EMGClassifierStr.h"
 #include "CCS_Keyboard.h"
 #include "EDS_DataGlove.h"
-#include "EDS_MatlabBarrett.h"
-#include "EDS_2x3PlaneFingers.h"
-#include "EDS_MatlabYangFan.h"
+//#include "EDS_MatlabBarrett.h"
+//#include "EDS_2x3PlaneFingers.h"
+//#include "EDS_MatlabYangFan.h"
+#include "CCS_TMRArmWangYang.h"
 
 class StrategyPrototype
 {
@@ -34,9 +35,10 @@ void StrategyPrototype::RegisterStrategy()
 	MAKE_CCS_PROTOTYPE(CCS_EMGClassifierStr)
 	MAKE_CCS_PROTOTYPE(CCS_Keyboard)
 	MAKE_EDS_PROTOTYPE(EDS_DataGlove)
-	MAKE_EDS_PROTOTYPE(EDS_MatlabBarrett)
-	MAKE_EDS_PROTOTYPE(EDS_2x3PlaneFingers)
-	MAKE_EDS_PROTOTYPE(EDS_MatlabYangFan)
+	//MAKE_EDS_PROTOTYPE(EDS_MatlabBarrett)
+	//MAKE_EDS_PROTOTYPE(EDS_2x3PlaneFingers)
+	//MAKE_EDS_PROTOTYPE(EDS_MatlabYangFan)
+	MAKE_CCS_PROTOTYPE(CCS_TMRArmWangYang)
 }
 
 #endif //_STRATEGYPROTOTYPE_H_

@@ -91,8 +91,8 @@ public:
 protected:
 	virtual ~IControlCharStrategy();
 	//传入手指根部指节,extend返回bool型，用于检测手指是否回到初始装配位置
-	virtual void flexFinger(Finger* _finger);
-	virtual bool extendFinger(Finger* _finger);
+	virtual void flexFinger(Finger* _finger, float speedratio = 1.0);
+	virtual bool extendFinger(Finger* _finger, float speedratio = 1.0);
 
 	//指节版本，只检查一个指节，可用于整根手指同步动作情形
 	bool checkKnuckleRecovered(Part* knuckle, const osg::Vec3& deltaAttitudePerFrame);
