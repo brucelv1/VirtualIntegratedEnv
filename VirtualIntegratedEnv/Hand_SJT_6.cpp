@@ -42,6 +42,9 @@ int Hand_SJT_6::ConfigureHand()
 void Hand_SJT_6::Part_Node_Mapping()
 {
 	mArm = getPartFromVector("Arm");
+	mForeArm = getPartFromVector("ForeArm");
+	HasElbowAction = true;
+
 	mPostWrist = getPartFromVector("PostWrist");
 	mWrist = getPartFromVector("Wrist");
 	mPalm = getPartFromVector("Palm");
@@ -91,7 +94,8 @@ void Hand_SJT_6::Part_Collision_Mapping()
 void Hand_SJT_6::Parent_Child_Mapping()
 {
 	mRoot->addChild(mArm);
-	mArm->addChild(mPostWrist);
+	mArm->addChild(mForeArm);
+	mForeArm->addChild(mPostWrist);
 	mPostWrist->addChild(mWrist);
 	mWrist->addChild(mPalm);
 

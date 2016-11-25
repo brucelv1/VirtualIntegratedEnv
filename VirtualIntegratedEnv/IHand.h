@@ -29,6 +29,8 @@
 class IHand
 {
 public:
+	bool HasElbowAction;
+public:
 	std::vector<Finger*> FingersVector;
 
 	IHand(float scale, const std::string& configFile);
@@ -50,6 +52,7 @@ public:
 	void initPartPtr();
 	Part* mRoot; //只初始化其位姿，不加载模型，专门用作管理。（不知道对于颜色等会不会出错）
 	Part* mArm;
+	Part* mForeArm; //并不是每只手都区分上臂和下臂，现在只有SJT-6区分
 	Part* mPostWrist;
 	Part* mWrist;
 	Part* mPalm;
