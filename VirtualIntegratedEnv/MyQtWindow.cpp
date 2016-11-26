@@ -263,25 +263,8 @@ void MyQtWindow::on_actionTraining_triggered()
 	//								  0,
 	//								  20,
 	//								  (LPCSTR)(sharedmemory.c_str()));
-	SettingsInfoStruct sis;
-	sis.strategy = "CCS_EMGClassifierStr";
-	sis.inputCOM = 6;
-	sis.outputCOM = 0;
-	if( !mVIECoreApp->On_SettingsInfo(sis))
-	{
-		QMessageBox msgBox;
-		msgBox.setWindowTitle("Strategy Setting");
-		msgBox.setIcon(QMessageBox::Icon::Warning);
-		msgBox.setInformativeText("The selected strategy has not been loaded!");
-		msgBox.setStandardButtons(QMessageBox::Ok);
-		msgBox.setDefaultButton(QMessageBox::Ok);
-		msgBox.exec();
-		
-		return;
-	}
 
 	system("start E:\\My_Cpp_Code\\CPPlearning\\Debug\\TrainModule.exe 7");
-	int a = 2;
 }
 
 void MyQtWindow::on_actionTesting_triggered()
