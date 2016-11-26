@@ -256,7 +256,6 @@ void MyQtWindow::on_actionAddCustomHand_triggered()
 
 void MyQtWindow::on_actionTraining_triggered()
 {
-	//system("start E:\\My_Cpp_Code\\CPPlearning\\Debug\\TrainModule.exe 7");
 	SettingsInfoStruct sis;
 
 	sis.strategy = "CCS_TrainTest";
