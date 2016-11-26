@@ -51,6 +51,8 @@ public slots:
 	void on_actionAddObjects_triggered();
 	void on_actionReset_triggered();
 	void on_actionAddCustomHand_triggered();
+	void on_actionTraining_triggered();
+	void on_actionTesting_triggered();
 
 signals:
 	void userAddData(userAddInfo* uAI);

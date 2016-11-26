@@ -28,6 +28,16 @@
       </property>
      </widget>
     </item>
+    <item row="1" column="0">
+     <widget class="QProgressBar" name="progressBar">
+      <property name="value">
+       <number>0</number>
+      </property>
+      <property name="textVisible">
+       <bool>false</bool>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -71,9 +81,17 @@
     <addaction name="separator"/>
     <addaction name="actionAddObjects"/>
    </widget>
+   <widget class="QMenu" name="menu_2">
+    <property name="title">
+     <string>模式识别</string>
+    </property>
+    <addaction name="actionTraining"/>
+    <addaction name="actionTesting"/>
+   </widget>
    <addaction name="menu_F"/>
    <addaction name="menu_S"/>
    <addaction name="menu"/>
+   <addaction name="menu_2"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QToolBar" name="viewToolBar">
@@ -165,6 +183,16 @@
   <action name="actionAddCustomHand">
    <property name="text">
     <string>添加自定义手...</string>
+   </property>
+  </action>
+  <action name="actionTraining">
+   <property name="text">
+    <string>Training</string>
+   </property>
+  </action>
+  <action name="actionTesting">
+   <property name="text">
+    <string>Testing</string>
    </property>
   </action>
  </widget>
