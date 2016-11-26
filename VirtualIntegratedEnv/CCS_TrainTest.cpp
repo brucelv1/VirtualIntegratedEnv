@@ -67,7 +67,7 @@ void CCS_TrainTest::createTrainProcess()
 
 	// Launch child process
 	// "start" -- async
-	std::string TrainProcess = "start E:\\My_Cpp_Code\\CPPlearning\\Debug\\TrainModule.exe";
+	std::string TrainProcess = "start E:\\My_Cpp_Code\\GitHubVersion\\TrainAndTestModule\\Debug\\TrainModule.exe";
 	std::string cmd = TrainProcess+ " " + NameSharedMem;
 	system(cmd.c_str());
 
