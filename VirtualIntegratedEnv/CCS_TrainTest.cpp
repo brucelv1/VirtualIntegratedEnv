@@ -29,6 +29,9 @@ CCS_TrainTest::CCS_TrainTest()
 
 CCS_TrainTest::CCS_TrainTest(const CCS_TrainTest& kbs)
 {
+	// 设定动作执行的速度倍数
+	IControlCharStrategy::mSpeedScale = 2.0;
+
 	b_mAllFingersRecoverd = kbs.b_mAllFingersRecoverd;
 	b_mFingerActionFinished = kbs.b_mFingerActionFinished;
 	b_mWristRecovered = kbs.b_mWristRecovered;

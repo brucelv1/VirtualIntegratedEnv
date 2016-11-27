@@ -17,11 +17,12 @@
 std::vector<std::string> IControlCharStrategy::CCSNameList;
 std::vector<IControlCharStrategy*> IControlCharStrategy::CCSObjectList;
 
-IControlCharStrategy::IControlCharStrategy()
+IControlCharStrategy::IControlCharStrategy(float _SpeedScale/*=1.0*/)
 : mName("DefaultName")
 , mHand(NULL)
 , mScene(NULL)
 , mWristActionType(0)
+, mSpeedScale(_SpeedScale)
 {
 }
 
@@ -30,6 +31,7 @@ IControlCharStrategy::IControlCharStrategy(const IControlCharStrategy& ICCS)
 , mHand(ICCS.mHand)
 , mScene(ICCS.mScene)
 , mWristActionType(ICCS.mWristActionType)
+, mSpeedScale(ICCS.mSpeedScale)
 {
 }
 
@@ -54,7 +56,7 @@ void IControlCharStrategy::flexFinger(Finger* _finger)
 	for (unsigned int i=0; i<_finger->numOfKnuckles(); i++)
 	{
 		Part* knuckle = _finger->getKnuckleAt(i);
-		knuckle->setAttitude(knuckle->getAttitude() + knuckle->getDeltaAttitudePerFrame());
+		knuckle->setAttitude(knuckle->getAttitude() + knuckle->getDeltaAttitudePerFrame()*mSpeedScale);
 		knuckle->makeTransform();
 	}
 }
@@ -69,9 +71,9 @@ bool IControlCharStrategy::extendFinger(Finger* _finger)
 	for (unsigned int i=0; i<_finger->numOfKnuckles(); i++)
 	{
 		Part* knuckle = _finger->getKnuckleAt(i);
-		if(false == checkKnuckleRecovered(knuckle,knuckle->getDeltaAttitudePerFrame()))
+		if(false == checkKnuckleRecovered(knuckle,knuckle->getDeltaAttitudePerFrame()*mSpeedScale))
 		{
-			knuckle->setAttitude(knuckle->getAttitude() - knuckle->getDeltaAttitudePerFrame());
+			knuckle->setAttitude(knuckle->getAttitude() - knuckle->getDeltaAttitudePerFrame()*mSpeedScale);
 			knuckle->makeTransform();
 		}
 	}
@@ -115,7 +117,7 @@ bool IControlCharStrategy::checkFingerRecovered(Finger* _finger)
 	for (unsigned int i=0; i<_finger->numOfKnuckles(); i++)
 	{
 		Part* knuckle = _finger->getKnuckleAt(i);
-		bRecover.push_back(checkKnuckleRecovered(knuckle, knuckle->getDeltaAttitudePerFrame()));
+		bRecover.push_back(checkKnuckleRecovered(knuckle, knuckle->getDeltaAttitudePerFrame()*mSpeedScale));
 	}
 
 	for (unsigned int j=0; j<bRecover.size(); j++)
