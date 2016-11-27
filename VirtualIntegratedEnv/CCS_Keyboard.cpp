@@ -175,7 +175,7 @@ void CCS_Keyboard::doWristAction()
 				pt->makeTransform();
 			}
 		}
-		//下切
+		//内翻
 		if(mWristActionType == 3)
 		{
 			Part* pt = mHand->mWrist;
@@ -185,7 +185,7 @@ void CCS_Keyboard::doWristAction()
 				pt->makeTransform();
 			}
 		}
-		//上切
+		//外翻
 		if(mWristActionType == 4)
 		{
 			Part* pt = mHand->mWrist;
@@ -195,7 +195,7 @@ void CCS_Keyboard::doWristAction()
 				pt->makeTransform();
 			}
 		}
-		//外翻
+		//下切
 		if(mWristActionType == 5)
 		{
 			Part* pt = mHand->mWrist;
@@ -205,7 +205,7 @@ void CCS_Keyboard::doWristAction()
 				pt->makeTransform();
 			}
 		}
-		//内翻
+		//上切
 		if(mWristActionType == 6)
 		{
 			Part* pt = mHand->mWrist;

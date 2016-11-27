@@ -180,7 +180,42 @@ void CCS_TrainTest::setWristActionType(int _type)
 void CCS_TrainTest::doWristAction()
 {
 	// query shared memory
-	// ...
+	// 256: shangqie, 512: xiaqie
+	// 1024: neifan, 2048: waifan
+	// 4096: neixuan, 8192: waixuan
+	// the command should be divided by 256
+	static unsigned char last_cmd = 0;
+	unsigned char cmd = 0XFF & _ucpSharedMem[3];
+	if(cmd != last_cmd)
+	{
+		switch (cmd)
+		{
+		case 0:
+			setWristActionType(0);
+			break;
+		case 1:
+			setWristActionType(6);
+			break;
+		case 2:
+			setWristActionType(5);
+			break;
+		case 4:
+			setWristActionType(3);
+			break;
+		case 8:
+			setWristActionType(4);
+			break;
+		case 16:
+			setWristActionType(2);
+			break;
+		case 32:
+			setWristActionType(1);
+			break;
+		default:
+			return;
+		}
+		last_cmd = cmd;
+	}
 
 	if(b_mWristRecovered == false)
 	{
@@ -216,7 +251,7 @@ void CCS_TrainTest::doWristAction()
 				pt->makeTransform();
 			}
 		}
-		//下切
+		//内翻
 		if(mWristActionType == 3)
 		{
 			Part* pt = mHand->mWrist;
@@ -226,7 +261,7 @@ void CCS_TrainTest::doWristAction()
 				pt->makeTransform();
 			}
 		}
-		//上切
+		//外翻
 		if(mWristActionType == 4)
 		{
 			Part* pt = mHand->mWrist;
@@ -236,7 +271,7 @@ void CCS_TrainTest::doWristAction()
 				pt->makeTransform();
 			}
 		}
-		//外翻
+		//下切
 		if(mWristActionType == 5)
 		{
 			Part* pt = mHand->mWrist;
@@ -246,7 +281,7 @@ void CCS_TrainTest::doWristAction()
 				pt->makeTransform();
 			}
 		}
-		//内翻
+		//上切
 		if(mWristActionType == 6)
 		{
 			Part* pt = mHand->mWrist;
@@ -303,7 +338,29 @@ void CCS_TrainTest::recoverWrist()
 void CCS_TrainTest::doElbowAction()
 {
 	// query shared memory
-	// ...
+	// 16384: shenzhou, _ucpSharedMem[3]的第6位,2^6
+	// 32768: quzhou, _ucpSharedMem[3]的第7位,2^7
+	// the command should be divided by 256
+	static unsigned char last_cmd = 0;
+	unsigned char cmd = 0XFF & _ucpSharedMem[3];
+	if(cmd != last_cmd)
+	{
+		switch (cmd)
+		{
+		case 0:
+			setElbowActionType(0);
+			break;
+		case 64:
+			setElbowActionType(1);
+			break;
+		case 128:
+			setElbowActionType(0);
+			break;
+		default:
+			return;
+		}
+		last_cmd = cmd;
+	}
 
 	static float Angle = 0;
 	Part* ForeArm = mHand->mForeArm;
@@ -312,6 +369,7 @@ void CCS_TrainTest::doElbowAction()
 	if (ForeArm == NULL || UpperArm == NULL)
 	    return;
 
+	// 屈肘，默认休息态
 	if (mElbowActionType == 0 && Angle > 0)
 	{
 		Angle -= 2.0;
@@ -319,6 +377,7 @@ void CCS_TrainTest::doElbowAction()
 		ForeArm->setAttitude(osg::Vec3(-Angle,0,0));
 	}
 
+	// 伸肘
 	if (mElbowActionType == 1 && Angle <= 50) // 前伸至50度位置
 	{
 		Angle += 2.0;
