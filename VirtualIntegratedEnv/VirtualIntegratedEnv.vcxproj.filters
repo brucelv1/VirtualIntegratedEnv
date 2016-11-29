@@ -117,6 +117,9 @@
     <ClInclude Include="JAGenerater.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="CCS_TrainTest.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AddDialog.cpp">
@@ -216,6 +219,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="EDS_MatlabYangFan.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CCS_TrainTest.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

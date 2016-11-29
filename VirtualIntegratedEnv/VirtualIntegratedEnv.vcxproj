@@ -22,6 +22,7 @@
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc.exe AddObjDlg.h</AdditionalInputs>
     </CustomBuild>
     <ClInclude Include="BarrettGrasp.h" />
+    <ClInclude Include="CCS_TrainTest.h" />
     <ClInclude Include="EDS_2x3PlaneFingers.h" />
     <ClInclude Include="EDS_MatlabBarrett.h" />
     <ClInclude Include="EDS_MatlabYangFan.h" />
@@ -79,6 +80,7 @@
     <ClCompile Include="AddDialog.cpp" />
     <ClCompile Include="AddObjDlg.cpp" />
     <ClCompile Include="AttributeVisitor.cpp" />
+    <ClCompile Include="CCS_TrainTest.cpp" />
     <ClCompile Include="EDS_2x3PlaneFingers.cpp" />
     <ClCompile Include="EDS_DataGlove.cpp" />
     <ClCompile Include="EDS_MatlabBarrett.cpp" />
@@ -141,8 +143,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(DELTA_INC);$(QT_INC);$(MATLAB_INC);$(IncludePath)</IncludePath>
-    <LibraryPath>$(DELTA_LIB);$(QT_LIB);$(MATLAB_LIB);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(DELTA_INC);$(QT_INC);$(MATLAB_INC);$(BOOST_ROOT);$(IncludePath)</IncludePath>
+    <LibraryPath>$(DELTA_LIB);$(QT_LIB);$(MATLAB_LIB);$(BOOST_ROOT)\lib32-msvc-10.0;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>

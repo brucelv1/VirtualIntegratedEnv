@@ -19,6 +19,7 @@
 #include <QtGui/QMainWindow>
 #include <QtGui/QMenu>
 #include <QtGui/QMenuBar>
+#include <QtGui/QProgressBar>
 #include <QtGui/QStatusBar>
 #include <QtGui/QToolBar>
 #include <QtGui/QWidget>
@@ -44,13 +45,17 @@ public:
     QAction *actionAddObjects;
     QAction *actionReset;
     QAction *actionAddCustomHand;
+    QAction *actionTraining;
+    QAction *actionTesting;
     QWidget *centralwidget;
     QGridLayout *gridLayout;
     QGraphicsView *graphicsView;
+    QProgressBar *progressBar;
     QMenuBar *menubar;
     QMenu *menu_F;
     QMenu *menu_S;
     QMenu *menu;
+    QMenu *menu_2;
     QStatusBar *statusbar;
     QToolBar *viewToolBar;
 
@@ -96,6 +101,10 @@ public:
         actionReset->setObjectName(QString::fromUtf8("actionReset"));
         actionAddCustomHand = new QAction(MainWindow);
         actionAddCustomHand->setObjectName(QString::fromUtf8("actionAddCustomHand"));
+        actionTraining = new QAction(MainWindow);
+        actionTraining->setObjectName(QString::fromUtf8("actionTraining"));
+        actionTesting = new QAction(MainWindow);
+        actionTesting->setObjectName(QString::fromUtf8("actionTesting"));
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         gridLayout = new QGridLayout(centralwidget);
@@ -105,6 +114,13 @@ public:
         graphicsView->setLineWidth(1);
 
         gridLayout->addWidget(graphicsView, 0, 0, 1, 1);
+
+        progressBar = new QProgressBar(centralwidget);
+        progressBar->setObjectName(QString::fromUtf8("progressBar"));
+        progressBar->setValue(0);
+        progressBar->setTextVisible(false);
+
+        gridLayout->addWidget(progressBar, 1, 0, 1, 1);
 
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
@@ -116,6 +132,8 @@ public:
         menu_S->setObjectName(QString::fromUtf8("menu_S"));
         menu = new QMenu(menubar);
         menu->setObjectName(QString::fromUtf8("menu"));
+        menu_2 = new QMenu(menubar);
+        menu_2->setObjectName(QString::fromUtf8("menu_2"));
         MainWindow->setMenuBar(menubar);
         statusbar = new QStatusBar(MainWindow);
         statusbar->setObjectName(QString::fromUtf8("statusbar"));
@@ -127,6 +145,7 @@ public:
         menubar->addAction(menu_F->menuAction());
         menubar->addAction(menu_S->menuAction());
         menubar->addAction(menu->menuAction());
+        menubar->addAction(menu_2->menuAction());
         menu_F->addAction(action_Add);
         menu_F->addSeparator();
         menu_F->addAction(actionOpen);
@@ -144,6 +163,8 @@ public:
         menu->addAction(actionAddCustomHand);
         menu->addSeparator();
         menu->addAction(actionAddObjects);
+        menu_2->addAction(actionTraining);
+        menu_2->addAction(actionTesting);
 
         retranslateUi(MainWindow);
 
@@ -169,9 +190,12 @@ public:
         actionAddObjects->setText(QApplication::translate("MainWindow", "\346\267\273\345\212\240\346\212\223\345\217\226\347\211\251\344\275\223...", 0, QApplication::UnicodeUTF8));
         actionReset->setText(QApplication::translate("MainWindow", "\351\207\215\347\275\256\347\216\257\345\242\203", 0, QApplication::UnicodeUTF8));
         actionAddCustomHand->setText(QApplication::translate("MainWindow", "\346\267\273\345\212\240\350\207\252\345\256\232\344\271\211\346\211\213...", 0, QApplication::UnicodeUTF8));
+        actionTraining->setText(QApplication::translate("MainWindow", "Training", 0, QApplication::UnicodeUTF8));
+        actionTesting->setText(QApplication::translate("MainWindow", "Testing", 0, QApplication::UnicodeUTF8));
         menu_F->setTitle(QApplication::translate("MainWindow", "\346\226\207\344\273\266(&F)", 0, QApplication::UnicodeUTF8));
         menu_S->setTitle(QApplication::translate("MainWindow", "\344\273\277\347\234\237(&S)", 0, QApplication::UnicodeUTF8));
         menu->setTitle(QApplication::translate("MainWindow", "\347\233\264\346\216\245\345\212\240\350\275\275", 0, QApplication::UnicodeUTF8));
+        menu_2->setTitle(QApplication::translate("MainWindow", "\346\250\241\345\274\217\350\257\206\345\210\253", 0, QApplication::UnicodeUTF8));
         viewToolBar->setWindowTitle(QApplication::translate("MainWindow", "toolBar", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 

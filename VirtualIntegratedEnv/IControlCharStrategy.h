@@ -38,7 +38,7 @@ class IControlCharStrategy : public dtCore::Base
 {
 public:
 	/// for prototype purpose
-	IControlCharStrategy();
+	IControlCharStrategy(float _SpeedScale=1.0);
 	IControlCharStrategy(const IControlCharStrategy& ICCS);
 	virtual void initStrategyConfig(SettingsInfoStruct& si, IHand* _hand, dtCore::Scene* _scene);
 
@@ -105,6 +105,8 @@ protected:
 	std::bitset<5> mCommandBits;
 	int mWristActionType;
 	int mElbowActionType;
+
+	float mSpeedScale;
 };
 
 #endif // _CONTROLSTRATEGY_H_

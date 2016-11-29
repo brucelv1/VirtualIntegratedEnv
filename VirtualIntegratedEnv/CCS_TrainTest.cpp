@@ -1,22 +1,22 @@
 ////////////////////////////////////////////////////////////////////////// 
 /// Copyright (c) 2015, 上海交通大学-生机电实验室. All rights reserved.  
 ///   
-/// @file    CCS_Keyboard.cpp
-/// @brief   控制字符策略-键盘策略类的源文件    
+/// @file    CCS_TrainTest.cpp
+/// @brief   控制字符策略-模式分类训练和测试的源文件    
 ///  
 /// @version 1.0     
 /// @author  吕威   
 /// @E-mail：lvwei.sjtu@foxmail.com  
-/// @date    2015/7 
+/// @date    2016/11 
 //////////////////////////////////////////////////////////////////////////
 
-#include "CCS_Keyboard.h"
+#include "CCS_TrainTest.h"
 #include <iostream>
 
 /// for prototype purpose
-//MAKE_CCS_PROTOTYPE(CCS_Keyboard)
+//MAKE_CCS_PROTOTYPE(CCS_TrainTest)
 
-CCS_Keyboard::CCS_Keyboard()
+CCS_TrainTest::CCS_TrainTest()
 : IControlCharStrategy()
 , b_mAllFingersRecoverd(false)
 , b_mFingerActionFinished(false)
@@ -27,8 +27,11 @@ CCS_Keyboard::CCS_Keyboard()
 		b_mNeedRecoverToLastFrameToAvoidCollisionDetect[i] = false;
 }
 
-CCS_Keyboard::CCS_Keyboard(const CCS_Keyboard& kbs)
+CCS_TrainTest::CCS_TrainTest(const CCS_TrainTest& kbs)
 {
+	// 设定动作执行的速度倍数
+	IControlCharStrategy::mSpeedScale = 2.0;
+
 	b_mAllFingersRecoverd = kbs.b_mAllFingersRecoverd;
 	b_mFingerActionFinished = kbs.b_mFingerActionFinished;
 	b_mWristRecovered = kbs.b_mWristRecovered;
@@ -38,13 +41,53 @@ CCS_Keyboard::CCS_Keyboard(const CCS_Keyboard& kbs)
 		kbs.b_mNeedRecoverToLastFrameToAvoidCollisionDetect[i];
 }
 
-
-CCS_Keyboard::~CCS_Keyboard(void)
+CCS_TrainTest::~CCS_TrainTest(void)
 {
 }
 
-void CCS_Keyboard::doGesture()
+void CCS_TrainTest::createTrainProcess()
 {
+	using namespace boost::interprocess;
+
+	std::string NameSharedMem = "SharedMemoryTrainTest";
+
+	// Create a native windows shared memory object.
+	// 5 bytes to contain: 0: reference count, 1-4: command int, left->right == high->low
+	_winshm = windows_shared_memory(create_only, NameSharedMem.c_str(), read_write, 5);
+
+	// Map the whole shared memory in this process
+	_region = mapped_region(_winshm, read_write);
+
+	// Write all the memory to 0
+	std::memset(_region.get_address(), 0, _region.get_size());
+
+	// Bind to member variables
+	_ucpSharedMem = static_cast<unsigned char*>(_region.get_address());
+	_stLenSharedMem = _region.get_size();
+
+	// add up reference count
+	_ucpSharedMem[0]+=1;
+
+	// Launch child process
+	// "start" -- async
+	std::string TrainProcess = "start E:\\My_Cpp_Code\\GitHubVersion\\TrainAndTestModule\\Debug\\TrainModule.exe";
+	std::string cmd = TrainProcess+ " " + NameSharedMem;
+	system(cmd.c_str());
+
+	// windows_shared_memory is destroyed when the last attached process dies...
+	// so there is no need to destroy the shared memory manually
+}
+
+void CCS_TrainTest::doGesture()
+{
+	// query shared memory
+	static unsigned char last_cmd = 0;
+	unsigned char cmd = 0X1F & _ucpSharedMem[4];
+	if(cmd != last_cmd)
+	{
+		setCommandBits(std::bitset<5>(cmd));
+		last_cmd = cmd;
+	}
 
 	if(b_mAllFingersRecoverd == false)
 	{
@@ -78,7 +121,7 @@ void CCS_Keyboard::doGesture()
 	}
 }
 
-void CCS_Keyboard::extendAllFingers()
+void CCS_TrainTest::extendAllFingers()
 {
 	//根据手指数初始化一个容器，全部设置为false
 	std::vector<bool> recoveredVec(mHand->FingersVector.size(), false);
@@ -97,9 +140,7 @@ void CCS_Keyboard::extendAllFingers()
 	b_mAllFingersRecoverd = true;
 }
 
-
-
-void CCS_Keyboard::OnMessage(MessageData* data)
+void CCS_TrainTest::OnMessage(MessageData* data)
 {
 	if (data->message == "collision")
 	{
@@ -123,7 +164,7 @@ void CCS_Keyboard::OnMessage(MessageData* data)
 	}
 }
 
-void CCS_Keyboard::setCommandBits(std::bitset<5> bits)
+void CCS_TrainTest::setCommandBits(std::bitset<5> bits)
 {
 	//要做新动作，所以相关标志置为false
 	b_mAllFingersRecoverd = false;
@@ -131,7 +172,7 @@ void CCS_Keyboard::setCommandBits(std::bitset<5> bits)
 	mCommandBits = bits;
 }
 
-void CCS_Keyboard::setWristActionType(int _type)
+void CCS_TrainTest::setWristActionType(int _type)
 {
 	//要做新动作，所以相关标志置为false
 	b_mWristRecovered = false;
@@ -139,8 +180,46 @@ void CCS_Keyboard::setWristActionType(int _type)
 	mWristActionType = _type;
 }
 
-void CCS_Keyboard::doWristAction()
+void CCS_TrainTest::doWristAction()
 {
+	// query shared memory
+	// 256: shangqie, 512: xiaqie
+	// 1024: neifan, 2048: waifan
+	// 4096: neixuan, 8192: waixuan
+	// the command should be divided by 256
+	static unsigned char last_cmd = 0;
+	unsigned char cmd = 0XFF & _ucpSharedMem[3];
+	if(cmd != last_cmd)
+	{
+		switch (cmd)
+		{
+		case 0:
+			setWristActionType(0);
+			break;
+		case 1:
+			setWristActionType(6);
+			break;
+		case 2:
+			setWristActionType(5);
+			break;
+		case 4:
+			setWristActionType(3);
+			break;
+		case 8:
+			setWristActionType(4);
+			break;
+		case 16:
+			setWristActionType(2);
+			break;
+		case 32:
+			setWristActionType(1);
+			break;
+		default:
+			return;
+		}
+		last_cmd = cmd;
+	}
+
 	if(b_mWristRecovered == false)
 	{
 		if(b_mWristActionFinished == true)
@@ -218,7 +297,7 @@ void CCS_Keyboard::doWristAction()
 	}
 }
 
-void CCS_Keyboard::recoverWrist()
+void CCS_TrainTest::recoverWrist()
 {
 	bool postR = true;
 	bool wP = true;
@@ -259,8 +338,33 @@ void CCS_Keyboard::recoverWrist()
 		b_mWristRecovered = true;
 }
 
-void CCS_Keyboard::doElbowAction()
+void CCS_TrainTest::doElbowAction()
 {
+	// query shared memory
+	// 16384: shenzhou, _ucpSharedMem[3]的第6位,2^6
+	// 32768: quzhou, _ucpSharedMem[3]的第7位,2^7
+	// the command should be divided by 256
+	static unsigned char last_cmd = 0;
+	unsigned char cmd = 0XFF & _ucpSharedMem[3];
+	if(cmd != last_cmd)
+	{
+		switch (cmd)
+		{
+		case 0:
+			setElbowActionType(0);
+			break;
+		case 64:
+			setElbowActionType(1);
+			break;
+		case 128:
+			setElbowActionType(0);
+			break;
+		default:
+			return;
+		}
+		last_cmd = cmd;
+	}
+
 	static float Angle = 0;
 	Part* ForeArm = mHand->mForeArm;
 	Part* UpperArm = mHand->mArm;
@@ -268,6 +372,7 @@ void CCS_Keyboard::doElbowAction()
 	if (ForeArm == NULL || UpperArm == NULL)
 	    return;
 
+	// 屈肘，默认休息态
 	if (mElbowActionType == 0 && Angle > 0)
 	{
 		Angle -= 2.0;
@@ -275,6 +380,7 @@ void CCS_Keyboard::doElbowAction()
 		ForeArm->setAttitude(osg::Vec3(-Angle,0,0));
 	}
 
+	// 伸肘
 	if (mElbowActionType == 1 && Angle <= 50) // 前伸至50度位置
 	{
 		Angle += 2.0;
@@ -286,71 +392,8 @@ void CCS_Keyboard::doElbowAction()
 	ForeArm->makeTransform();
 }
 
-void CCS_Keyboard::updateCommand(int key)
-{
-	switch(key)
-	{
-	case '1':
-		setWristActionType(1);
-		break;
-	case '2':
-		setWristActionType(2);
-		break;
-	case '3':
-		setWristActionType(3);
-		break;
-	case '4':
-		setWristActionType(4);
-		break;
-	case '5':
-		setWristActionType(5);
-		break;
-	case '6':
-		setWristActionType(6);
-		break;
-	case '7':
-		setElbowActionType(1);
-		break;
-	case 'f':
-		setCommandBits(std::bitset<5>(0X1F));
-		break;
-
-	case 'g':
-		setCommandBits(std::bitset<5>(0X19));
-		break;
-
-	case 't':
-		setCommandBits(std::bitset<5>(0X03));
-		break;
-
-	case 'x':
-		setCommandBits(std::bitset<5>(0X0E));
-		break;
-
-	case 'u':
-		setCommandBits(std::bitset<5>(0X07));
-		break;
-
-	case 'i':
-		setCommandBits(std::bitset<5>(0X1D));
-		break;
-
-	case 'n':
-		setCommandBits(std::bitset<5>(0X1C));
-		break;
-
-	case 'r':
-		setCommandBits(std::bitset<5>(0X00));
-		setWristActionType(0);
-		setElbowActionType(0);
-		break;
-
-	default:
-		break;
-	}
-}
-
-void CCS_Keyboard::initStrategyConfig( SettingsInfoStruct& si, IHand* _hand, dtCore::Scene* _scene )
+void CCS_TrainTest::initStrategyConfig( SettingsInfoStruct& si, IHand* _hand, dtCore::Scene* _scene )
 {
 	IControlCharStrategy::initStrategyConfig(si,_hand,_scene);
+	createTrainProcess();
 }

@@ -23,6 +23,7 @@
 #include <QtGui/QMessageBox>
 #include <QtGui/QFileDialog>
 #include "InfoStruct.h"
+#include <Windows.h>
 
 
 MyQtWindow::MyQtWindow(VIECoreApp* _vcApp,QMainWindow* parent)
@@ -128,8 +129,6 @@ void MyQtWindow::on_actionSettings_triggered()  //自动关联槽
 		sis.inputCOM = sDlg.InputBox->currentText().remove(0,3).toInt();
 		sis.outputCOM = sDlg.OutputBox->currentText().remove(0,3).toInt();
 
-		actionStart->setEnabled(true);  //该对话框被done之后，才能使用“启动”按钮
-
 		if( !mVIECoreApp->On_SettingsInfo(sis))
 		{
 			QMessageBox msgBox;
@@ -139,7 +138,10 @@ void MyQtWindow::on_actionSettings_triggered()  //自动关联槽
 			msgBox.setStandardButtons(QMessageBox::Ok);
 			msgBox.setDefaultButton(QMessageBox::Ok);
 			msgBox.exec();
+			return;
 		}
+
+		actionStart->setEnabled(true);  //策略被成功创建后，才能使用“启动”按钮
 	}
 	
 }
@@ -250,4 +252,35 @@ void MyQtWindow::on_actionAddCustomHand_triggered()
 	{
 		mVIECoreApp->LoadHand("UserCustom",hcf.PathLine->text().toStdString());
 	}
+}
+
+void MyQtWindow::on_actionTraining_triggered()
+{
+	SettingsInfoStruct sis;
+
+	sis.strategy = "CCS_TrainTest";
+	sis.inputCOM = 0;
+	sis.outputCOM = 0;
+
+	if( !mVIECoreApp->On_SettingsInfo(sis))
+	{
+		QMessageBox msgBox;
+		msgBox.setWindowTitle("Strategy Setting");
+		msgBox.setIcon(QMessageBox::Icon::Warning);
+		msgBox.setInformativeText("The selected strategy has not been loaded!");
+		msgBox.setStandardButtons(QMessageBox::Ok);
+		msgBox.setDefaultButton(QMessageBox::Ok);
+		msgBox.exec();
+
+		return;
+	}
+
+	// simulate pressing "Start" button
+	// the simulation starts from now.
+	on_actionStart_triggered();
+}
+
+void MyQtWindow::on_actionTesting_triggered()
+{
+
 }
