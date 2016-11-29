@@ -23,6 +23,9 @@
 #include "userAddInfoStruct.h"
 #include "VIECoreApp.h"
 #include <dtCore/base.h> //使用其消息机制
+#include <boost/interprocess/windows_shared_memory.hpp>
+#include <boost/interprocess/mapped_region.hpp>
+#include <QtCore/QTimer>
 
 class MyQtWindow :
 	public QMainWindow , public Ui_MainWindow, public dtCore::Base //采用了多继承，注意二义性！
@@ -54,6 +57,9 @@ public slots:
 	void on_actionTraining_triggered();
 	void on_actionTesting_triggered();
 
+private slots:
+	void _qTimer_timeout();
+
 signals:
 	void userAddData(userAddInfo* uAI);
 	void StartTriggered();
@@ -69,5 +75,17 @@ signals:
 
 private:
 	VIECoreApp* mVIECoreApp;
+	// shared memory
+	boost::interprocess::windows_shared_memory _winshm;
+	boost::interprocess::mapped_region _region;
+	unsigned char* _ucpSharedMem;
+	size_t         _stLenSharedMem;
+
+	// 创建训练测试子进程
+	void createTrainTestProcess(std::string& module_path);
+
+	// Timer, for processing bar
+	QTimer* qTimer;
+	int processingBarVal;
 };
 #endif //_Delta_MyMainWindow_H_
