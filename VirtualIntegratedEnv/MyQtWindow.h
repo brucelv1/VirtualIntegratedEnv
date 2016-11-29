@@ -82,7 +82,7 @@ private:
 	size_t         _stLenSharedMem;
 
 	// 创建训练测试子进程
-	void createTrainTestProcess(std::string& module_path);
+	void createTrainTestProcess(std::string& module_path, const std::string& NameSharedMem);
 
 	// Timer, for processing bar
 	QTimer* qTimer;

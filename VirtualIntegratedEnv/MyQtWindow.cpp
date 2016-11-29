@@ -261,7 +261,7 @@ void MyQtWindow::on_actionAddCustomHand_triggered()
 void MyQtWindow::on_actionTraining_triggered()
 {
 	std::string trainModule = "E:\\My_Cpp_Code\\GitHubVersion\\TrainAndTestModule\\Debug\\TrainModule.exe";
-	this->createTrainTestProcess(trainModule);
+	this->createTrainTestProcess(trainModule, "SharedMemoryTrain");
 
 	SettingsInfoStruct sis;
 	sis.strategy = "CCS_TrainTest";
@@ -298,7 +298,7 @@ void MyQtWindow::on_actionTesting_triggered()
 
 	// test module
 	std::string testModule = "E:\\My_Cpp_Code\\GitHubVersion\\TrainAndTestModule\\Debug\\TestModule.exe";
-	this->createTrainTestProcess(testModule);
+	this->createTrainTestProcess(testModule, "SharedMemoryTest");
 	
 	SettingsInfoStruct sis;
 	sis.strategy = "CCS_TrainTest";
@@ -325,11 +325,9 @@ void MyQtWindow::on_actionTesting_triggered()
 	on_actionStart_triggered();
 }
 
-void MyQtWindow::createTrainTestProcess(std::string& module_path)
+void MyQtWindow::createTrainTestProcess(std::string& module_path, const std::string& NameSharedMem)
 {
 	using namespace boost::interprocess;
-
-	std::string NameSharedMem = "SharedMemoryTrainTest";
 
 	// Create a native windows shared memory object.
 	// 5 bytes to contain: 0: reference count, 1-4: command int, left->right == high->low
