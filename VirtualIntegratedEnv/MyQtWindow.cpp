@@ -368,4 +368,16 @@ void MyQtWindow::_qTimer_timeout()
 	// 6th byte: process
 	processingBarVal = _ucpSharedMem[6];
 	progressBar->setValue(processingBarVal);
+
+	// 5th byte: countdown
+	if(_ucpSharedMem[5] == 3)
+		LECountdown->setText("3");
+	else if(_ucpSharedMem[5] == 2)
+		LECountdown->setText("2");
+	else if(_ucpSharedMem[5] == 1)
+		LECountdown->setText("1");
+	else if(_ucpSharedMem[5] == 0)
+		LECountdown->setText("Go!");
+	else
+		LECountdown->setText(" ");
 }
