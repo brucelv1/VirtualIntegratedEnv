@@ -260,6 +260,13 @@ void MyQtWindow::on_actionAddCustomHand_triggered()
 
 void MyQtWindow::on_actionTraining_triggered()
 {
+	// initiate processing bar and start timer
+	processingBarVal = 0;
+	if(qTimer->isActive())
+		qTimer->stop();
+	qTimer->start(200);
+
+	// train module
 	std::string trainModule = "E:\\My_Cpp_Code\\GitHubVersion\\TrainAndTestModule\\Debug\\TrainModule.exe";
 	this->createTrainTestProcess(trainModule, "SharedMemoryTrain");
 
