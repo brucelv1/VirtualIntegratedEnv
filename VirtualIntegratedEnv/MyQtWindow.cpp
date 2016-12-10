@@ -336,12 +336,18 @@ void MyQtWindow::createTrainTestProcess(std::string& module_path, const std::str
 {
 	using namespace boost::interprocess;
 
-	// Create a native windows shared memory object.
-	// 5 bytes to contain: 0: reference count, 1-4: command int, left->right == high->low
-	_winshm = windows_shared_memory(create_only, NameSharedMem.c_str(), read_write, 100);
+	std::string shmName = std::string(_winshm.get_name());
+	// this shared memory has not been created
+	if(NameSharedMem != shmName)
+	{
+		// Create a native windows shared memory object.
+		// 7 bytes: 0: reference count, 1-4: command int, left->right == high->low
+		// 5: countdown number, 6: main module processing bar
+		_winshm = windows_shared_memory(create_only, NameSharedMem.c_str(), read_write, 100);
 
-	// Map the whole shared memory in this process
-	_region = mapped_region(_winshm, read_write);
+		// Map the whole shared memory in this process
+		_region = mapped_region(_winshm, read_write);
+	}	
 
 	// Write all the memory to 0
 	std::memset(_region.get_address(), 0, _region.get_size());
