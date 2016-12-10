@@ -14,14 +14,16 @@
 #include <QtGui/QApplication>
 #include <QtGui/QButtonGroup>
 #include <QtGui/QGraphicsView>
-#include <QtGui/QGridLayout>
+#include <QtGui/QHBoxLayout>
 #include <QtGui/QHeaderView>
+#include <QtGui/QLineEdit>
 #include <QtGui/QMainWindow>
 #include <QtGui/QMenu>
 #include <QtGui/QMenuBar>
 #include <QtGui/QProgressBar>
 #include <QtGui/QStatusBar>
 #include <QtGui/QToolBar>
+#include <QtGui/QVBoxLayout>
 #include <QtGui/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -48,8 +50,10 @@ public:
     QAction *actionTraining;
     QAction *actionTesting;
     QWidget *centralwidget;
-    QGridLayout *gridLayout;
+    QVBoxLayout *verticalLayout;
     QGraphicsView *graphicsView;
+    QHBoxLayout *horizontalLayout;
+    QLineEdit *LECountdown;
     QProgressBar *progressBar;
     QMenuBar *menubar;
     QMenu *menu_F;
@@ -63,7 +67,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-        MainWindow->resize(792, 552);
+        MainWindow->resize(765, 527);
         QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
@@ -107,25 +111,38 @@ public:
         actionTesting->setObjectName(QString::fromUtf8("actionTesting"));
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
-        gridLayout = new QGridLayout(centralwidget);
-        gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
+        verticalLayout = new QVBoxLayout(centralwidget);
+        verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
         graphicsView = new QGraphicsView(centralwidget);
         graphicsView->setObjectName(QString::fromUtf8("graphicsView"));
         graphicsView->setLineWidth(1);
 
-        gridLayout->addWidget(graphicsView, 0, 0, 1, 1);
+        verticalLayout->addWidget(graphicsView);
+
+        horizontalLayout = new QHBoxLayout();
+        horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
+        LECountdown = new QLineEdit(centralwidget);
+        LECountdown->setObjectName(QString::fromUtf8("LECountdown"));
+        LECountdown->setReadOnly(true);
+
+        horizontalLayout->addWidget(LECountdown);
 
         progressBar = new QProgressBar(centralwidget);
         progressBar->setObjectName(QString::fromUtf8("progressBar"));
         progressBar->setValue(0);
         progressBar->setTextVisible(false);
 
-        gridLayout->addWidget(progressBar, 1, 0, 1, 1);
+        horizontalLayout->addWidget(progressBar);
+
+        horizontalLayout->setStretch(0, 1);
+        horizontalLayout->setStretch(1, 8);
+
+        verticalLayout->addLayout(horizontalLayout);
 
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName(QString::fromUtf8("menubar"));
-        menubar->setGeometry(QRect(0, 0, 792, 23));
+        menubar->setGeometry(QRect(0, 0, 765, 23));
         menu_F = new QMenu(menubar);
         menu_F->setObjectName(QString::fromUtf8("menu_F"));
         menu_S = new QMenu(menubar);

@@ -45,39 +45,6 @@ CCS_TrainTest::~CCS_TrainTest(void)
 {
 }
 
-void CCS_TrainTest::createTrainProcess()
-{
-	using namespace boost::interprocess;
-
-	std::string NameSharedMem = "SharedMemoryTrainTest";
-
-	// Create a native windows shared memory object.
-	// 5 bytes to contain: 0: reference count, 1-4: command int, left->right == high->low
-	_winshm = windows_shared_memory(create_only, NameSharedMem.c_str(), read_write, 5);
-
-	// Map the whole shared memory in this process
-	_region = mapped_region(_winshm, read_write);
-
-	// Write all the memory to 0
-	std::memset(_region.get_address(), 0, _region.get_size());
-
-	// Bind to member variables
-	_ucpSharedMem = static_cast<unsigned char*>(_region.get_address());
-	_stLenSharedMem = _region.get_size();
-
-	// add up reference count
-	_ucpSharedMem[0]+=1;
-
-	// Launch child process
-	// "start" -- async
-	std::string TrainProcess = "start E:\\My_Cpp_Code\\GitHubVersion\\TrainAndTestModule\\Debug\\TrainModule.exe";
-	std::string cmd = TrainProcess+ " " + NameSharedMem;
-	system(cmd.c_str());
-
-	// windows_shared_memory is destroyed when the last attached process dies...
-	// so there is no need to destroy the shared memory manually
-}
-
 void CCS_TrainTest::doGesture()
 {
 	// query shared memory
@@ -395,5 +362,7 @@ void CCS_TrainTest::doElbowAction()
 void CCS_TrainTest::initStrategyConfig( SettingsInfoStruct& si, IHand* _hand, dtCore::Scene* _scene )
 {
 	IControlCharStrategy::initStrategyConfig(si,_hand,_scene);
-	createTrainProcess();
+	this->_ucpSharedMem = si.nameSharedMem;
+	this->_stLenSharedMem = si.lenSharedMem;
+	//createTrainProcess();
 }

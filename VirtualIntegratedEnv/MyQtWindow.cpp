@@ -27,9 +27,9 @@
 
 
 MyQtWindow::MyQtWindow(VIECoreApp* _vcApp,QMainWindow* parent)
-:QMainWindow(parent)
-,mVIECoreApp(_vcApp)
-
+    : QMainWindow(parent)
+    , mVIECoreApp(_vcApp)
+    , processingBarVal(0)
 {
 	setupUi(this);
 	this->showMaximized();
@@ -43,6 +43,10 @@ MyQtWindow::MyQtWindow(VIECoreApp* _vcApp,QMainWindow* parent)
 	connect(action_Add,SIGNAL(triggered()),this,SLOT(on_action_Add_triggered()));
 
 	this->AddSender(mVIECoreApp);
+
+	// processing bar timer
+	qTimer = new QTimer(this);
+	connect(qTimer, SIGNAL(timeout()), this, SLOT(_qTimer_timeout()));
 }
 
 MyQtWindow::~MyQtWindow(void)
@@ -256,18 +260,29 @@ void MyQtWindow::on_actionAddCustomHand_triggered()
 
 void MyQtWindow::on_actionTraining_triggered()
 {
-	SettingsInfoStruct sis;
+	// initiate processing bar and start timer
+	processingBarVal = 0;
+	if(qTimer->isActive())
+		qTimer->stop();
+	qTimer->start(200);
 
+	// train module
+	std::string trainModule = "E:\\My_Cpp_Code\\GitHubVersion\\TrainAndTestModule\\Debug\\TrainModule.exe";
+	this->createTrainTestProcess(trainModule, "SharedMemoryTrain");
+
+	SettingsInfoStruct sis;
 	sis.strategy = "CCS_TrainTest";
 	sis.inputCOM = 0;
 	sis.outputCOM = 0;
+	sis.nameSharedMem = _ucpSharedMem;
+	sis.lenSharedMem = _stLenSharedMem;
 
 	if( !mVIECoreApp->On_SettingsInfo(sis))
 	{
 		QMessageBox msgBox;
 		msgBox.setWindowTitle("Strategy Setting");
 		msgBox.setIcon(QMessageBox::Icon::Warning);
-		msgBox.setInformativeText("The selected strategy has not been loaded!");
+		msgBox.setInformativeText("The training strategy has not been loaded!");
 		msgBox.setStandardButtons(QMessageBox::Ok);
 		msgBox.setDefaultButton(QMessageBox::Ok);
 		msgBox.exec();
@@ -282,5 +297,93 @@ void MyQtWindow::on_actionTraining_triggered()
 
 void MyQtWindow::on_actionTesting_triggered()
 {
+	// initiate processing bar and start timer
+	processingBarVal = 0;
+	if(qTimer->isActive())
+		qTimer->stop();
+	qTimer->start(200);
 
+	// test module
+	std::string testModule = "E:\\My_Cpp_Code\\GitHubVersion\\TrainAndTestModule\\Debug\\TestModule.exe";
+	this->createTrainTestProcess(testModule, "SharedMemoryTest");
+	
+	SettingsInfoStruct sis;
+	sis.strategy = "CCS_TrainTest";
+	sis.inputCOM = 0;
+	sis.outputCOM = 0;
+	sis.nameSharedMem = _ucpSharedMem;
+	sis.lenSharedMem = _stLenSharedMem;
+
+	if( !mVIECoreApp->On_SettingsInfo(sis))
+	{
+		QMessageBox msgBox;
+		msgBox.setWindowTitle("Strategy Setting");
+		msgBox.setIcon(QMessageBox::Icon::Warning);
+		msgBox.setInformativeText("The testing strategy has not been loaded!");
+		msgBox.setStandardButtons(QMessageBox::Ok);
+		msgBox.setDefaultButton(QMessageBox::Ok);
+		msgBox.exec();
+
+		return;
+	}
+
+	// simulate pressing "Start" button
+	// the simulation starts from now.
+	on_actionStart_triggered();
+}
+
+void MyQtWindow::createTrainTestProcess(std::string& module_path, const std::string& NameSharedMem)
+{
+	using namespace boost::interprocess;
+
+	std::string shmName = std::string(_winshm.get_name());
+	// this shared memory has not been created
+	if(NameSharedMem != shmName)
+	{
+		// Create a native windows shared memory object.
+		// 7 bytes: 0: reference count, 1-4: command int, left->right == high->low
+		// 5: countdown number, 6: main module processing bar
+		_winshm = windows_shared_memory(create_only, NameSharedMem.c_str(), read_write, 100);
+
+		// Map the whole shared memory in this process
+		_region = mapped_region(_winshm, read_write);
+	}	
+
+	// Write all the memory to 0
+	std::memset(_region.get_address(), 0, _region.get_size());
+
+	// Bind to member variables
+	_ucpSharedMem = static_cast<unsigned char*>(_region.get_address());
+	_stLenSharedMem = _region.get_size();
+
+	// add up reference count
+	_ucpSharedMem[0]+=1;
+
+	// Launch child process
+	// "start" -- async
+	std::string TrainProcess = "start "+module_path;
+	std::string cmd = TrainProcess+ " " + NameSharedMem;
+	system(cmd.c_str());
+
+	// windows_shared_memory is destroyed when the last attached process dies...
+	// so there is no need to destroy the shared memory manually
+}
+
+void MyQtWindow::_qTimer_timeout()
+{
+	// 6th byte: process
+	processingBarVal = _ucpSharedMem[6];
+	progressBar->setValue(processingBarVal);
+
+	// 5th byte: countdown
+	if(_ucpSharedMem[5] == 3)
+		LECountdown->setText("3");
+	else if(_ucpSharedMem[5] == 2)
+		LECountdown->setText("2");
+	else if(_ucpSharedMem[5] == 1)
+		LECountdown->setText("1");
+	else if(_ucpSharedMem[5] == 0)
+		LECountdown->setText("Go!");
+	else
+		LECountdown->setText(" ");
 }

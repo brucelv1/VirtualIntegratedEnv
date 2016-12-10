@@ -21,8 +21,8 @@
 #include "IControlCharStrategy.h"
 #include <osg/Vec3>
 #include <dtCore/scene.h>
-#include <boost/interprocess/windows_shared_memory.hpp>
-#include <boost/interprocess/mapped_region.hpp>
+//#include <boost/interprocess/windows_shared_memory.hpp>
+//#include <boost/interprocess/mapped_region.hpp>
 
 class CCS_TrainTest :
 	public IControlCharStrategy
@@ -39,7 +39,7 @@ public:
 	virtual ~CCS_TrainTest(void);
 
 	// 创建训练进程
-	void createTrainProcess();
+	//void createTrainProcess();
 
 	//手指动作函数
 	virtual void doGesture();
@@ -68,8 +68,8 @@ private:
 	bool b_mNeedRecoverToLastFrameToAvoidCollisionDetect[5];
 
 	// shared memory
-	boost::interprocess::windows_shared_memory _winshm;
-	boost::interprocess::mapped_region _region;
+	/*boost::interprocess::windows_shared_memory _winshm;
+	boost::interprocess::mapped_region _region;*/
 	unsigned char* _ucpSharedMem;
 	size_t         _stLenSharedMem;
 };

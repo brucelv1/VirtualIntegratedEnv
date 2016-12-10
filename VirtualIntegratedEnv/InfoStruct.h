@@ -30,6 +30,8 @@ struct SettingsInfoStruct
 	std::string strategy;          //策略名
 	unsigned int inputCOM;         //输入设备串口号
 	unsigned int outputCOM;        //输出设备串口号
+	unsigned char* nameSharedMem;  //共享内存地址
+	size_t         lenSharedMem;//共享内存长度，字节数
 };
 
 struct CollisionInfoStruct
