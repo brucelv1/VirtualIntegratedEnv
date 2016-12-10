@@ -48,7 +48,7 @@ CCS_TrainTest::~CCS_TrainTest(void)
 void CCS_TrainTest::doGesture()
 {
 	// query shared memory
-	static unsigned char last_cmd = 0;
+	static unsigned char last_cmd = -1;
 	unsigned char cmd = 0X1F & _ucpSharedMem[4];
 	if(cmd != last_cmd)
 	{
@@ -205,9 +205,9 @@ void CCS_TrainTest::doWristAction()
 		if(mWristActionType == 1)
 		{
 			Part* pt = mHand->mPostWrist;
-			if(pt != NULL && pt->getAttitude().z() < 30)
+			if(pt != NULL && pt->getAttitude().z() < 70)
 			{
-				pt->setAttitude(pt->getAttitude() + osg::Vec3(0,0,1.5));
+				pt->setAttitude(pt->getAttitude() + osg::Vec3(0,0,3.0));
 				pt->makeTransform();
 			}
 		}
@@ -215,9 +215,9 @@ void CCS_TrainTest::doWristAction()
 		if(mWristActionType == 2)
 		{
 			Part* pt = mHand->mPostWrist;
-			if(pt != NULL && pt->getAttitude().z() > -30)
+			if(pt != NULL && pt->getAttitude().z() > -70)
 			{
-				pt->setAttitude(pt->getAttitude() - osg::Vec3(0,0,1.5));
+				pt->setAttitude(pt->getAttitude() - osg::Vec3(0,0,3.0));
 				pt->makeTransform();
 			}
 		}
@@ -225,9 +225,9 @@ void CCS_TrainTest::doWristAction()
 		if(mWristActionType == 3)
 		{
 			Part* pt = mHand->mWrist;
-			if(pt != NULL && pt->getAttitude().y() > -30)
+			if(pt != NULL && pt->getAttitude().y() > -70)
 			{
-				pt->setAttitude(pt->getAttitude() - osg::Vec3(0,1.5,0));
+				pt->setAttitude(pt->getAttitude() - osg::Vec3(0,3.0,0));
 				pt->makeTransform();
 			}
 		}
@@ -235,9 +235,9 @@ void CCS_TrainTest::doWristAction()
 		if(mWristActionType == 4)
 		{
 			Part* pt = mHand->mWrist;
-			if(pt != NULL && pt->getAttitude().y() < 30)
+			if(pt != NULL && pt->getAttitude().y() < 70)
 			{
-				pt->setAttitude(pt->getAttitude() + osg::Vec3(0,1.5,0));
+				pt->setAttitude(pt->getAttitude() + osg::Vec3(0,3.0,0));
 				pt->makeTransform();
 			}
 		}
@@ -245,9 +245,9 @@ void CCS_TrainTest::doWristAction()
 		if(mWristActionType == 5)
 		{
 			Part* pt = mHand->mWrist;
-			if(pt != NULL && pt->getAttitude().x() > -30)
+			if(pt != NULL && pt->getAttitude().x() > -70)
 			{
-				pt->setAttitude(pt->getAttitude() - osg::Vec3(1.5,0,0));
+				pt->setAttitude(pt->getAttitude() - osg::Vec3(3.0,0,0));
 				pt->makeTransform();
 			}
 		}
@@ -255,9 +255,9 @@ void CCS_TrainTest::doWristAction()
 		if(mWristActionType == 6)
 		{
 			Part* pt = mHand->mWrist;
-			if(pt != NULL && pt->getAttitude().x() < 30)
+			if(pt != NULL && pt->getAttitude().x() < 70)
 			{
-				pt->setAttitude(pt->getAttitude() + osg::Vec3(1.5,0,0));
+				pt->setAttitude(pt->getAttitude() + osg::Vec3(3.0,0,0));
 				pt->makeTransform();
 			}
 		}
@@ -275,30 +275,30 @@ void CCS_TrainTest::recoverWrist()
 	if(pt1 != NULL)
 	{
 		if (pt1->getAttitude().z() < 0)
-			pt1->setAttitude(pt1->getAttitude() + osg::Vec3(0,0,1.5));
+			pt1->setAttitude(pt1->getAttitude() + osg::Vec3(0,0,3.0));
 		if (pt1->getAttitude().z() > 0)
-			pt1->setAttitude(pt1->getAttitude() - osg::Vec3(0,0,1.5));
+			pt1->setAttitude(pt1->getAttitude() - osg::Vec3(0,0,3.0));
 
 		pt1->makeTransform();
 
-		postR = (-0.75 <= pt1->getAttitude().z() && pt1->getAttitude().z() <= 0.75);
+		postR = (-1.5 <= pt1->getAttitude().z() && pt1->getAttitude().z() <= 1.5);
 	}
 	
 	if(pt2 != NULL)
 	{
 		if (pt2->getAttitude().y() < 0)
-			pt2->setAttitude(pt2->getAttitude() + osg::Vec3(0,1.5,0));
+			pt2->setAttitude(pt2->getAttitude() + osg::Vec3(0,3.0,0));
 		if (pt2->getAttitude().y() > 0)
-			pt2->setAttitude(pt2->getAttitude() - osg::Vec3(0,1.5,0));
+			pt2->setAttitude(pt2->getAttitude() - osg::Vec3(0,3.0,0));
 		if (pt2->getAttitude().x() < 0)
-			pt2->setAttitude(pt2->getAttitude() + osg::Vec3(1.5,0,0));
+			pt2->setAttitude(pt2->getAttitude() + osg::Vec3(3.0,0,0));
 		if (pt2->getAttitude().x() > 0)
-			pt2->setAttitude(pt2->getAttitude() - osg::Vec3(1.5,0,0));
+			pt2->setAttitude(pt2->getAttitude() - osg::Vec3(3.0,0,0));
 
 		pt2->makeTransform();
 
-		wP = (-0.75 <= pt2->getAttitude().y() && pt2->getAttitude().y() <= 0.75);
-		wH = (-0.75 <= pt2->getAttitude().x() && pt2->getAttitude().x() <= 0.75);
+		wP = (-1.5 <= pt2->getAttitude().y() && pt2->getAttitude().y() <= 1.5);
+		wH = (-1.5 <= pt2->getAttitude().x() && pt2->getAttitude().x() <= 1.5);
 	}
 
 	if(postR && wP && wH)
