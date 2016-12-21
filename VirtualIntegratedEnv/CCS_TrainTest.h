@@ -44,6 +44,7 @@ public:
 	//手指动作函数
 	virtual void doGesture();
 	void extendAllFingers();
+	void doOpenHand(char command); // called in doGesture()
 
 	//手腕动作函数
 	virtual void doWristAction();

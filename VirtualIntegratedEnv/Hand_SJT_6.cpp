@@ -116,3 +116,50 @@ void Hand_SJT_6::setMotionPriority()
 	getFingerFromVector(0)->addHigherPriority(getFingerFromVector(3));
 	getFingerFromVector(0)->addHigherPriority(getFingerFromVector(4));
 }
+
+void Hand_SJT_6::OpenHand( bool open )
+{
+	static Part* thumbbase = getFingerFromVector(0)->getKnuckleAt(0);
+	static Part* indexbase = getFingerFromVector(1)->getKnuckleAt(1);
+	static Part* middlebase = getFingerFromVector(2)->getKnuckleAt(1);
+	static Part* ringbase = getFingerFromVector(3)->getKnuckleAt(1);
+	static Part* littlebase = getFingerFromVector(4)->getKnuckleAt(1);
+	static int times = 0;
+
+	if (open)
+	{
+		if(times>=20)
+			return;
+
+		thumbbase->setAttitude(thumbbase->getAttitude() - thumbbase->getDeltaAttitudePerFrame());
+		thumbbase->makeTransform();
+		indexbase->setAttitude(indexbase->getAttitude() - indexbase->getDeltaAttitudePerFrame());
+		indexbase->makeTransform();
+		middlebase->setAttitude(middlebase->getAttitude() - middlebase->getDeltaAttitudePerFrame());
+		middlebase->makeTransform();
+		ringbase->setAttitude(ringbase->getAttitude() - ringbase->getDeltaAttitudePerFrame());
+		ringbase->makeTransform();
+		littlebase->setAttitude(littlebase->getAttitude() - littlebase->getDeltaAttitudePerFrame());
+		littlebase->makeTransform();
+
+		times++;
+	}
+	else
+	{
+		if(times <= 0)
+			return;
+
+		thumbbase->setAttitude(thumbbase->getAttitude() + thumbbase->getDeltaAttitudePerFrame());
+		thumbbase->makeTransform();
+		indexbase->setAttitude(indexbase->getAttitude() + indexbase->getDeltaAttitudePerFrame());
+		indexbase->makeTransform();
+		middlebase->setAttitude(middlebase->getAttitude() + middlebase->getDeltaAttitudePerFrame());
+		middlebase->makeTransform();
+		ringbase->setAttitude(ringbase->getAttitude() + ringbase->getDeltaAttitudePerFrame());
+		ringbase->makeTransform();
+		littlebase->setAttitude(littlebase->getAttitude() + littlebase->getDeltaAttitudePerFrame());
+		littlebase->makeTransform();
+
+		times--;
+	}	
+}

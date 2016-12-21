@@ -47,9 +47,12 @@ CCS_TrainTest::~CCS_TrainTest(void)
 
 void CCS_TrainTest::doGesture()
 {
-	// query shared memory
+	// query shared memory to do OpenHand
+	unsigned char cmd = 0X20 & _ucpSharedMem[4];
+	doOpenHand( (cmd>>5) );
+
 	static unsigned char last_cmd = -1;
-	unsigned char cmd = 0X1F & _ucpSharedMem[4];
+	cmd = 0X1F & _ucpSharedMem[4];
 	if(cmd != last_cmd)
 	{
 		setCommandBits(std::bitset<5>(cmd));
@@ -105,6 +108,11 @@ void CCS_TrainTest::extendAllFingers()
 	}
 	//所有手指都回位，才能执行到这一步
 	b_mAllFingersRecoverd = true;
+}
+
+void CCS_TrainTest::doOpenHand( char command )
+{
+	mHand->OpenHand(command==1);
 }
 
 void CCS_TrainTest::OnMessage(MessageData* data)
