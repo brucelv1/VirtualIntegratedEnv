@@ -23,6 +23,7 @@
     </CustomBuild>
     <ClInclude Include="BarrettGrasp.h" />
     <ClInclude Include="CCS_TrainTest.h" />
+    <ClInclude Include="CCS_UserExercise.h" />
     <ClInclude Include="ColorVisitor.h" />
     <ClInclude Include="EDS_2x3PlaneFingers.h" />
     <ClInclude Include="EDS_MatlabBarrett.h" />
@@ -80,6 +81,7 @@
     <ClCompile Include="AddDialog.cpp" />
     <ClCompile Include="AddObjDlg.cpp" />
     <ClCompile Include="CCS_TrainTest.cpp" />
+    <ClCompile Include="CCS_UserExercise.cpp" />
     <ClCompile Include="ColorVisitor.cpp" />
     <ClCompile Include="EDS_2x3PlaneFingers.cpp" />
     <ClCompile Include="EDS_DataGlove.cpp" />

@@ -120,6 +120,9 @@
     <ClInclude Include="ColorVisitor.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="CCS_UserExercise.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AddDialog.cpp">
@@ -222,6 +225,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="ColorVisitor.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CCS_UserExercise.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
