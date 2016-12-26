@@ -44,7 +44,7 @@ void InfoVisitor::apply(osg::Geode& node)
 		{
 			std::cout<<"  ";
 		}
-		std::cout<<"["<<_indent+1<<"]"<<drawable->libraryName()<<":lv:"<<drawable->className()<<"  "<<drawable->getName()<<std::endl;
+		std::cout<<"["<<_indent+1<<"]"<<drawable->libraryName()<<"::"<<drawable->className()<<"  "<<drawable->getName()<<std::endl;
 	}
 
 	_indent++;

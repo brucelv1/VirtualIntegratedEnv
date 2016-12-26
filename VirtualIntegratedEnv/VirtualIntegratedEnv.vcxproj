@@ -23,6 +23,7 @@
     </CustomBuild>
     <ClInclude Include="BarrettGrasp.h" />
     <ClInclude Include="CCS_TrainTest.h" />
+    <ClInclude Include="ColorVisitor.h" />
     <ClInclude Include="EDS_2x3PlaneFingers.h" />
     <ClInclude Include="EDS_MatlabBarrett.h" />
     <ClInclude Include="EDS_MatlabYangFan.h" />
@@ -40,7 +41,6 @@
     <ClInclude Include="Hand_Human.h" />
     <ClInclude Include="Hand_SJT_3.h" />
     <ClInclude Include="InfoStruct.h" />
-    <ClInclude Include="AttributeVisitor.h" />
     <ClInclude Include="EDS_DataGlove.h" />
     <ClInclude Include="Finger.h" />
     <ClInclude Include="Hand_SJT_6.h" />
@@ -79,8 +79,8 @@
   <ItemGroup>
     <ClCompile Include="AddDialog.cpp" />
     <ClCompile Include="AddObjDlg.cpp" />
-    <ClCompile Include="AttributeVisitor.cpp" />
     <ClCompile Include="CCS_TrainTest.cpp" />
+    <ClCompile Include="ColorVisitor.cpp" />
     <ClCompile Include="EDS_2x3PlaneFingers.cpp" />
     <ClCompile Include="EDS_DataGlove.cpp" />
     <ClCompile Include="EDS_MatlabBarrett.cpp" />
