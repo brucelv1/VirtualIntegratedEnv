@@ -12,8 +12,8 @@
 
 #include "Hand_Human.h"
 
-Hand_Human::Hand_Human(float scale, const std::string& configFile)
-	: IHand(scale, configFile)
+Hand_Human::Hand_Human(std::string name, float scale, const std::string& configFile)
+	: IHand(name, scale, configFile)
 {
 }
 

@@ -12,8 +12,8 @@
 
 #include "Hand_SJT_6.h"
 
-Hand_SJT_6::Hand_SJT_6(float scale, const std::string& configFile)
-	: IHand(scale, configFile)
+Hand_SJT_6::Hand_SJT_6(std::string name, float scale, const std::string& configFile)
+	: IHand(name, scale, configFile)
 {
 }
 

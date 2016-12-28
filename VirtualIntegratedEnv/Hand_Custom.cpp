@@ -13,8 +13,8 @@
 #include "Hand_Custom.h"
 #include <QtGui/QMessageBox>
 
-Hand_Custom::Hand_Custom(float scale, const std::string& configFile)
-	: IHand(scale, configFile)
+Hand_Custom::Hand_Custom(std::string name, float scale, const std::string& configFile)
+	: IHand(name, scale, configFile)
 {
 }
 

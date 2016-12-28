@@ -12,8 +12,8 @@
 
 #include "Hand_Barrett.h"
 
-Hand_Barrett::Hand_Barrett(float scale, const std::string& configFile)
-	: IHand(scale, configFile)
+Hand_Barrett::Hand_Barrett(std::string name, float scale, const std::string& configFile)
+	: IHand(name, scale, configFile)
 {
 }
 

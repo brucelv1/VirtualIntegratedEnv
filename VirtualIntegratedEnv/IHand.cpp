@@ -14,15 +14,14 @@
 
 #include "IHand.h"
 
-IHand::IHand(float scale, const std::string& configFile)
-: mScale(scale)
+IHand::IHand(std::string name, float scale, const std::string& configFile)
+: mName(name)
+, mScale(scale)
 , mConfigFile(configFile)
 , HasElbowAction(false)
 {
 	initPartPtr();
 	mRoot = new Part("mRoot");
-	//mRoot->setPosition(0,0,0);
-	//mRoot->makeTransform();
 }
 
 IHand::~IHand()

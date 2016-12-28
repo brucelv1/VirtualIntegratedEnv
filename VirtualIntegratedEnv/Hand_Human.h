@@ -19,7 +19,7 @@
 class Hand_Human : public IHand
 {
 public:
-	Hand_Human(float scale, const std::string& configFile);
+	Hand_Human(std::string name, float scale, const std::string& configFile);
 	virtual ~Hand_Human();
 
 	virtual int ConfigureHand();
