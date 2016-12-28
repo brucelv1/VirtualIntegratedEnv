@@ -20,7 +20,12 @@
 class CCS_UserExercise :
 	public IControlCharStrategy
 {
-	
+private:
+	unsigned char num_decision;
+	static const int NUM_DECISION_BYTE = 7;
+	static const int DECISION_TYPE_BYTE = 8;
+	static const int FINGER_RETURN_COMMAND_BYTE = 9;
+	enum DECISION_TYPE { FINGER=1, WRIST };
 public:
 	/// for prototype purpose
 	IMPLEMENT_CCS_CLONE(CCS_UserExercise)
@@ -50,6 +55,10 @@ public:
 
 	//Åö×²ÏìÓ¦
 	virtual void OnMessage(MessageData* data);
+
+
+	void newDoGesture();
+	void moveFinger();
 	
 private:
 	bool b_mAllFingersRecoverd;
@@ -60,6 +69,8 @@ private:
 
 	unsigned char* _ucpSharedMem;
 	size_t         _stLenSharedMem;
+
+	std::vector<unsigned char> cmdVec;
 };
 
 #endif // _CCS_USER_EXERCISE_H_

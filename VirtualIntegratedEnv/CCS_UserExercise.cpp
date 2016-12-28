@@ -20,6 +20,7 @@ CCS_UserExercise::CCS_UserExercise()
 , b_mFingerActionFinished(false)
 , b_mWristRecovered(false)
 , b_mWristActionFinished(false)
+, num_decision(0)
 {
 	for (int i=0; i<5; i++)
 		b_mNeedRecoverToLastFrameToAvoidCollisionDetect[i] = false;
@@ -43,50 +44,87 @@ CCS_UserExercise::~CCS_UserExercise(void)
 {
 }
 
-void CCS_UserExercise::doGesture()
+void CCS_UserExercise::newDoGesture()
 {
-	// query shared memory to do OpenHand
-	unsigned char cmd = 0X20 & _ucpSharedMem[4];
-	doOpenHand( (cmd>>5) );
+	// is there new decision?
+	if (num_decision == _ucpSharedMem[NUM_DECISION_BYTE])
+		return;
 
-	static unsigned char last_cmd = -1;
-	cmd = 0X1F & _ucpSharedMem[4];
-	if(cmd != last_cmd)
-	{
-		setCommandBits(std::bitset<5>(cmd));
-		last_cmd = cmd;
-	}
+	if(_ucpSharedMem[DECISION_TYPE_BYTE] == FINGER)
+		_ucpSharedMem[DECISION_TYPE_BYTE] = 0;
+	else
+		return;
 
-	if(b_mAllFingersRecoverd == false)
+	num_decision = _ucpSharedMem[NUM_DECISION_BYTE];
+
+	unsigned char cmd = _ucpSharedMem[4];
+
+	// musk default rest
+	if (cmd == 0)
+		return;
+
+	// assign user-defined return-finger command
+	if (cmd == _ucpSharedMem[FINGER_RETURN_COMMAND_BYTE])
 	{
-		if(b_mFingerActionFinished == true)
-			extendAllFingers();
-		else
-			b_mAllFingersRecoverd = true;
+		cmd = 0;
+		mCommandBits = std::bitset<5>(cmd);
 	}
 	else
 	{
-		//如果mCommandBits == 00000，则说明动作结束
-		if(mCommandBits == std::bitset<5>(0))
-			b_mFingerActionFinished = true;
+		cmd = 0X1F & _ucpSharedMem[4];
+		mCommandBits = std::bitset<5>(cmd);
+	}
 
-		//根据mCommandBits做动作
-		for (unsigned int i=0; i<mHand->FingersVector.size(); i++)
+	
+	// move
+	if (cmdVec.empty())
+	{
+		if(cmd!=0)
 		{
-			if(mCommandBits.at(i) == 1)
-				flexFinger(mHand->getFingerFromVector(i));
-		}
-
-		//如果产生碰撞，该布尔变量在OnMessage中被赋值为真，使手指回退一帧，避免持续的碰撞检测
-		for (unsigned int i=0; i<mHand->FingersVector.size(); i++)
-		{
-			if (b_mNeedRecoverToLastFrameToAvoidCollisionDetect[i] == true)
-			{
-				extendFinger(mHand->getFingerFromVector(i));
-				b_mNeedRecoverToLastFrameToAvoidCollisionDetect[i] = false;
-			}
+			cmdVec.push_back(cmd);
+			moveFinger();
 		}
 	}
+	else
+	{
+		if(cmd==0 || cmd != *(cmdVec.rbegin()))
+		{
+			cmdVec.pop_back();
+			doOpenHand(0);
+			extendAllFingers();
+		}
+		else
+		{
+			cmdVec.push_back(cmd);
+			moveFinger();
+		}
+	}
+	std::cout<< cmdVec.size() << std::endl;
+}
+
+void CCS_UserExercise::moveFinger()
+{
+	//根据mCommandBits做动作
+	for (unsigned int i=0; i<mHand->FingersVector.size(); i++)
+	{
+		if(mCommandBits.at(i) == 1)
+			flexFinger(mHand->getFingerFromVector(i));
+	}
+
+	//如果产生碰撞，该布尔变量在OnMessage中被赋值为真，使手指回退一帧，避免持续的碰撞检测
+	for (unsigned int i=0; i<mHand->FingersVector.size(); i++)
+	{
+		if (b_mNeedRecoverToLastFrameToAvoidCollisionDetect[i] == true)
+		{
+			extendFinger(mHand->getFingerFromVector(i));
+			b_mNeedRecoverToLastFrameToAvoidCollisionDetect[i] = false;
+		}
+	}
+}
+
+void CCS_UserExercise::doGesture()
+{
+	newDoGesture();
 }
 
 void CCS_UserExercise::extendAllFingers()
@@ -141,131 +179,120 @@ void CCS_UserExercise::setCommandBits(std::bitset<5> bits)
 {
 	//要做新动作，所以相关标志置为false
 	b_mAllFingersRecoverd = false;
-	//IControlCharStrategy::setCommandBits(bits);
 	mCommandBits = bits;
 }
 
 void CCS_UserExercise::setWristActionType(int _type)
 {
-	//要做新动作，所以相关标志置为false
-	b_mWristRecovered = false;
-	//IControlCharStrategy::setWristActionType(_type);
 	mWristActionType = _type;
 }
 
 void CCS_UserExercise::doWristAction()
 {
+	// is there new decision?
+	if (num_decision == _ucpSharedMem[NUM_DECISION_BYTE])
+		return;
+
+	if(_ucpSharedMem[DECISION_TYPE_BYTE] == WRIST)
+		_ucpSharedMem[DECISION_TYPE_BYTE] = 0;
+	else
+		return;
+
+	num_decision = _ucpSharedMem[NUM_DECISION_BYTE];
+
 	// query shared memory
 	// 256: shangqie, 512: xiaqie
 	// 1024: neifan, 2048: waifan
 	// 4096: neixuan, 8192: waixuan
 	// the command should be divided by 256
-	static unsigned char last_cmd = 0;
+
 	unsigned char cmd = 0XFF & _ucpSharedMem[3];
-	if(cmd != last_cmd)
+	switch (cmd)
 	{
-		switch (cmd)
-		{
-		case 0:
-			setWristActionType(0);
-			break;
-		case 1:
-			setWristActionType(6);
-			break;
-		case 2:
-			setWristActionType(5);
-			break;
-		case 4:
-			setWristActionType(3);
-			break;
-		case 8:
-			setWristActionType(4);
-			break;
-		case 16:
-			setWristActionType(2);
-			break;
-		case 32:
-			setWristActionType(1);
-			break;
-		default:
-			return;
-		}
-		last_cmd = cmd;
+	case 0:
+		setWristActionType(0);
+		break;
+	case 1:
+		setWristActionType(6);
+		break;
+	case 2:
+		setWristActionType(5);
+		break;
+	case 4:
+		setWristActionType(3);
+		break;
+	case 8:
+		setWristActionType(4);
+		break;
+	case 16:
+		setWristActionType(2);
+		break;
+	case 32:
+		setWristActionType(1);
+		break;
+	default:
+		return;
 	}
 
-	if(b_mWristRecovered == false)
+	//动作
+	//外旋
+	if(mWristActionType == 1)
 	{
-		if(b_mWristActionFinished == true)
-			recoverWrist();
-		else
-			b_mWristRecovered = true;
+		Part* pt = mHand->mPostWrist;
+		if(pt != NULL && pt->getAttitude().z() < 70)
+		{
+			pt->setAttitude(pt->getAttitude() + osg::Vec3(0,0,3.0));
+			pt->makeTransform();
+		}
 	}
-	else
+	//内旋
+	if(mWristActionType == 2)
 	{
-		//用于恢复手腕位置
-		if(mWristActionType == 0)
-			b_mWristActionFinished = true;
-		
-		//动作
-		//外旋
-		if(mWristActionType == 1)
+		Part* pt = mHand->mPostWrist;
+		if(pt != NULL && pt->getAttitude().z() > -70)
 		{
-			Part* pt = mHand->mPostWrist;
-			if(pt != NULL && pt->getAttitude().z() < 70)
-			{
-				pt->setAttitude(pt->getAttitude() + osg::Vec3(0,0,3.0));
-				pt->makeTransform();
-			}
+			pt->setAttitude(pt->getAttitude() - osg::Vec3(0,0,3.0));
+			pt->makeTransform();
 		}
-		//内旋
-		if(mWristActionType == 2)
+	}
+	//内翻
+	if(mWristActionType == 3)
+	{
+		Part* pt = mHand->mWrist;
+		if(pt != NULL && pt->getAttitude().y() > -70)
 		{
-			Part* pt = mHand->mPostWrist;
-			if(pt != NULL && pt->getAttitude().z() > -70)
-			{
-				pt->setAttitude(pt->getAttitude() - osg::Vec3(0,0,3.0));
-				pt->makeTransform();
-			}
+			pt->setAttitude(pt->getAttitude() - osg::Vec3(0,3.0,0));
+			pt->makeTransform();
 		}
-		//内翻
-		if(mWristActionType == 3)
+	}
+	//外翻
+	if(mWristActionType == 4)
+	{
+		Part* pt = mHand->mWrist;
+		if(pt != NULL && pt->getAttitude().y() < 70)
 		{
-			Part* pt = mHand->mWrist;
-			if(pt != NULL && pt->getAttitude().y() > -70)
-			{
-				pt->setAttitude(pt->getAttitude() - osg::Vec3(0,3.0,0));
-				pt->makeTransform();
-			}
+			pt->setAttitude(pt->getAttitude() + osg::Vec3(0,3.0,0));
+			pt->makeTransform();
 		}
-		//外翻
-		if(mWristActionType == 4)
+	}
+	//下切
+	if(mWristActionType == 5)
+	{
+		Part* pt = mHand->mWrist;
+		if(pt != NULL && pt->getAttitude().x() > -70)
 		{
-			Part* pt = mHand->mWrist;
-			if(pt != NULL && pt->getAttitude().y() < 70)
-			{
-				pt->setAttitude(pt->getAttitude() + osg::Vec3(0,3.0,0));
-				pt->makeTransform();
-			}
+			pt->setAttitude(pt->getAttitude() - osg::Vec3(3.0,0,0));
+			pt->makeTransform();
 		}
-		//下切
-		if(mWristActionType == 5)
+	}
+	//上切
+	if(mWristActionType == 6)
+	{
+		Part* pt = mHand->mWrist;
+		if(pt != NULL && pt->getAttitude().x() < 70)
 		{
-			Part* pt = mHand->mWrist;
-			if(pt != NULL && pt->getAttitude().x() > -70)
-			{
-				pt->setAttitude(pt->getAttitude() - osg::Vec3(3.0,0,0));
-				pt->makeTransform();
-			}
-		}
-		//上切
-		if(mWristActionType == 6)
-		{
-			Part* pt = mHand->mWrist;
-			if(pt != NULL && pt->getAttitude().x() < 70)
-			{
-				pt->setAttitude(pt->getAttitude() + osg::Vec3(3.0,0,0));
-				pt->makeTransform();
-			}
+			pt->setAttitude(pt->getAttitude() + osg::Vec3(3.0,0,0));
+			pt->makeTransform();
 		}
 	}
 }
@@ -313,6 +340,10 @@ void CCS_UserExercise::recoverWrist()
 
 void CCS_UserExercise::doElbowAction()
 {
+	// testing purpose
+	return;
+
+
 	// query shared memory
 	// 16384: shenzhou, _ucpSharedMem[3]的第6位,2^6
 	// 32768: quzhou, _ucpSharedMem[3]的第7位,2^7
