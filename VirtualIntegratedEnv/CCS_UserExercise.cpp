@@ -13,6 +13,7 @@
 #include "CCS_UserExercise.h"
 #include <iostream>
 #include "ColorVisitor.h"
+#include "HandFactory.h"
 
 CCS_UserExercise::CCS_UserExercise()
 : IControlCharStrategy()
@@ -407,5 +408,7 @@ void CCS_UserExercise::initStrategyConfig( SettingsInfoStruct& si, IHand* _hand,
 	//cv.setRGBA(1,1,1,0.5);
 	//mHand->getHandRoot()->getModelPtr()->GetOSGNode()->accept(cv);
 
-
+	mHintHand = HandFactory::createHand(mHand->getName(), mHand->getHandScale(), mHand->getConfigFilePath(), false);
+	if(mHintHand != NULL)
+		mScene->AddChild(mHintHand->getHandRoot()->getCoordinatePtr());
 }

@@ -14,10 +14,11 @@
 
 #include "IHand.h"
 
-IHand::IHand(std::string name, float scale, const std::string& configFile)
+IHand::IHand(std::string name, float scale, const std::string& configFile, bool useCollision)
 : mName(name)
 , mScale(scale)
 , mConfigFile(configFile)
+, mUseCollision(useCollision)
 , HasElbowAction(false)
 {
 	initPartPtr();

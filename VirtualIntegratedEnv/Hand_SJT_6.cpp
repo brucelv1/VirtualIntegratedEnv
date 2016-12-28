@@ -12,8 +12,8 @@
 
 #include "Hand_SJT_6.h"
 
-Hand_SJT_6::Hand_SJT_6(std::string name, float scale, const std::string& configFile)
-	: IHand(name, scale, configFile)
+Hand_SJT_6::Hand_SJT_6(std::string name, float scale, const std::string& configFile, bool useCollision)
+: IHand(name, scale, configFile, useCollision)
 {
 }
 
@@ -82,8 +82,10 @@ void Hand_SJT_6::Part_Node_Mapping()
 
 void Hand_SJT_6::Part_Collision_Mapping()
 {
-	mPalm->getModelPtr()->SetCollisionMesh();
+	if(mUseCollision == false)
+		return;
 
+	mPalm->getModelPtr()->SetCollisionMesh();
 	getFingerFromVector(0)->getKnuckleAt(2)->getModelPtr()->SetCollisionMesh();
 	getFingerFromVector(1)->getKnuckleAt(2)->getModelPtr()->SetCollisionMesh();
 	getFingerFromVector(2)->getKnuckleAt(2)->getModelPtr()->SetCollisionMesh();

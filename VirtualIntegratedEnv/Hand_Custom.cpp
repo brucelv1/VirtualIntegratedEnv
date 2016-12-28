@@ -13,8 +13,8 @@
 #include "Hand_Custom.h"
 #include <QtGui/QMessageBox>
 
-Hand_Custom::Hand_Custom(std::string name, float scale, const std::string& configFile)
-	: IHand(name, scale, configFile)
+Hand_Custom::Hand_Custom(std::string name, float scale, const std::string& configFile, bool useCollision)
+: IHand(name, scale, configFile, useCollision)
 {
 }
 
@@ -65,6 +65,9 @@ void Hand_Custom::Part_Node_Mapping()
 
 void Hand_Custom::Part_Collision_Mapping()
 {
+	if(mUseCollision == false)
+		return;
+
 	std::vector<CollisionInfoStruct*> CollidesList;
 	IHand::mAsmInfo->parsePartCollision(CollidesList);
 	for (unsigned int i=0; i<CollidesList.size(); i++)

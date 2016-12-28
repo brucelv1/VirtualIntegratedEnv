@@ -12,8 +12,8 @@
 
 #include "Hand_Barrett.h"
 
-Hand_Barrett::Hand_Barrett(std::string name, float scale, const std::string& configFile)
-	: IHand(name, scale, configFile)
+Hand_Barrett::Hand_Barrett(std::string name, float scale, const std::string& configFile, bool useCollision)
+: IHand(name, scale, configFile, useCollision)
 {
 }
 
@@ -62,8 +62,10 @@ void Hand_Barrett::Part_Node_Mapping()
 
 void Hand_Barrett::Part_Collision_Mapping()
 {
-	mPalm->getModelPtr()->SetCollisionMesh();
+	if(mUseCollision == false)
+		return;
 
+	mPalm->getModelPtr()->SetCollisionMesh();
 	getFingerFromVector(0)->getKnuckleAt(1)->getModelPtr()->SetCollisionMesh();
 	getFingerFromVector(1)->getKnuckleAt(2)->getModelPtr()->SetCollisionMesh();
 	getFingerFromVector(2)->getKnuckleAt(2)->getModelPtr()->SetCollisionMesh();

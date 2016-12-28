@@ -21,6 +21,9 @@ class CCS_UserExercise :
 	public IControlCharStrategy
 {
 private:
+
+	IHand* mHintHand;
+
 	unsigned char num_decision;
 	static const int NUM_DECISION_BYTE = 7;
 	static const int DECISION_TYPE_BYTE = 8;
