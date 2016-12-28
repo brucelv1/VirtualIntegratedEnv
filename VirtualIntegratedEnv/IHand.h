@@ -30,6 +30,12 @@ class IHand
 {
 public:
 	bool HasElbowAction;
+	struct CREATE_INFO {
+		std::string name;
+		float scale;
+		std::string filePath;
+	};
+	CREATE_INFO Create_Info;
 public:
 	std::vector<Finger*> FingersVector;
 

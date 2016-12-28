@@ -179,22 +179,32 @@ void MyQtWindow::OnMessage(MessageData* data)
 
 void MyQtWindow::on_actionSJT_6_triggered()
 {
-	mVIECoreApp->LoadHand(actionSJT_6->text().toStdString());
+	mVIECoreApp->LoadHand(actionSJT_6->text().toStdString(), "./models/SJT6HandOSG/SJT6AsmInfo.txt");
 }
 
 void MyQtWindow::on_actionSJT_3_triggered()
 {
-	mVIECoreApp->LoadHand(actionSJT_3->text().toStdString());
+	mVIECoreApp->LoadHand(actionSJT_3->text().toStdString(), "./models/SJT3HandOSG/SJT3AsmInfo.txt");
 }
 
 void MyQtWindow::on_actionBarrett_triggered()
 {
-	mVIECoreApp->LoadHand(actionBarrett->text().toStdString());
+	mVIECoreApp->LoadHand(actionBarrett->text().toStdString(), "./models/BarrettHandOSG/BarrettAsmInfo.txt");
 }
 
 void MyQtWindow::on_actionHumanHand_triggered()
 {
-	mVIECoreApp->LoadHand(actionHumanHand->text().toStdString());
+	mVIECoreApp->LoadHand(actionHumanHand->text().toStdString(), "./models/HumanHandOSG/HumanAsmInfo.txt");
+}
+
+void MyQtWindow::on_actionAddCustomHand_triggered()
+{
+	HandConfigFileDlg hcf(this);
+	hcf.setModal(true);
+	if (hcf.exec() == QDialog::Accepted)
+	{
+		mVIECoreApp->LoadHand("UserCustom",hcf.PathLine->text().toStdString());
+	}
 }
 
 void MyQtWindow::on_actionAddObjects_triggered()
@@ -246,16 +256,6 @@ void MyQtWindow::on_actionReset_triggered()
 
 	if (QMessageBox::Yes == msgBox.exec())
 		mVIECoreApp->On_ResetVIE();
-}
-
-void MyQtWindow::on_actionAddCustomHand_triggered()
-{
-	HandConfigFileDlg hcf(this);
-	hcf.setModal(true);
-	if (hcf.exec() == QDialog::Accepted)
-	{
-		mVIECoreApp->LoadHand("UserCustom",hcf.PathLine->text().toStdString());
-	}
 }
 
 void MyQtWindow::on_actionTraining_triggered()

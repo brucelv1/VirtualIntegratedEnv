@@ -402,7 +402,10 @@ void CCS_UserExercise::initStrategyConfig( SettingsInfoStruct& si, IHand* _hand,
 	this->_ucpSharedMem = si.nameSharedMem;
 	this->_stLenSharedMem = si.lenSharedMem;
 
-	ColorVisitor cv;
-	cv.setRGBA(1,1,1,0.5);
-	mHand->getHandRoot()->getModelPtr()->GetOSGNode()->accept(cv);
+	//////////////////////////////////////////////////////////////////////////
+	//ColorVisitor cv;
+	//cv.setRGBA(1,1,1,0.5);
+	//mHand->getHandRoot()->getModelPtr()->GetOSGNode()->accept(cv);
+
+
 }

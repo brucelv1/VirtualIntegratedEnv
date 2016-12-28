@@ -31,13 +31,13 @@ public:
 		IHand* hand = NULL;
 
 		if (_name == "SJT_3")
-			hand = new Hand_SJT_3(_scale, "./models/SJT3HandOSG/SJT3AsmInfo.txt");
+			hand = new Hand_SJT_3(_scale, _filePath);
 		if (_name == "SJT_6")
-			hand = new Hand_SJT_6(_scale, "./models/SJT6HandOSG/SJT6AsmInfo.txt");
+			hand = new Hand_SJT_6(_scale, _filePath);
 		if (_name == "Barrett")
-			hand = new Hand_Barrett(_scale/100, "./models/BarrettHandOSG/BarrettAsmInfo.txt");
+			hand = new Hand_Barrett(_scale/100, _filePath);
 		if (_name == "HumanHand")
-			hand = new Hand_Human(_scale/10, "./models/HumanHandOSG/HumanAsmInfo.txt");
+			hand = new Hand_Human(_scale/10, _filePath);
 		if (_name == "UserCustom")
 			hand = new Hand_Custom(_scale/100, _filePath);
 
