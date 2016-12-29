@@ -23,6 +23,7 @@ IControlCharStrategy::IControlCharStrategy(float _SpeedScale/*=1.0*/)
 , mScene(NULL)
 , mWristActionType(0)
 , mSpeedScale(_SpeedScale)
+, mUseFingerPriority(true)
 {
 }
 
@@ -32,6 +33,7 @@ IControlCharStrategy::IControlCharStrategy(const IControlCharStrategy& ICCS)
 , mScene(ICCS.mScene)
 , mWristActionType(ICCS.mWristActionType)
 , mSpeedScale(ICCS.mSpeedScale)
+, mUseFingerPriority(ICCS.mUseFingerPriority)
 {
 }
 
@@ -50,7 +52,7 @@ void IControlCharStrategy::flexFinger(Finger* _finger)
 	if(_finger == NULL)
 		return;
 	//被观察的其他手指没有停下来，就不进行运动
-	if(!_finger->readyToMove())
+	if(mUseFingerPriority && !_finger->readyToMove())
 		return;
 
 	for (unsigned int i=0; i<_finger->numOfKnuckles(); i++)

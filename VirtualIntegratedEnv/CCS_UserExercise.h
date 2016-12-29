@@ -72,6 +72,9 @@ private:
 	size_t         _stLenSharedMem;
 
 	std::vector<unsigned char> cmdVec;
+
+private:
+	void setHintHandFingers( unsigned char command );
 };
 
 #endif // _CCS_USER_EXERCISE_H_

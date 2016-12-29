@@ -401,6 +401,8 @@ void CCS_UserExercise::initStrategyConfig( SettingsInfoStruct& si, IHand* _hand,
 
 	//////////////////////////////////////////////////////////////////////////
 
+	IControlCharStrategy::enableFingerPriority(false);
+
 	// here wait for initializing -- GUI should give info
 	mHintHand = HandFactory::createHand(mHand->getName(), mHand->getHandScale(), mHand->getConfigFilePath(), false);
 	// here finish initializing -- GUI should give info
@@ -412,5 +414,17 @@ void CCS_UserExercise::initStrategyConfig( SettingsInfoStruct& si, IHand* _hand,
 		cv.setRGBA(1,1,1,0.5);
 		Part* root = mHintHand->mPalm;
 		root->getModelPtr()->GetOSGNode()->accept(cv);
+	}
+}
+
+void CCS_UserExercise::setHintHandFingers( unsigned char command )
+{
+	if(mHintHand == NULL)
+		return;
+
+	for (unsigned int i=0; i<mHintHand->FingersVector.size(); i++)
+	{
+		if( (command&(1<<i)) != 0)
+			flexFinger(mHintHand->getFingerFromVector(i));
 	}
 }
