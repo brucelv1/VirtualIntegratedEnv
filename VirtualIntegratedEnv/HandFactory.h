@@ -42,7 +42,9 @@ public:
 			hand = new Hand_Custom(_name, _scale/100, _filePath, useCollision);
 
 		if(1 == hand->ConfigureHand())
+		{
 			return hand;
+		}
 
 		return NULL;
 	}

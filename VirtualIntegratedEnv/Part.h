@@ -47,6 +47,7 @@ public:
 
 	void loadFile(const std::string& filename, bool useCache = true);
 
+	std::string getName();
 	void setName(const std::string& name);
 
 	void addToScene(dtCore::Scene* scene);

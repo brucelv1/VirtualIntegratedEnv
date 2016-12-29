@@ -75,7 +75,7 @@ bool IHand::LoadPartToVector()
 void IHand::configPart(Part* thisPart, AssemblyInfoStruct & ais, Part* parent/*=NULL*/)
 {
 	thisPart->setName(ais.name);
-	thisPart->loadFile(ais.filename);
+	thisPart->loadFile(ais.filename,false);
 	if(parent != NULL)
 		parent->addChild(thisPart);
 	thisPart->getModelPtr()->SetScale(osg::Vec3(mScale, mScale, mScale));

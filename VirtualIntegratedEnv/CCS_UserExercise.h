@@ -59,8 +59,6 @@ public:
 	//Åö×²ÏìÓ¦
 	virtual void OnMessage(MessageData* data);
 
-
-	void newDoGesture();
 	void moveFinger();
 	
 private:

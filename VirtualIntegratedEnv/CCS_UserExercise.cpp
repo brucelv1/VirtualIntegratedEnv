@@ -17,6 +17,7 @@
 
 CCS_UserExercise::CCS_UserExercise()
 : IControlCharStrategy()
+, mHintHand(NULL)
 , b_mAllFingersRecoverd(false)
 , b_mFingerActionFinished(false)
 , b_mWristRecovered(false)
@@ -45,7 +46,7 @@ CCS_UserExercise::~CCS_UserExercise(void)
 {
 }
 
-void CCS_UserExercise::newDoGesture()
+void CCS_UserExercise::doGesture()
 {
 	// is there new decision?
 	if (num_decision == _ucpSharedMem[NUM_DECISION_BYTE])
@@ -121,11 +122,6 @@ void CCS_UserExercise::moveFinger()
 			b_mNeedRecoverToLastFrameToAvoidCollisionDetect[i] = false;
 		}
 	}
-}
-
-void CCS_UserExercise::doGesture()
-{
-	newDoGesture();
 }
 
 void CCS_UserExercise::extendAllFingers()
@@ -404,11 +400,17 @@ void CCS_UserExercise::initStrategyConfig( SettingsInfoStruct& si, IHand* _hand,
 	this->_stLenSharedMem = si.lenSharedMem;
 
 	//////////////////////////////////////////////////////////////////////////
-	//ColorVisitor cv;
-	//cv.setRGBA(1,1,1,0.5);
-	//mHand->getHandRoot()->getModelPtr()->GetOSGNode()->accept(cv);
 
+	// here wait for initializing -- GUI should give info
 	mHintHand = HandFactory::createHand(mHand->getName(), mHand->getHandScale(), mHand->getConfigFilePath(), false);
+	// here finish initializing -- GUI should give info
+	
 	if(mHintHand != NULL)
+	{
 		mScene->AddChild(mHintHand->getHandRoot()->getCoordinatePtr());
+		ColorVisitor cv;
+		cv.setRGBA(1,1,1,0.5);
+		Part* root = mHintHand->mPalm;
+		root->getModelPtr()->GetOSGNode()->accept(cv);
+	}
 }
