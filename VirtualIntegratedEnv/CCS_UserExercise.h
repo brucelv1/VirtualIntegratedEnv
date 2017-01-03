@@ -16,6 +16,7 @@
 #include "IControlCharStrategy.h"
 #include <osg/Vec3>
 #include <dtCore/scene.h>
+#include <boost/thread.hpp>
 
 class CCS_UserExercise :
 	public IControlCharStrategy
@@ -28,7 +29,15 @@ private:
 	static const int NUM_DECISION_BYTE = 7;
 	static const int DECISION_TYPE_BYTE = 8;
 	static const int FINGER_RETURN_COMMAND_BYTE = 9;
+	static const int HINT_HAND_MOVE_BYTE = 10;
+	static const int HINT_HAND_MOVE_BYTE4 = 11;
+	static const int HINT_HAND_MOVE_BYTE3 = 12;
+	static const int HINT_HAND_MOVE_BYTE2 = 13;
+	static const int HINT_HAND_MOVE_BYTE1 = 14;
+	static const int HINT_HAND_RETURN_BYTE = 15;
 	enum DECISION_TYPE { FINGER=1, WRIST };
+
+	boost::thread hintColorThread;
 public:
 	/// for prototype purpose
 	IMPLEMENT_CCS_CLONE(CCS_UserExercise)
@@ -72,9 +81,18 @@ private:
 	size_t         _stLenSharedMem;
 
 	std::vector<unsigned char> cmdVec;
+	std::vector<unsigned char> hintCmdVec;
 
 private:
-	void setHintHandFingers( unsigned char command );
+	void setHintHandFingers();
+	void returnHintHandFingers();
+
+	bool allowChildThread;
+	enum HINT_COLOR_TYPE {UNSET=0, NORMAL, RIGHT};
+	HINT_COLOR_TYPE hintHandColorType;
+	static void hintColorThreadFunc(CCS_UserExercise* param);
+	void setHintRightColor();
+	void setHintNormalColor();
 };
 
 #endif // _CCS_USER_EXERCISE_H_

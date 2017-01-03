@@ -14,6 +14,7 @@
 #include <iostream>
 #include "ColorVisitor.h"
 #include "HandFactory.h"
+#include <Windows.h>
 
 CCS_UserExercise::CCS_UserExercise()
 : IControlCharStrategy()
@@ -23,6 +24,8 @@ CCS_UserExercise::CCS_UserExercise()
 , b_mWristRecovered(false)
 , b_mWristActionFinished(false)
 , num_decision(0)
+, hintHandColorType(UNSET)
+, allowChildThread(false)
 {
 	for (int i=0; i<5; i++)
 		b_mNeedRecoverToLastFrameToAvoidCollisionDetect[i] = false;
@@ -37,6 +40,8 @@ CCS_UserExercise::CCS_UserExercise(const CCS_UserExercise& kbs)
 	b_mFingerActionFinished = kbs.b_mFingerActionFinished;
 	b_mWristRecovered = kbs.b_mWristRecovered;
 	b_mWristActionFinished = kbs.b_mWristActionFinished;
+	num_decision = kbs.num_decision;
+	hintHandColorType = kbs.hintHandColorType;
 	for (int i=0; i<5; i++)
 		b_mNeedRecoverToLastFrameToAvoidCollisionDetect[i] = \
 		kbs.b_mNeedRecoverToLastFrameToAvoidCollisionDetect[i];
@@ -44,10 +49,16 @@ CCS_UserExercise::CCS_UserExercise(const CCS_UserExercise& kbs)
 
 CCS_UserExercise::~CCS_UserExercise(void)
 {
+	allowChildThread = false;
+	hintColorThread.join();
 }
 
 void CCS_UserExercise::doGesture()
 {
+	// set/return hinthand
+	setHintHandFingers();
+	returnHintHandFingers();
+
 	// is there new decision?
 	if (num_decision == _ucpSharedMem[NUM_DECISION_BYTE])
 		return;
@@ -404,27 +415,125 @@ void CCS_UserExercise::initStrategyConfig( SettingsInfoStruct& si, IHand* _hand,
 	IControlCharStrategy::enableFingerPriority(false);
 
 	// here wait for initializing -- GUI should give info
-	mHintHand = HandFactory::createHand(mHand->getName(), mHand->getHandScale(), mHand->getConfigFilePath(), false);
+	mHintHand = HandFactory::createHand(mHand->getName(), 1.02*mHand->getHandScale(), mHand->getConfigFilePath(), false);
 	// here finish initializing -- GUI should give info
 	
 	if(mHintHand != NULL)
 	{
 		mScene->AddChild(mHintHand->getHandRoot()->getCoordinatePtr());
-		ColorVisitor cv;
-		cv.setRGBA(1,1,1,0.5);
-		Part* root = mHintHand->mPalm;
-		root->getModelPtr()->GetOSGNode()->accept(cv);
+		setHintNormalColor();
 	}
+
+	//////////////////////////////////////////////////////////////////////////
+	allowChildThread = true;
+	hintColorThread = boost::thread(&hintColorThreadFunc, this);
 }
 
-void CCS_UserExercise::setHintHandFingers( unsigned char command )
+void CCS_UserExercise::setHintHandFingers()
 {
 	if(mHintHand == NULL)
 		return;
 
-	for (unsigned int i=0; i<mHintHand->FingersVector.size(); i++)
+	if (_ucpSharedMem[HINT_HAND_MOVE_BYTE] == 1)
 	{
-		if( (command&(1<<i)) != 0)
-			flexFinger(mHintHand->getFingerFromVector(i));
+		unsigned char command = _ucpSharedMem[HINT_HAND_MOVE_BYTE1];
+		if(command == 0)
+			return;
+
+		// find one moving finger
+		int finger = 0;
+		for (int n=1; n<=4; n++)
+		{
+			if( ((command>>n) & 1) == 1)
+				finger = n;
+		}
+
+		osg::Vec3 angle = mHintHand->getFingerFromVector(finger)->getKnuckleAt(1)->getAttitude();
+		// limit: 65 degrees
+		if (angle.length() < 65)
+		{
+			for (unsigned int i=0; i<mHintHand->FingersVector.size(); i++)
+			{
+				if( (command&(1<<i)) != 0)
+					flexFinger(mHintHand->getFingerFromVector(i));
+			}
+			hintCmdVec.push_back(command);
+			angle = mHintHand->getFingerFromVector(finger)->getKnuckleAt(1)->getAttitude();
+		}
+		else
+		{
+			// flag set to 0
+			_ucpSharedMem[HINT_HAND_MOVE_BYTE] = 0;
+		}
 	}
+}
+
+void CCS_UserExercise::returnHintHandFingers()
+{
+	if(mHintHand == NULL)
+		return;
+
+	if (_ucpSharedMem[HINT_HAND_RETURN_BYTE] == 1)
+	{
+		bool hasReturned = false;
+		while( !hasReturned )
+		{
+			bool tmp = true;
+			for (unsigned int i=0; i<mHintHand->FingersVector.size(); i++)
+			{
+				tmp = tmp && extendFinger(mHintHand->getFingerFromVector(i));
+			}
+			if(tmp == true)
+				hasReturned = true;
+		}
+		hintCmdVec.clear();
+		// flag set to 0
+		_ucpSharedMem[HINT_HAND_RETURN_BYTE] = 0;
+	}
+}
+
+void CCS_UserExercise::hintColorThreadFunc( CCS_UserExercise* param )
+{
+	while(param->allowChildThread)
+	{
+		int real = param->cmdVec.size();
+		int desire = param->hintCmdVec.size();
+
+		if (desire>1 && ::abs(real-desire)<2)
+		{
+			// same type
+			if(param->cmdVec[0]==param->hintCmdVec[0])
+				param->setHintRightColor();
+		}
+		else
+		{
+			param->setHintNormalColor();
+		}
+	}
+}
+
+void CCS_UserExercise::setHintRightColor()
+{
+	if (hintHandColorType != RIGHT)
+	{
+		ColorVisitor cv;
+		cv.setRGBA(0,1,0,0.5);
+		Part* root = mHintHand->mPalm;
+		root->getModelPtr()->GetOSGNode()->accept(cv);
+
+		hintHandColorType = RIGHT;
+	}
+}
+
+void CCS_UserExercise::setHintNormalColor()
+{
+	if (hintHandColorType != NORMAL)
+	{
+		ColorVisitor cv;
+		cv.setRGBA(1,1,1,0.5);
+		Part* root = mHintHand->mPalm;
+		root->getModelPtr()->GetOSGNode()->accept(cv);
+
+		hintHandColorType = NORMAL;
+	}	
 }
