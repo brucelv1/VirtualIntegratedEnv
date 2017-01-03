@@ -24,7 +24,7 @@ CCS_UserExercise::CCS_UserExercise()
 , b_mWristRecovered(false)
 , b_mWristActionFinished(false)
 , num_decision(0)
-, hintHandColorType(UNSET)
+, HandColorType(UNSET)
 , allowChildThread(false)
 {
 	for (int i=0; i<5; i++)
@@ -41,7 +41,7 @@ CCS_UserExercise::CCS_UserExercise(const CCS_UserExercise& kbs)
 	b_mWristRecovered = kbs.b_mWristRecovered;
 	b_mWristActionFinished = kbs.b_mWristActionFinished;
 	num_decision = kbs.num_decision;
-	hintHandColorType = kbs.hintHandColorType;
+	HandColorType = kbs.HandColorType;
 	for (int i=0; i<5; i++)
 		b_mNeedRecoverToLastFrameToAvoidCollisionDetect[i] = \
 		kbs.b_mNeedRecoverToLastFrameToAvoidCollisionDetect[i];
@@ -415,18 +415,18 @@ void CCS_UserExercise::initStrategyConfig( SettingsInfoStruct& si, IHand* _hand,
 	IControlCharStrategy::enableFingerPriority(false);
 
 	// here wait for initializing -- GUI should give info
-	mHintHand = HandFactory::createHand(mHand->getName(), 1.02*mHand->getHandScale(), mHand->getConfigFilePath(), false);
+	mHintHand = HandFactory::createHand(mHand->getName(), 0.99*mHand->getHandScale(), mHand->getConfigFilePath(), false);
 	// here finish initializing -- GUI should give info
 	
 	if(mHintHand != NULL)
 	{
 		mScene->AddChild(mHintHand->getHandRoot()->getCoordinatePtr());
-		setHintNormalColor();
+		setHandNormalColor();
 	}
 
 	//////////////////////////////////////////////////////////////////////////
 	allowChildThread = true;
-	hintColorThread = boost::thread(&hintColorThreadFunc, this);
+	hintColorThread = boost::thread(&handColorThreadFunc, this);
 }
 
 void CCS_UserExercise::setHintHandFingers()
@@ -492,7 +492,7 @@ void CCS_UserExercise::returnHintHandFingers()
 	}
 }
 
-void CCS_UserExercise::hintColorThreadFunc( CCS_UserExercise* param )
+void CCS_UserExercise::handColorThreadFunc( CCS_UserExercise* param )
 {
 	while(param->allowChildThread)
 	{
@@ -503,37 +503,37 @@ void CCS_UserExercise::hintColorThreadFunc( CCS_UserExercise* param )
 		{
 			// same type
 			if(param->cmdVec[0]==param->hintCmdVec[0])
-				param->setHintRightColor();
+				param->setHandRightColor();
 		}
 		else
 		{
-			param->setHintNormalColor();
+			param->setHandNormalColor();
 		}
 	}
 }
 
-void CCS_UserExercise::setHintRightColor()
+void CCS_UserExercise::setHandRightColor()
 {
-	if (hintHandColorType != RIGHT)
+	if (HandColorType != RIGHT)
 	{
 		ColorVisitor cv;
-		cv.setRGBA(0,1,0,0.5);
-		Part* root = mHintHand->mPalm;
+		cv.setRGBA(0,1,0,0.6);
+		Part* root = mHand->mPalm;
 		root->getModelPtr()->GetOSGNode()->accept(cv);
 
-		hintHandColorType = RIGHT;
+		HandColorType = RIGHT;
 	}
 }
 
-void CCS_UserExercise::setHintNormalColor()
+void CCS_UserExercise::setHandNormalColor()
 {
-	if (hintHandColorType != NORMAL)
+	if (HandColorType != NORMAL)
 	{
 		ColorVisitor cv;
-		cv.setRGBA(1,1,1,0.5);
-		Part* root = mHintHand->mPalm;
+		cv.setRGBA(1,1,1,0.6);
+		Part* root = mHand->mPalm;
 		root->getModelPtr()->GetOSGNode()->accept(cv);
 
-		hintHandColorType = NORMAL;
+		HandColorType = NORMAL;
 	}	
 }

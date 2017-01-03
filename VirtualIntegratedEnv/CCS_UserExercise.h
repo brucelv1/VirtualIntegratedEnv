@@ -89,10 +89,10 @@ private:
 
 	bool allowChildThread;
 	enum HINT_COLOR_TYPE {UNSET=0, NORMAL, RIGHT};
-	HINT_COLOR_TYPE hintHandColorType;
-	static void hintColorThreadFunc(CCS_UserExercise* param);
-	void setHintRightColor();
-	void setHintNormalColor();
+	HINT_COLOR_TYPE HandColorType;
+	static void handColorThreadFunc(CCS_UserExercise* param);
+	void setHandRightColor();
+	void setHandNormalColor();
 };
 
 #endif // _CCS_USER_EXERCISE_H_
