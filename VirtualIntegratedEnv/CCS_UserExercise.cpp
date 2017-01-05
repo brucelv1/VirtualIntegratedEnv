@@ -58,6 +58,8 @@ CCS_UserExercise::~CCS_UserExercise(void)
 
 void CCS_UserExercise::doGesture()
 {
+	// just for being executed per frame
+	// once is okay
 	if (_holdFlag==1)
 	{
 		startOrContinueTimer();
@@ -67,7 +69,7 @@ void CCS_UserExercise::doGesture()
 		stopAndClearTimer();
 	}
 
-	// set/return hinthand
+	// set/return hinthand fingers
 	setHintHandFingers();
 	returnHintHandFingers();
 
@@ -117,6 +119,7 @@ void CCS_UserExercise::doGesture()
 			cmdVec.pop_back();
 			doOpenHand(0);
 			extendAllFingers();
+			recoverWrist(mHand);
 		}
 		else
 		{
@@ -124,7 +127,6 @@ void CCS_UserExercise::doGesture()
 			moveFinger();
 		}
 	}
-	std::cout<< cmdVec.size() << std::endl;
 }
 
 void CCS_UserExercise::moveFinger()
@@ -202,13 +204,12 @@ void CCS_UserExercise::setCommandBits(std::bitset<5> bits)
 	mCommandBits = bits;
 }
 
-void CCS_UserExercise::setWristActionType(int _type)
-{
-	mWristActionType = _type;
-}
-
 void CCS_UserExercise::doWristAction()
 {
+	// set/return hinthand wrist
+	setHintHandWrist();
+	returnHintHandWrist();
+
 	// is there new decision?
 	if (num_decision == _ucpSharedMem[ByteDef::NUM_DECISION_BYTE])
 		return;
@@ -224,41 +225,66 @@ void CCS_UserExercise::doWristAction()
 	// 256: shangqie, 512: xiaqie
 	// 1024: neifan, 2048: waifan
 	// 4096: neixuan, 8192: waixuan
-	// the command should be divided by 256
-
-	unsigned char cmd = 0XFF & _ucpSharedMem[3];
+	unsigned int cmd = 256 * _ucpSharedMem[3];
 	switch (cmd)
 	{
 	case 0:
-		setWristActionType(0);
+		return;
+	case 256:
+		mWristActionType = 6;
 		break;
-	case 1:
-		setWristActionType(6);
+	case 512:
+		mWristActionType = 5;
 		break;
-	case 2:
-		setWristActionType(5);
+	case 1024:
+		mWristActionType = 3;
 		break;
-	case 4:
-		setWristActionType(3);
+	case 2048:
+		mWristActionType = 4;
 		break;
-	case 8:
-		setWristActionType(4);
+	case 4096:
+		mWristActionType = 2;
 		break;
-	case 16:
-		setWristActionType(2);
-		break;
-	case 32:
-		setWristActionType(1);
+	case 8192:
+		mWristActionType = 1;
 		break;
 	default:
 		return;
 	}
 
+	// move
+	if (cmdVec.empty())
+	{
+		if(cmd!=0)
+		{
+			cmdVec.push_back(cmd);
+			moveWrist(mHand,mWristActionType);
+		}
+	}
+	else
+	{
+		if(cmd==0 || cmd != *(cmdVec.rbegin()))
+		{
+			cmdVec.pop_back();
+			doOpenHand(0);
+			extendAllFingers();
+			recoverWrist(mHand);
+		}
+		else
+		{
+			cmdVec.push_back(cmd);
+			moveWrist(mHand,mWristActionType);
+		}
+	}
+}
+
+void CCS_UserExercise::moveWrist(IHand* hand, int actionType)
+{
 	//动作
 	//外旋
-	if(mWristActionType == 1)
+	if(actionType == 1)
 	{
-		Part* pt = mHand->mPostWrist;
+		Part* pt = hand->mPostWrist;
 		if(pt != NULL && pt->getAttitude().z() < 70)
 		{
 			pt->setAttitude(pt->getAttitude() + osg::Vec3(0,0,3.0));
@@ -266,9 +292,9 @@ void CCS_UserExercise::doWristAction()
 		}
 	}
 	//内旋
-	if(mWristActionType == 2)
+	if(actionType == 2)
 	{
-		Part* pt = mHand->mPostWrist;
+		Part* pt = hand->mPostWrist;
 		if(pt != NULL && pt->getAttitude().z() > -70)
 		{
 			pt->setAttitude(pt->getAttitude() - osg::Vec3(0,0,3.0));
@@ -276,9 +302,9 @@ void CCS_UserExercise::doWristAction()
 		}
 	}
 	//内翻
-	if(mWristActionType == 3)
+	if(actionType == 3)
 	{
-		Part* pt = mHand->mWrist;
+		Part* pt = hand->mWrist;
 		if(pt != NULL && pt->getAttitude().y() > -70)
 		{
 			pt->setAttitude(pt->getAttitude() - osg::Vec3(0,3.0,0));
@@ -286,9 +312,9 @@ void CCS_UserExercise::doWristAction()
 		}
 	}
 	//外翻
-	if(mWristActionType == 4)
+	if(actionType == 4)
 	{
-		Part* pt = mHand->mWrist;
+		Part* pt = hand->mWrist;
 		if(pt != NULL && pt->getAttitude().y() < 70)
 		{
 			pt->setAttitude(pt->getAttitude() + osg::Vec3(0,3.0,0));
@@ -296,9 +322,9 @@ void CCS_UserExercise::doWristAction()
 		}
 	}
 	//下切
-	if(mWristActionType == 5)
+	if(actionType == 5)
 	{
-		Part* pt = mHand->mWrist;
+		Part* pt = hand->mWrist;
 		if(pt != NULL && pt->getAttitude().x() > -70)
 		{
 			pt->setAttitude(pt->getAttitude() - osg::Vec3(3.0,0,0));
@@ -306,9 +332,9 @@ void CCS_UserExercise::doWristAction()
 		}
 	}
 	//上切
-	if(mWristActionType == 6)
+	if(actionType == 6)
 	{
-		Part* pt = mHand->mWrist;
+		Part* pt = hand->mWrist;
 		if(pt != NULL && pt->getAttitude().x() < 70)
 		{
 			pt->setAttitude(pt->getAttitude() + osg::Vec3(3.0,0,0));
@@ -317,45 +343,52 @@ void CCS_UserExercise::doWristAction()
 	}
 }
 
-void CCS_UserExercise::recoverWrist()
+bool CCS_UserExercise::recoverWrist(IHand* hand)
 {
+	Part* pt1 = hand->mPostWrist;
+	Part* pt2 = hand->mWrist;
+
 	bool postR = true;
 	bool wP = true;
 	bool wH = true;
 
-	Part* pt1 = mHand->mPostWrist;
-	Part* pt2 = mHand->mWrist;
 	if(pt1 != NULL)
 	{
-		if (pt1->getAttitude().z() < 0)
-			pt1->setAttitude(pt1->getAttitude() + osg::Vec3(0,0,3.0));
-		if (pt1->getAttitude().z() > 0)
-			pt1->setAttitude(pt1->getAttitude() - osg::Vec3(0,0,3.0));
-
-		pt1->makeTransform();
-
 		postR = (-1.5 <= pt1->getAttitude().z() && pt1->getAttitude().z() <= 1.5);
+		if (postR == false)
+		{
+			if (pt1->getAttitude().z() < 0)
+				pt1->setAttitude(pt1->getAttitude() + osg::Vec3(0,0,3.0));
+			if (pt1->getAttitude().z() > 0)
+				pt1->setAttitude(pt1->getAttitude() - osg::Vec3(0,0,3.0));
+			pt1->makeTransform();
+		}
 	}
 	
 	if(pt2 != NULL)
 	{
-		if (pt2->getAttitude().y() < 0)
-			pt2->setAttitude(pt2->getAttitude() + osg::Vec3(0,3.0,0));
-		if (pt2->getAttitude().y() > 0)
-			pt2->setAttitude(pt2->getAttitude() - osg::Vec3(0,3.0,0));
-		if (pt2->getAttitude().x() < 0)
-			pt2->setAttitude(pt2->getAttitude() + osg::Vec3(3.0,0,0));
-		if (pt2->getAttitude().x() > 0)
-			pt2->setAttitude(pt2->getAttitude() - osg::Vec3(3.0,0,0));
-
-		pt2->makeTransform();
-
 		wP = (-1.5 <= pt2->getAttitude().y() && pt2->getAttitude().y() <= 1.5);
 		wH = (-1.5 <= pt2->getAttitude().x() && pt2->getAttitude().x() <= 1.5);
+
+		if (wP == false)
+		{
+			if (pt2->getAttitude().y() < 0)
+				pt2->setAttitude(pt2->getAttitude() + osg::Vec3(0,3.0,0));
+			if (pt2->getAttitude().y() > 0)
+				pt2->setAttitude(pt2->getAttitude() - osg::Vec3(0,3.0,0));
+			pt2->makeTransform();
+		}
+		if (wH == false)
+		{
+			if (pt2->getAttitude().x() < 0)
+				pt2->setAttitude(pt2->getAttitude() + osg::Vec3(3.0,0,0));
+			if (pt2->getAttitude().x() > 0)
+				pt2->setAttitude(pt2->getAttitude() - osg::Vec3(3.0,0,0));
+			pt2->makeTransform();
+		}
 	}
 
-	if(postR && wP && wH)
-		b_mWristRecovered = true;
+	return postR && wP && wH;
 }
 
 void CCS_UserExercise::doElbowAction()
@@ -492,7 +525,7 @@ void CCS_UserExercise::returnHintHandFingers()
 	if(mHintHand == NULL)
 		return;
 
-	if (_ucpSharedMem[ByteDef::HINT_HAND_RETURN_BYTE] == 1)
+	if (_ucpSharedMem[ByteDef::HINT_HAND_FINGER_RETURN_BYTE] == 1)
 	{
 		EnterCriticalSection(&g_CS_hinthandVector);
 		bool hasReturned = false;
@@ -508,19 +541,88 @@ void CCS_UserExercise::returnHintHandFingers()
 		}
 		hintCmdVec.clear();
 		// flag set to 0
-		_ucpSharedMem[ByteDef::HINT_HAND_RETURN_BYTE] = 0;
+		_ucpSharedMem[ByteDef::HINT_HAND_FINGER_RETURN_BYTE] = 0;
 		LeaveCriticalSection(&g_CS_hinthandVector);
 	}
 }
 
 void CCS_UserExercise::setHintHandWrist()
 {
+	if(mHintHand == NULL)
+		return;
 
+	if (_ucpSharedMem[ByteDef::HINT_HAND_MOVE_BYTE] == 1)
+	{
+		unsigned int command = 256 * _ucpSharedMem[ByteDef::HINT_HAND_MOVE_BYTE2];
+		if(command == 0)
+			return;
+
+		// query shared memory
+		// 256: shangqie, 512: xiaqie
+		// 1024: neifan, 2048: waifan
+		// 4096: neixuan, 8192: waixuan
+		int actionType = 0;
+		switch (command)
+		{
+		case 0:
+			actionType = 0;
+			break;
+		case 256:
+			actionType = 6;
+			break;
+		case 512:
+			actionType = 5;
+			break;
+		case 1024:
+			actionType = 3;
+			break;
+		case 2048:
+			actionType = 4;
+			break;
+		case 4096:
+			actionType = 2;
+			break;
+		case 8192:
+			actionType = 1;
+			break;
+		default:
+			return;
+		}
+
+		// no bigger than 24
+		if (hintCmdVec.size() < 20)
+		{
+			hintCmdVec.push_back(command);
+			moveWrist(mHintHand, actionType);
+		}
+		else
+		{
+			// flag set to 0
+			_ucpSharedMem[ByteDef::HINT_HAND_MOVE_BYTE] = 0;
+		}
+	}
 }
 
 void CCS_UserExercise::returnHintHandWrist()
 {
+	if(mHintHand == NULL)
+		return;
 
+	if (_ucpSharedMem[ByteDef::HINT_HAND_WRIST_RETURN_BYTE] == 1)
+	{
+		EnterCriticalSection(&g_CS_hinthandVector);
+		bool hasReturned = false;
+		while( !hasReturned )
+		{
+			bool done = recoverWrist(mHintHand);
+			if(done == true)
+				hasReturned = true;
+		}
+		hintCmdVec.clear();
+		// flag set to 0
+		_ucpSharedMem[ByteDef::HINT_HAND_WRIST_RETURN_BYTE] = 0;
+		LeaveCriticalSection(&g_CS_hinthandVector);
+	}
 }
 
 void CCS_UserExercise::handCheckThreadFunc( CCS_UserExercise* param )
@@ -584,9 +686,10 @@ void CCS_UserExercise::startOrContinueTimer()
 	}
 
 	static int cnt=0;
-	if (cnt%5==0)
+	if (cnt%50==0)
 	{
-		printf("%d\n",_holdFlag);
+		std::cout << "startOrContinueTimer(): ";
+		printf("_holdFlag -- %d\n",_holdFlag);
 	}
 	cnt++;
 }
@@ -601,9 +704,10 @@ void CCS_UserExercise::stopAndClearTimer()
 	}
 
 	static int cnt=0;
-	if (cnt%5==0)
+	if (cnt%50==0)
 	{
-		printf("%d\n",_holdFlag);
+		std::cout << "stopAndClearTimer(): ";
+		printf("_holdFlag -- %d\n",_holdFlag);
 	}
 	cnt++;
 }

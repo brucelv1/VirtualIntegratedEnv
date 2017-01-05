@@ -32,8 +32,9 @@ public:
 	static const int HINT_HAND_MOVE_BYTE3 = 12;
 	static const int HINT_HAND_MOVE_BYTE2 = 13;
 	static const int HINT_HAND_MOVE_BYTE1 = 14;
-	static const int HINT_HAND_RETURN_BYTE = 15;
-	static const int HAND_HOLD_BYTE = 16;
+	static const int HINT_HAND_FINGER_RETURN_BYTE = 15;
+	static const int HINT_HAND_WRIST_RETURN_BYTE = 16;
+	static const int HAND_HOLD_BYTE = 17;
 };
 
 class CCS_UserExercise :
@@ -66,20 +67,16 @@ public:
 
 	//手腕动作函数
 	virtual void doWristAction();
-	void recoverWrist();
 
 	//手肘动作函数
 	virtual void doElbowAction();
 
 	virtual void setCommandBits(std::bitset<5> bits);
-	virtual void setWristActionType(int _type);
 
 	void updateCommand(int key);
 
 	//碰撞响应
 	virtual void OnMessage(MessageData* data);
-
-	void moveFinger();
 	
 private:
 	bool b_mAllFingersRecoverd;
@@ -91,10 +88,14 @@ private:
 	unsigned char* _ucpSharedMem;
 	size_t         _stLenSharedMem;
 
-	std::vector<unsigned char> cmdVec;
-	std::vector<unsigned char> hintCmdVec;
+	std::vector<unsigned int> cmdVec;
+	std::vector<unsigned int> hintCmdVec;
 
 private:
+	void moveFinger();
+	void moveWrist(IHand* hand, int actionType);
+	bool recoverWrist(IHand* hand);
+
 	void setHintHandFingers();
 	void returnHintHandFingers();
 	void setHintHandWrist();
