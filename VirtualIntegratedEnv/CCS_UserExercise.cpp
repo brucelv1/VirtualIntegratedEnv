@@ -14,7 +14,10 @@
 #include <iostream>
 #include "ColorVisitor.h"
 #include "HandFactory.h"
-#include <Windows.h>
+#include <functional>
+
+// multi-thread
+CRITICAL_SECTION g_CS_hinthandVector;
 
 CCS_UserExercise::CCS_UserExercise()
 : IControlCharStrategy()
@@ -55,20 +58,29 @@ CCS_UserExercise::~CCS_UserExercise(void)
 
 void CCS_UserExercise::doGesture()
 {
+	if (_holdFlag==1)
+	{
+		startOrContinueTimer();
+	}
+	else
+	{
+		stopAndClearTimer();
+	}
+
 	// set/return hinthand
 	setHintHandFingers();
 	returnHintHandFingers();
 
 	// is there new decision?
-	if (num_decision == _ucpSharedMem[NUM_DECISION_BYTE])
+	if (num_decision == _ucpSharedMem[ByteDef::NUM_DECISION_BYTE])
 		return;
 
-	if(_ucpSharedMem[DECISION_TYPE_BYTE] == FINGER)
-		_ucpSharedMem[DECISION_TYPE_BYTE] = 0;
+	if(_ucpSharedMem[ByteDef::DECISION_TYPE_BYTE] == FINGER)
+		_ucpSharedMem[ByteDef::DECISION_TYPE_BYTE] = 0;
 	else
 		return;
 
-	num_decision = _ucpSharedMem[NUM_DECISION_BYTE];
+	num_decision = _ucpSharedMem[ByteDef::NUM_DECISION_BYTE];
 
 	unsigned char cmd = _ucpSharedMem[4];
 
@@ -77,7 +89,7 @@ void CCS_UserExercise::doGesture()
 		return;
 
 	// assign user-defined return-finger command
-	if (cmd == _ucpSharedMem[FINGER_RETURN_COMMAND_BYTE])
+	if (cmd == _ucpSharedMem[ByteDef::FINGER_RETURN_COMMAND_BYTE])
 	{
 		cmd = 0;
 		mCommandBits = std::bitset<5>(cmd);
@@ -198,15 +210,15 @@ void CCS_UserExercise::setWristActionType(int _type)
 void CCS_UserExercise::doWristAction()
 {
 	// is there new decision?
-	if (num_decision == _ucpSharedMem[NUM_DECISION_BYTE])
+	if (num_decision == _ucpSharedMem[ByteDef::NUM_DECISION_BYTE])
 		return;
 
-	if(_ucpSharedMem[DECISION_TYPE_BYTE] == WRIST)
-		_ucpSharedMem[DECISION_TYPE_BYTE] = 0;
+	if(_ucpSharedMem[ByteDef::DECISION_TYPE_BYTE] == WRIST)
+		_ucpSharedMem[ByteDef::DECISION_TYPE_BYTE] = 0;
 	else
 		return;
 
-	num_decision = _ucpSharedMem[NUM_DECISION_BYTE];
+	num_decision = _ucpSharedMem[ByteDef::NUM_DECISION_BYTE];
 
 	// query shared memory
 	// 256: shangqie, 512: xiaqie
@@ -426,7 +438,14 @@ void CCS_UserExercise::initStrategyConfig( SettingsInfoStruct& si, IHand* _hand,
 
 	//////////////////////////////////////////////////////////////////////////
 	allowChildThread = true;
-	hintColorThread = boost::thread(&handColorThreadFunc, this);
+	hintColorThread = boost::thread(&handCheckThreadFunc, this);
+	InitializeCriticalSection(&g_CS_hinthandVector);
+
+
+	//////////////////////////////////////////////////////////////////////////
+	// set timer
+	_holdFlag = 0;
+	_holdActionTimer = new QTimerTools(std::bind(&CCS_UserExercise::_setHoldFlag,this));
 }
 
 void CCS_UserExercise::setHintHandFingers()
@@ -434,9 +453,9 @@ void CCS_UserExercise::setHintHandFingers()
 	if(mHintHand == NULL)
 		return;
 
-	if (_ucpSharedMem[HINT_HAND_MOVE_BYTE] == 1)
+	if (_ucpSharedMem[ByteDef::HINT_HAND_MOVE_BYTE] == 1)
 	{
-		unsigned char command = _ucpSharedMem[HINT_HAND_MOVE_BYTE1];
+		unsigned char command = _ucpSharedMem[ByteDef::HINT_HAND_MOVE_BYTE1];
 		if(command == 0)
 			return;
 
@@ -463,7 +482,7 @@ void CCS_UserExercise::setHintHandFingers()
 		else
 		{
 			// flag set to 0
-			_ucpSharedMem[HINT_HAND_MOVE_BYTE] = 0;
+			_ucpSharedMem[ByteDef::HINT_HAND_MOVE_BYTE] = 0;
 		}
 	}
 }
@@ -473,8 +492,9 @@ void CCS_UserExercise::returnHintHandFingers()
 	if(mHintHand == NULL)
 		return;
 
-	if (_ucpSharedMem[HINT_HAND_RETURN_BYTE] == 1)
+	if (_ucpSharedMem[ByteDef::HINT_HAND_RETURN_BYTE] == 1)
 	{
+		EnterCriticalSection(&g_CS_hinthandVector);
 		bool hasReturned = false;
 		while( !hasReturned )
 		{
@@ -488,14 +508,26 @@ void CCS_UserExercise::returnHintHandFingers()
 		}
 		hintCmdVec.clear();
 		// flag set to 0
-		_ucpSharedMem[HINT_HAND_RETURN_BYTE] = 0;
+		_ucpSharedMem[ByteDef::HINT_HAND_RETURN_BYTE] = 0;
+		LeaveCriticalSection(&g_CS_hinthandVector);
 	}
 }
 
-void CCS_UserExercise::handColorThreadFunc( CCS_UserExercise* param )
+void CCS_UserExercise::setHintHandWrist()
+{
+
+}
+
+void CCS_UserExercise::returnHintHandWrist()
+{
+
+}
+
+void CCS_UserExercise::handCheckThreadFunc( CCS_UserExercise* param )
 {
 	while(param->allowChildThread)
 	{
+		EnterCriticalSection(&g_CS_hinthandVector);
 		int real = param->cmdVec.size();
 		int desire = param->hintCmdVec.size();
 
@@ -503,12 +535,17 @@ void CCS_UserExercise::handColorThreadFunc( CCS_UserExercise* param )
 		{
 			// same type
 			if(param->cmdVec[0]==param->hintCmdVec[0])
+			{
 				param->setHandRightColor();
+				param->_holdFlag = 1;
+			}
 		}
 		else
 		{
 			param->setHandNormalColor();
+			param->_holdFlag = 0;
 		}
+		LeaveCriticalSection(&g_CS_hinthandVector);
 	}
 }
 
@@ -537,3 +574,42 @@ void CCS_UserExercise::setHandNormalColor()
 		HandColorType = NORMAL;
 	}	
 }
+
+void CCS_UserExercise::startOrContinueTimer()
+{
+	QTimer* t = _holdActionTimer->getTimer();
+	if ( ! t->isActive())
+	{
+		t->start(2000);
+	}
+
+	static int cnt=0;
+	if (cnt%5==0)
+	{
+		printf("%d\n",_holdFlag);
+	}
+	cnt++;
+}
+
+void CCS_UserExercise::stopAndClearTimer()
+{
+	//_holdFlag = 0;
+	QTimer* t = _holdActionTimer->getTimer();
+	if ( t->isActive())
+	{
+		t->stop();
+	}
+
+	static int cnt=0;
+	if (cnt%5==0)
+	{
+		printf("%d\n",_holdFlag);
+	}
+	cnt++;
+}
+
+void CCS_UserExercise::_setHoldFlag()
+{
+	_ucpSharedMem[ByteDef::HAND_HOLD_BYTE] = 1;
+}
+

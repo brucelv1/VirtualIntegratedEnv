@@ -17,15 +17,13 @@
 #include <osg/Vec3>
 #include <dtCore/scene.h>
 #include <boost/thread.hpp>
+#include "QTimerTools.h"
+#include <Windows.h>
 
-class CCS_UserExercise :
-	public IControlCharStrategy
+// The definition of each byte of the shared memory
+class ByteDef
 {
-private:
-
-	IHand* mHintHand;
-
-	unsigned char num_decision;
+public:
 	static const int NUM_DECISION_BYTE = 7;
 	static const int DECISION_TYPE_BYTE = 8;
 	static const int FINGER_RETURN_COMMAND_BYTE = 9;
@@ -35,6 +33,19 @@ private:
 	static const int HINT_HAND_MOVE_BYTE2 = 13;
 	static const int HINT_HAND_MOVE_BYTE1 = 14;
 	static const int HINT_HAND_RETURN_BYTE = 15;
+	static const int HAND_HOLD_BYTE = 16;
+};
+
+class CCS_UserExercise :
+	public IControlCharStrategy
+{
+private:
+
+
+	IHand* mHintHand;
+
+	unsigned char num_decision;
+	
 	enum DECISION_TYPE { FINGER=1, WRIST };
 
 	boost::thread hintColorThread;
@@ -86,13 +97,23 @@ private:
 private:
 	void setHintHandFingers();
 	void returnHintHandFingers();
+	void setHintHandWrist();
+	void returnHintHandWrist();
 
 	bool allowChildThread;
 	enum HINT_COLOR_TYPE {UNSET=0, NORMAL, RIGHT};
 	HINT_COLOR_TYPE HandColorType;
-	static void handColorThreadFunc(CCS_UserExercise* param);
+	static void handCheckThreadFunc(CCS_UserExercise* param);
 	void setHandRightColor();
 	void setHandNormalColor();
+
+	// timer
+	QTimerTools* _holdActionTimer;
+	void startOrContinueTimer();
+	void stopAndClearTimer();
+
+	int _holdFlag;
+	void _setHoldFlag();
 };
 
 #endif // _CCS_USER_EXERCISE_H_
