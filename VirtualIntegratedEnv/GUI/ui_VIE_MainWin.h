@@ -49,6 +49,7 @@ public:
     QAction *actionAddCustomHand;
     QAction *actionTraining;
     QAction *actionTesting;
+    QAction *actionExercising;
     QWidget *centralwidget;
     QVBoxLayout *verticalLayout;
     QGraphicsView *graphicsView;
@@ -109,6 +110,8 @@ public:
         actionTraining->setObjectName(QString::fromUtf8("actionTraining"));
         actionTesting = new QAction(MainWindow);
         actionTesting->setObjectName(QString::fromUtf8("actionTesting"));
+        actionExercising = new QAction(MainWindow);
+        actionExercising->setObjectName(QString::fromUtf8("actionExercising"));
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         verticalLayout = new QVBoxLayout(centralwidget);
@@ -182,6 +185,7 @@ public:
         menu->addAction(actionAddObjects);
         menu_2->addAction(actionTraining);
         menu_2->addAction(actionTesting);
+        menu_2->addAction(actionExercising);
 
         retranslateUi(MainWindow);
 
@@ -209,6 +213,7 @@ public:
         actionAddCustomHand->setText(QApplication::translate("MainWindow", "\346\267\273\345\212\240\350\207\252\345\256\232\344\271\211\346\211\213...", 0, QApplication::UnicodeUTF8));
         actionTraining->setText(QApplication::translate("MainWindow", "Training", 0, QApplication::UnicodeUTF8));
         actionTesting->setText(QApplication::translate("MainWindow", "Testing", 0, QApplication::UnicodeUTF8));
+        actionExercising->setText(QApplication::translate("MainWindow", "Exercising", 0, QApplication::UnicodeUTF8));
         menu_F->setTitle(QApplication::translate("MainWindow", "\346\226\207\344\273\266(&F)", 0, QApplication::UnicodeUTF8));
         menu_S->setTitle(QApplication::translate("MainWindow", "\344\273\277\347\234\237(&S)", 0, QApplication::UnicodeUTF8));
         menu->setTitle(QApplication::translate("MainWindow", "\347\233\264\346\216\245\345\212\240\350\275\275", 0, QApplication::UnicodeUTF8));

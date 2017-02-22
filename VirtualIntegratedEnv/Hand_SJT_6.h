@@ -19,7 +19,7 @@
 class Hand_SJT_6 : public IHand
 {
 public:
-	Hand_SJT_6(float scale, const std::string& configFile);
+	Hand_SJT_6(std::string name, float scale, const std::string& configFile, bool useCollision);
 	virtual ~Hand_SJT_6();
 
 	virtual int ConfigureHand();

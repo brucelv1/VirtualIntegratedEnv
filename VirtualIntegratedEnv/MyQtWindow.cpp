@@ -179,22 +179,32 @@ void MyQtWindow::OnMessage(MessageData* data)
 
 void MyQtWindow::on_actionSJT_6_triggered()
 {
-	mVIECoreApp->LoadHand(actionSJT_6->text().toStdString());
+	mVIECoreApp->LoadHand(actionSJT_6->text().toStdString(), "./models/SJT6HandOSG/SJT6AsmInfo.txt");
 }
 
 void MyQtWindow::on_actionSJT_3_triggered()
 {
-	mVIECoreApp->LoadHand(actionSJT_3->text().toStdString());
+	mVIECoreApp->LoadHand(actionSJT_3->text().toStdString(), "./models/SJT3HandOSG/SJT3AsmInfo.txt");
 }
 
 void MyQtWindow::on_actionBarrett_triggered()
 {
-	mVIECoreApp->LoadHand(actionBarrett->text().toStdString());
+	mVIECoreApp->LoadHand(actionBarrett->text().toStdString(), "./models/BarrettHandOSG/BarrettAsmInfo.txt");
 }
 
 void MyQtWindow::on_actionHumanHand_triggered()
 {
-	mVIECoreApp->LoadHand(actionHumanHand->text().toStdString());
+	mVIECoreApp->LoadHand(actionHumanHand->text().toStdString(), "./models/HumanHandOSG/HumanAsmInfo.txt");
+}
+
+void MyQtWindow::on_actionAddCustomHand_triggered()
+{
+	HandConfigFileDlg hcf(this);
+	hcf.setModal(true);
+	if (hcf.exec() == QDialog::Accepted)
+	{
+		mVIECoreApp->LoadHand("UserCustom",hcf.PathLine->text().toStdString());
+	}
 }
 
 void MyQtWindow::on_actionAddObjects_triggered()
@@ -248,16 +258,6 @@ void MyQtWindow::on_actionReset_triggered()
 		mVIECoreApp->On_ResetVIE();
 }
 
-void MyQtWindow::on_actionAddCustomHand_triggered()
-{
-	HandConfigFileDlg hcf(this);
-	hcf.setModal(true);
-	if (hcf.exec() == QDialog::Accepted)
-	{
-		mVIECoreApp->LoadHand("UserCustom",hcf.PathLine->text().toStdString());
-	}
-}
-
 void MyQtWindow::on_actionTraining_triggered()
 {
 	// initiate processing bar and start timer
@@ -309,6 +309,44 @@ void MyQtWindow::on_actionTesting_triggered()
 	
 	SettingsInfoStruct sis;
 	sis.strategy = "CCS_TrainTest";
+	sis.inputCOM = 0;
+	sis.outputCOM = 0;
+	sis.nameSharedMem = _ucpSharedMem;
+	sis.lenSharedMem = _stLenSharedMem;
+
+	if( !mVIECoreApp->On_SettingsInfo(sis))
+	{
+		QMessageBox msgBox;
+		msgBox.setWindowTitle("Strategy Setting");
+		msgBox.setIcon(QMessageBox::Icon::Warning);
+		msgBox.setInformativeText("The testing strategy has not been loaded!");
+		msgBox.setStandardButtons(QMessageBox::Ok);
+		msgBox.setDefaultButton(QMessageBox::Ok);
+		msgBox.exec();
+
+		return;
+	}
+
+	// simulate pressing "Start" button
+	// the simulation starts from now.
+	on_actionStart_triggered();
+}
+
+
+void MyQtWindow::on_actionExercising_triggered()
+{
+	// initiate processing bar and start timer
+	processingBarVal = 0;
+	if(qTimer->isActive())
+		qTimer->stop();
+	qTimer->start(200);
+
+	// exercising module
+	std::string exerciseModule = "E:\\My_Cpp_Code\\GitHubVersion\\TrainAndTestModule\\Debug\\ExerciseModule.exe";
+	this->createTrainTestProcess(exerciseModule, "SharedMemoryExercise");
+
+	SettingsInfoStruct sis;
+	sis.strategy = "CCS_UserExercise";
 	sis.inputCOM = 0;
 	sis.outputCOM = 0;
 	sis.nameSharedMem = _ucpSharedMem;
@@ -387,3 +425,4 @@ void MyQtWindow::_qTimer_timeout()
 	else
 		LECountdown->setText(" ");
 }
+

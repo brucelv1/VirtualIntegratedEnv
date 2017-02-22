@@ -23,6 +23,7 @@
 #include "EDS_2x3PlaneFingers.h"
 #include "EDS_MatlabYangFan.h"
 #include "CCS_TrainTest.h"
+#include "CCS_UserExercise.h"
 
 class StrategyPrototype
 {
@@ -35,6 +36,7 @@ void StrategyPrototype::RegisterStrategy()
 	MAKE_CCS_PROTOTYPE(CCS_EMGClassifierStr)
 	MAKE_CCS_PROTOTYPE(CCS_Keyboard)
 	MAKE_CCS_PROTOTYPE(CCS_TrainTest)
+	MAKE_CCS_PROTOTYPE(CCS_UserExercise)
 	MAKE_EDS_PROTOTYPE(EDS_DataGlove)
 	MAKE_EDS_PROTOTYPE(EDS_MatlabBarrett)
 	MAKE_EDS_PROTOTYPE(EDS_2x3PlaneFingers)

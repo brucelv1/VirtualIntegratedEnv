@@ -23,6 +23,7 @@
     </CustomBuild>
     <ClInclude Include="BarrettGrasp.h" />
     <ClInclude Include="CCS_TrainTest.h" />
+    <ClInclude Include="CCS_UserExercise.h" />
     <ClInclude Include="ColorVisitor.h" />
     <ClInclude Include="EDS_2x3PlaneFingers.h" />
     <ClInclude Include="EDS_MatlabBarrett.h" />
@@ -59,6 +60,11 @@
     </CustomBuild>
     <ClInclude Include="JAGenerater.h" />
     <ClInclude Include="Part.h" />
+    <CustomBuild Include="QTimerTools.h">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc.exe QTimerTools.h -o moc_QTimerTools.cpp</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc_QTimerTools.cpp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc.exe QTimerTools.h</AdditionalInputs>
+    </CustomBuild>
     <ClInclude Include="ReadAsmTxt.h" />
     <ClInclude Include="SerialPort.h" />
     <CustomBuild Include="SettingsDlg.h">
@@ -80,6 +86,7 @@
     <ClCompile Include="AddDialog.cpp" />
     <ClCompile Include="AddObjDlg.cpp" />
     <ClCompile Include="CCS_TrainTest.cpp" />
+    <ClCompile Include="CCS_UserExercise.cpp" />
     <ClCompile Include="ColorVisitor.cpp" />
     <ClCompile Include="EDS_2x3PlaneFingers.cpp" />
     <ClCompile Include="EDS_DataGlove.cpp" />
@@ -104,6 +111,7 @@
     <ClCompile Include="moc_AddObjDlg.cpp" />
     <ClCompile Include="moc_HandConfigFileDlg.cpp" />
     <ClCompile Include="moc_MyQtWindow.cpp" />
+    <ClCompile Include="moc_QTimerTools.cpp" />
     <ClCompile Include="moc_SettingsDlg.cpp" />
     <ClCompile Include="MyQtWindow.cpp" />
     <ClCompile Include="Part.cpp" />

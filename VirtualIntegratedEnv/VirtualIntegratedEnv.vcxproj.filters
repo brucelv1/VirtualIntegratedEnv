@@ -120,6 +120,9 @@
     <ClInclude Include="ColorVisitor.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="CCS_UserExercise.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AddDialog.cpp">
@@ -224,6 +227,12 @@
     <ClCompile Include="ColorVisitor.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="CCS_UserExercise.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="moc_QTimerTools.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="AddDialog.h">
@@ -239,6 +248,9 @@
       <Filter>头文件</Filter>
     </CustomBuild>
     <CustomBuild Include="HandConfigFileDlg.h">
+      <Filter>头文件</Filter>
+    </CustomBuild>
+    <CustomBuild Include="QTimerTools.h">
       <Filter>头文件</Filter>
     </CustomBuild>
   </ItemGroup>

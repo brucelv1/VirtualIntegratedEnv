@@ -33,7 +33,7 @@ public:
 public:
 	std::vector<Finger*> FingersVector;
 
-	IHand(float scale, const std::string& configFile);
+	IHand(std::string name, float scale, const std::string& configFile, bool useCollision);
 	virtual ~IHand();
 
 	// 完成手的配置工作，子类根据需求重写该函数，但是要在最开始处调用这个函数
@@ -45,9 +45,11 @@ public:
 
 	Finger* getFingerFromVector(unsigned int index);
 
-	float getHandScale() {return mScale;}
-
 	void getFingerConfigInfo(std::vector<int>& FCI);
+
+	std::string getName() {return mName;}
+	float getHandScale() {return mScale;}
+	std::string getConfigFilePath() {return mConfigFile;}
 
 	// 公共动作：完全张开手掌
 	virtual void OpenHand(bool open) {}
@@ -72,11 +74,15 @@ protected:
 	ReadAsmTxt* mAsmInfo;
 	std::vector<int> mFingerConfigInfo;
 
-private:
-	std::vector<Part*> PartVector;
+	// creating argument info
+	std::string mName;
 	float mScale;
 	std::string mConfigFile;
+	bool mUseCollision;
 
+private:
+	std::vector<Part*> PartVector;
+	
 	void configPart(Part* thisPart, AssemblyInfoStruct & ais, Part* parent = NULL);
 
 	bool LoadPartToVector();

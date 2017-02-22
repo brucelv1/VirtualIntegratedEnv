@@ -56,6 +56,7 @@ public slots:
 	void on_actionAddCustomHand_triggered();
 	void on_actionTraining_triggered();
 	void on_actionTesting_triggered();
+	void on_actionExercising_triggered();
 
 private slots:
 	void _qTimer_timeout();

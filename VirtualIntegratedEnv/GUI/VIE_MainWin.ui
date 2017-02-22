@@ -98,6 +98,7 @@
     </property>
     <addaction name="actionTraining"/>
     <addaction name="actionTesting"/>
+    <addaction name="actionExercising"/>
    </widget>
    <addaction name="menu_F"/>
    <addaction name="menu_S"/>
@@ -204,6 +205,11 @@
   <action name="actionTesting">
    <property name="text">
     <string>Testing</string>
+   </property>
+  </action>
+  <action name="actionExercising">
+   <property name="text">
+    <string>Exercising</string>
    </property>
   </action>
  </widget>

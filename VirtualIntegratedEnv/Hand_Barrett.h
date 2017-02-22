@@ -19,7 +19,7 @@
 class Hand_Barrett : public IHand
 {
 public:
-	Hand_Barrett(float scale, const std::string& configFile);
+	Hand_Barrett(std::string name, float scale, const std::string& configFile, bool useCollision);
 	virtual ~Hand_Barrett();
 
 	virtual int ConfigureHand();

@@ -12,8 +12,8 @@
 
 #include "Hand_Human.h"
 
-Hand_Human::Hand_Human(float scale, const std::string& configFile)
-	: IHand(scale, configFile)
+Hand_Human::Hand_Human(std::string name, float scale, const std::string& configFile, bool useCollision)
+: IHand(name, scale, configFile, useCollision)
 {
 }
 
@@ -77,8 +77,10 @@ void Hand_Human::Part_Node_Mapping()
 
 void Hand_Human::Part_Collision_Mapping()
 {
-	mPalm->getModelPtr()->SetCollisionMesh();
+	if(mUseCollision == false)
+		return;
 
+	mPalm->getModelPtr()->SetCollisionMesh();
 	for (unsigned int i=0; i<FingersVector.size(); i++)
 	{
 		unsigned int endKnuckleID = getFingerFromVector(i)->numOfKnuckles()-1;

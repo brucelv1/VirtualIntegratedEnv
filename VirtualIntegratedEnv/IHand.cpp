@@ -14,15 +14,15 @@
 
 #include "IHand.h"
 
-IHand::IHand(float scale, const std::string& configFile)
-: mScale(scale)
+IHand::IHand(std::string name, float scale, const std::string& configFile, bool useCollision)
+: mName(name)
+, mScale(scale)
 , mConfigFile(configFile)
+, mUseCollision(useCollision)
 , HasElbowAction(false)
 {
 	initPartPtr();
 	mRoot = new Part("mRoot");
-	//mRoot->setPosition(0,0,0);
-	//mRoot->makeTransform();
 }
 
 IHand::~IHand()
@@ -75,7 +75,7 @@ bool IHand::LoadPartToVector()
 void IHand::configPart(Part* thisPart, AssemblyInfoStruct & ais, Part* parent/*=NULL*/)
 {
 	thisPart->setName(ais.name);
-	thisPart->loadFile(ais.filename);
+	thisPart->loadFile(ais.filename,false);
 	if(parent != NULL)
 		parent->addChild(thisPart);
 	thisPart->getModelPtr()->SetScale(osg::Vec3(mScale, mScale, mScale));

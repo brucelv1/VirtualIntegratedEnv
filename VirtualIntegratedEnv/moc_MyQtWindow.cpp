@@ -22,7 +22,7 @@ static const uint qt_meta_data_MyQtWindow[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-      22,   14, // methods
+      23,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -53,7 +53,8 @@ static const uint qt_meta_data_MyQtWindow[] = {
      602,   11,   11,   11, 0x0a,
      637,   11,   11,   11, 0x0a,
      667,   11,   11,   11, 0x0a,
-     696,   11,   11,   11, 0x08,
+     696,   11,   11,   11, 0x0a,
+     728,   11,   11,   11, 0x08,
 
        0        // eod
 };
@@ -80,6 +81,7 @@ static const char qt_meta_stringdata_MyQtWindow[] = {
     "on_actionAddCustomHand_triggered()\0"
     "on_actionTraining_triggered()\0"
     "on_actionTesting_triggered()\0"
+    "on_actionExercising_triggered()\0"
     "_qTimer_timeout()\0"
 };
 
@@ -110,7 +112,8 @@ void MyQtWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 18: _t->on_actionAddCustomHand_triggered(); break;
         case 19: _t->on_actionTraining_triggered(); break;
         case 20: _t->on_actionTesting_triggered(); break;
-        case 21: _t->_qTimer_timeout(); break;
+        case 21: _t->on_actionExercising_triggered(); break;
+        case 22: _t->_qTimer_timeout(); break;
         default: ;
         }
     }
@@ -152,9 +155,9 @@ int MyQtWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 22)
+        if (_id < 23)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 22;
+        _id -= 23;
     }
     return _id;
 }

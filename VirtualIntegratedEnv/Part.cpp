@@ -86,6 +86,10 @@ void Part::loadFile(const std::string& filename, bool useCache /*= true*/)
 	b_DrawableHasBeenLoaded = true;
 }
 
+std::string Part::getName()
+{
+	return mModel->GetName();
+}
 void Part::setName(const std::string& name)
 {
 	mModel->SetName(name);

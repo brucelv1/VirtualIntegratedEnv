@@ -15,11 +15,6 @@
 #ifndef _CONTROLSTRATEGY_H_
 #define _CONTROLSTRATEGY_H_
 
-////ode要求指定dSINGLE或dDOUBLE
-//#ifndef dSINGLE
-//#define dSINGLE
-//#endif
-
 #include <dtCore/base.h>
 #include <dtCore/scene.h>
 #include <osg/Vec3>
@@ -88,6 +83,9 @@ public:
 	virtual IControlCharStrategy* clone() const = 0;
 	static IControlCharStrategy* makeCCSProduct(std::string _name);
 
+	// for finger movement
+	void enableFingerPriority(bool use=true) {mUseFingerPriority=use;}
+
 protected:
 	virtual ~IControlCharStrategy();
 	//传入手指根部指节,extend返回bool型，用于检测手指是否回到初始装配位置
@@ -107,6 +105,9 @@ protected:
 	int mElbowActionType;
 
 	float mSpeedScale;
+	// if a hand has fingers with different movement priority, set 
+	// this variable to true. default value is true.
+	bool  mUseFingerPriority;
 };
 
 #endif // _CONTROLSTRATEGY_H_
