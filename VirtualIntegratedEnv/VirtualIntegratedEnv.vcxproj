@@ -21,13 +21,9 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc_AddObjDlg.cpp</Outputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc.exe AddObjDlg.h</AdditionalInputs>
     </CustomBuild>
-    <ClInclude Include="BarrettGrasp.h" />
     <ClInclude Include="CCS_TrainTest.h" />
     <ClInclude Include="CCS_UserExercise.h" />
     <ClInclude Include="ColorVisitor.h" />
-    <ClInclude Include="EDS_2x3PlaneFingers.h" />
-    <ClInclude Include="EDS_MatlabBarrett.h" />
-    <ClInclude Include="EDS_MatlabYangFan.h" />
     <ClInclude Include="GUI\ui_AddObjDlg.h" />
     <ClInclude Include="GUI\ui_HandConfigFileDlg.h" />
     <ClInclude Include="GUI\ui_VIE_MainWin.h" />
@@ -58,7 +54,6 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc_MyQtWindow.cpp</Outputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc.exe MyQtWindow.h</AdditionalInputs>
     </CustomBuild>
-    <ClInclude Include="JAGenerater.h" />
     <ClInclude Include="Part.h" />
     <CustomBuild Include="QTimerTools.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc.exe QTimerTools.h -o moc_QTimerTools.cpp</Command>
@@ -88,10 +83,7 @@
     <ClCompile Include="CCS_TrainTest.cpp" />
     <ClCompile Include="CCS_UserExercise.cpp" />
     <ClCompile Include="ColorVisitor.cpp" />
-    <ClCompile Include="EDS_2x3PlaneFingers.cpp" />
     <ClCompile Include="EDS_DataGlove.cpp" />
-    <ClCompile Include="EDS_MatlabBarrett.cpp" />
-    <ClCompile Include="EDS_MatlabYangFan.cpp" />
     <ClCompile Include="IExternDataStrategy.cpp" />
     <ClCompile Include="findNodeVisitor.cpp" />
     <ClCompile Include="Finger.cpp" />
@@ -151,8 +143,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(DELTA_INC);$(QT_INC);$(MATLAB_INC);$(BOOST_ROOT);$(IncludePath)</IncludePath>
-    <LibraryPath>$(DELTA_LIB);$(QT_LIB);$(MATLAB_LIB);$(BOOST_ROOT)\lib32-msvc-10.0;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(DELTA_INC);$(QT_INC);$(BOOST_ROOT);$(IncludePath)</IncludePath>
+    <LibraryPath>$(DELTA_LIB);$(QT_LIB);$(BOOST_ROOT)\lib32-msvc-10.0;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -168,7 +160,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>dtCored.lib;dtABCd.lib;osgd.lib;QtGuid4.lib;QtCored4.lib;dtQtd.lib;osgDBd.lib;fgloved.lib;ode_singled.lib;mclmcrrt.lib;BarrettGrasp.lib;JAGenerater.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>dtCored.lib;dtABCd.lib;osgd.lib;QtGuid4.lib;QtCored4.lib;dtQtd.lib;osgDBd.lib;fgloved.lib;ode_singled.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

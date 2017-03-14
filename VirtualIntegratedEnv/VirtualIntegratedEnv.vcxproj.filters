@@ -99,21 +99,6 @@
     <ClInclude Include="StrategyPrototype.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="BarrettGrasp.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="EDS_MatlabBarrett.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="EDS_2x3PlaneFingers.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="EDS_MatlabYangFan.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="JAGenerater.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="CCS_TrainTest.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -210,15 +195,6 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="EDS_DataGlove.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="EDS_MatlabBarrett.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="EDS_2x3PlaneFingers.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="EDS_MatlabYangFan.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="CCS_TrainTest.cpp">
